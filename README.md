@@ -1,2 +1,2 @@
 # InterOn
-# Share your passions - Social Networking Site
+Share your passions - Social Networking Site
