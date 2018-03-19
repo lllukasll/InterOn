@@ -14,6 +14,12 @@ namespace InterOn.Api.Helpers
         {
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+
+            CreateMap<Role, RoleDto>();
+            CreateMap<RoleDto, Role>();
+
+            CreateMap<UserRoleDto, UserRole>();
+            CreateMap<UserRole, UserRoleDto>();
         }
     }
 }

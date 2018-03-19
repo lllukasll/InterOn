@@ -10,10 +10,12 @@ namespace InterOn.Service.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRepository<Role> _roleRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IRepository<Role> roleRepository)
         {
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
         }
 
         public User Authenticate(string username, string password)
@@ -50,6 +52,29 @@ namespace InterOn.Service.Services
             _userRepository.Save();
 
             return user;
+        }
+
+        public void AssignRoleToUser(UserRole userRole)
+        {
+            var user = _userRepository.GetUserById(userRole.UserId);
+
+            if(user == null)
+                throw new Exception("UserId : " + userRole.UserId + " don't exists");
+
+            var role = _roleRepository.Get(userRole.RoleId);
+
+            if(role == null)
+                throw new Exception("RoleId : " + userRole.RoleId + " don't exists");
+
+            _userRepository.AssignRoleToUser(userRole);
+            _userRepository.Save();
+        }
+
+        public IEnumerable<Role> GetUserRoles(User user)
+        {
+            var userRoles = _userRepository.GetUserRoles(user.Id);
+
+            return userRoles;
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

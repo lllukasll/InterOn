@@ -44,12 +44,18 @@ namespace InterOn.Api.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var roles = _userService.GetUserRoles(user);
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+            foreach (var v in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, v.Name));
+            }
+
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
@@ -77,6 +83,26 @@ namespace InterOn.Api.Controllers
             {
                 _userService.Create(user, userDto.Password);
                 return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //Moze stworzyc kontroler do UserRole ? 
+        [HttpPost("assignRole")]
+        public IActionResult AssignRoleToUser([FromBody]UserRoleDto userRoleDto)
+        {
+            if (userRoleDto == null)
+                return BadRequest();
+
+            var userRole = _mapper.Map<UserRole>(userRoleDto);
+
+            try
+            {
+                _userService.AssignRoleToUser(userRole);
+                return Ok(userRole);
             }
             catch (AppException ex)
             {

@@ -11,9 +11,10 @@ using System;
 namespace InterOn.Repo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180319195409_AddedRoles")]
+    partial class AddedRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,13 +58,13 @@ namespace InterOn.Repo.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("RoleId");
+                    b.Property<int>("RolesId");
 
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RolesId");
 
                     b.HasIndex("UserId");
 
@@ -74,7 +75,7 @@ namespace InterOn.Repo.Migrations
                 {
                     b.HasOne("InterOn.Data.DbModels.Role", "Roles")
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("InterOn.Data.DbModels.User", "User")

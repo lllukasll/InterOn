@@ -9,5 +9,9 @@ namespace InterOn.Service.Interfaces
     {
         User Authenticate(string username, string password);
         User Create(User user, string password);
+
+        //Moze zrobic to oddzielnie ? 
+        void AssignRoleToUser(UserRole userRole);
+        IEnumerable<Role> GetUserRoles(User user);
     }
 }
