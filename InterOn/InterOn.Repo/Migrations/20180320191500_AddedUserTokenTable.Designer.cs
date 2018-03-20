@@ -11,9 +11,10 @@ using System;
 namespace InterOn.Repo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180320191500_AddedUserTokenTable")]
+    partial class AddedUserTokenTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,8 +77,6 @@ namespace InterOn.Repo.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("IsStop");
-
-                    b.Property<string>("Token");
 
                     b.Property<int>("UserId");
 

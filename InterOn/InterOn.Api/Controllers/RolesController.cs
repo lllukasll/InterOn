@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace InterOn.Api.Controllers
 {
-    [Authorize(Roles = "Uzytkownik")]
+    [Authorize]
     [Route("roles")]
     public class RolesController : Controller
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using InterOn.Data.DbModels;
+using InterOn.Data.ModelsDto;
 using InterOn.Repo.Interfaces;
 
 namespace InterOn.Repo.Repositories
@@ -58,9 +59,44 @@ namespace InterOn.Repo.Repositories
             return tmp;
         }
 
+        public bool AddToken(UserToken userRole)
+        {
+            try
+            {
+                _context.UserTokens.Add(userRole);
+                _context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }    
+        }
+
         public void CreateUser(User user)
         {
             _context.Users.Add(user);
+        }
+
+        public UserToken GetUserToken(string refreshToken, int userId)
+        {
+            var token = _context.UserTokens.SingleOrDefault(x => x.Token == refreshToken && x.UserId == userId);
+
+            return token;
+        }
+
+        public bool ExpireUserToken(UserToken userToken)
+        {
+            try
+            {
+                _context.UserTokens.Update(userToken);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public void Save()

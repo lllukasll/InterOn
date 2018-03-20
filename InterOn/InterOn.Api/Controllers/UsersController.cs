@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using InterOn.Data.ModelsDto;
 using InterOn.Service.Interfaces;
+using Newtonsoft.Json;
 
 namespace InterOn.Api.Controllers
 {
@@ -22,8 +23,8 @@ namespace InterOn.Api.Controllers
     [Route("api")]
     public class UsersController : Controller
     {
-        private IUserService _userService;
-        private IMapper _mapper;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(IUserService userService, IMapper mapper, IOptions<AppSettings> appSettings)
@@ -37,13 +38,98 @@ namespace InterOn.Api.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] UserDto userDto)
         {
+            if (userDto == null)
+            {
+                //mozna udostepnic jakies dane
+                return BadRequest();
+            }
+
+            if (userDto.GrantType == "password")
+            {
+                return DoPassword(userDto);
+            }
+            else if (userDto.GrantType == "refresh_token")
+            {
+                return DoRefreshToken(userDto);
+            }
+            else
+            {
+                //mozna wyswietlic jakis blad
+                return BadRequest();
+            }
+        }
+
+        private IActionResult DoPassword(UserDto userDto)
+        {
             var user = _userService.Authenticate(userDto.Username, userDto.Password);
 
             if (user == null)
-                return Unauthorized();
+            {
+                return BadRequest();
+            }
 
+            var refreshToken = GenerateRefreshToken();
+
+            var rToken = new UserTokenDto
+            {
+                Token = refreshToken,
+                UserId = user.Id,
+                IsStop = 0
+            };
+
+            var mappedRefreshToken = _mapper.Map<UserToken>(rToken);
+
+            if (_userService.AddToken(mappedRefreshToken))
+            {
+                return Ok(GetJwt(user, refreshToken));
+            }
+
+            return BadRequest();
+        }
+
+        private IActionResult DoRefreshToken(UserDto userDto)
+        {
+            var token = _userService.GetUserToken(userDto.RefreshToken, userDto.Id);
+
+            if (token == null)
+            {
+                return BadRequest();
+            }
+
+            if (token.IsStop == 1) //Token stracił ważność
+            {
+                return BadRequest();
+            }
+
+            var refreshToken = GenerateRefreshToken();
+
+            token.IsStop = 1;
+
+            var updateFlag = _userService.ExpireUserToken(token);
+
+            var addFlag = _userService.AddToken(new UserToken
+            {
+                UserId = userDto.Id,
+                IsStop = 0,
+                Token = refreshToken
+            });
+
+            var user = _mapper.Map<User>(userDto);
+
+            if (updateFlag && addFlag)
+            {
+                return Ok(GetJwt(user, refreshToken));
+            }
+
+            return BadRequest();
+        }
+
+        private LoginResponseData GetJwt(User user, string refreshToken)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+            //====Moj kod do roli ====
             var roles = _userService.GetUserRoles(user);
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
@@ -51,26 +137,33 @@ namespace InterOn.Api.Controllers
             {
                 claims.Add(new Claim(ClaimTypes.Role, v.Name));
             }
-
+            //========Koniec===========
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddMinutes(double.Parse(_appSettings.AccessExpireMinutes)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new
+            var response = new LoginResponseData
             {
-                Id = user.Id,
-                Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Token = tokenString
-            });
+                ClientId = user.Id,
+                AccessToken = tokenString,
+                RefreshToken = refreshToken
+            };
+
+            return response;
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var token = Guid.NewGuid().ToString().Replace("-", "");
+
+            return token;
         }
 
         [AllowAnonymous]

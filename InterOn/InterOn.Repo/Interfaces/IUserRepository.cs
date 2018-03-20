@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using InterOn.Data.DbModels;
+using InterOn.Data.ModelsDto;
 
 namespace InterOn.Repo.Interfaces
 {
@@ -17,5 +18,8 @@ namespace InterOn.Repo.Interfaces
         //Moze to przeniose ... jeszcze nie wiem :)
         void AssignRoleToUser(UserRole userRole);
         IEnumerable<Role> GetUserRoles(int userId);
+        bool AddToken(UserToken userToken);
+        UserToken GetUserToken(string refreshToken, int userId);
+        bool ExpireUserToken(UserToken userToken);
     }
 }

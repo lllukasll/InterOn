@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using InterOn.Data.DbModels;
+using InterOn.Data.ModelsDto;
 
 namespace InterOn.Service.Interfaces
 {
@@ -13,5 +14,8 @@ namespace InterOn.Service.Interfaces
         //Moze zrobic to oddzielnie ? 
         void AssignRoleToUser(UserRole userRole);
         IEnumerable<Role> GetUserRoles(User user);
+        bool AddToken(UserToken userToken);
+        bool ExpireUserToken(UserToken userToken);
+        UserToken GetUserToken(string refreshToken, int userId);
     }
 }

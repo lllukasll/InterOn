@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using InterOn.Data.DbModels;
+using InterOn.Data.ModelsDto;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 
@@ -70,11 +71,39 @@ namespace InterOn.Service.Services
             _userRepository.Save();
         }
 
+        public bool AddToken(UserToken userToken)
+        {
+            if (_userRepository.AddToken(userToken))
+                return true;
+
+            return false;
+        }
+
         public IEnumerable<Role> GetUserRoles(User user)
         {
             var userRoles = _userRepository.GetUserRoles(user.Id);
 
             return userRoles;
+        }
+
+        public UserToken GetUserToken(string refreshToken, int userId)
+        {
+            var token = _userRepository.GetUserToken(refreshToken, userId);
+
+            return token;
+        }
+
+        public bool ExpireUserToken(UserToken userToken)
+        {
+            try
+            {
+                _userRepository.ExpireUserToken(userToken);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
