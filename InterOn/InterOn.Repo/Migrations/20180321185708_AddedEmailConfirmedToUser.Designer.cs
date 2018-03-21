@@ -11,9 +11,10 @@ using System;
 namespace InterOn.Repo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180321185708_AddedEmailConfirmedToUser")]
+    partial class AddedEmailConfirmedToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,8 +55,6 @@ namespace InterOn.Repo.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Email");
 
                     b.Property<bool>("EmailConfirmed");
 

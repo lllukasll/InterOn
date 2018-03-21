@@ -16,6 +16,7 @@ namespace InterOn.Repo
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<ConfirmationKey> ConfirmationKeys { get; set; }
        
     }
 }

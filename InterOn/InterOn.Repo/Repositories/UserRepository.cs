@@ -5,6 +5,7 @@ using System.Text;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
 using InterOn.Repo.Interfaces;
+using SQLitePCL;
 
 namespace InterOn.Repo.Repositories
 {
@@ -59,11 +60,11 @@ namespace InterOn.Repo.Repositories
             return tmp;
         }
 
-        public bool AddToken(UserToken userRole)
+        public bool AddToken(UserToken userToken)
         {
             try
             {
-                _context.UserTokens.Add(userRole);
+                _context.UserTokens.Add(userToken);
                 _context.SaveChanges();
                 return true;
             }
@@ -76,6 +77,12 @@ namespace InterOn.Repo.Repositories
         public void CreateUser(User user)
         {
             _context.Users.Add(user);
+        }
+
+        public void UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+            _context.SaveChanges();
         }
 
         public UserToken GetUserToken(string refreshToken, int userId)
@@ -98,6 +105,45 @@ namespace InterOn.Repo.Repositories
             }
             return true;
         }
+
+        //Confirmation Key
+        public ConfirmationKey GetConfirmationKey(int userId, string key)
+        {
+            return _context.ConfirmationKeys.SingleOrDefault(x => x.Key == key && x.UserId == userId);
+        }
+
+        public void ConfirmEmail(ConfirmationKey key)
+        {
+            var user = GetUserById(key.UserId);
+
+            var tmpUser = user;
+            tmpUser.EmailConfirmed = true;
+
+            UpdateUser(tmpUser);
+
+            key.Revoked = true;
+
+            RevokeConfirmationKey(key);
+        }
+
+        public void AddConfirmationKey(ConfirmationKey key)
+        {
+            _context.ConfirmationKeys.Add(key);
+            _context.SaveChanges();
+        }
+
+        public void RevokeConfirmationKey(ConfirmationKey key)
+        {
+            _context.ConfirmationKeys.Update(key);
+            _context.SaveChanges();
+        }
+
+        public void DeleteConfirmationKey(ConfirmationKey key)
+        {
+            _context.ConfirmationKeys.Remove(key);
+            _context.SaveChanges();
+        }
+
 
         public void Save()
         {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
@@ -104,6 +106,112 @@ namespace InterOn.Service.Services
                 return false;
             }
             return true;
+        }
+
+        public bool SendConfirmationEmail(User user)
+        {
+            try
+            {
+                var key = GenerateConfirmationKey(user);
+
+                using (SmtpClient client = new SmtpClient())
+                {
+                    var credential = new NetworkCredential
+                    {
+                        UserName = "mailinteron@gmail.com",
+                        Password = "4BsYmh3adsz"
+                    };
+                    client.Credentials = credential;
+
+                    client.Host = "smtp.gmail.com";
+                    client.Port = 587;
+                    client.EnableSsl = true;
+
+                    var message = new MailMessage();
+
+                    message.To.Add(new MailAddress(user.Email));
+                    message.From = new MailAddress("mailinteron@gmail.com");
+                    message.Subject = "Link aktywacyjny";
+                    message.Body = "http://localhost:58200/api/" + key.UserId + "/" + key.Key + "<br />Link aktywacyjny<br />Klucz : " + key.Key + "<br />UserId : " + key.UserId;
+                    message.IsBodyHtml = true;
+
+                    client.Send(message);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool ConfirmEmail(ConfirmationKey key)
+        {
+            try
+            {
+                if (key == null)
+                    return false;
+
+                _userRepository.ConfirmEmail(key);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public ConfirmationKey GetConfirmationKey(int userId, string key)
+        {
+            if (userId == null || key == null)
+            {
+                throw new Exception("Values can't be null");
+            }
+            return _userRepository.GetConfirmationKey(userId, key);
+        }
+
+        public ConfirmationKey GenerateConfirmationKey(User user)
+        {
+            var key = Guid.NewGuid().ToString().Replace("-", "");
+
+            var confirmationKey = new ConfirmationKey
+            {
+                UserId = user.Id,
+                Key = key,
+                Revoked = false
+            };
+
+            _userRepository.AddConfirmationKey(confirmationKey);
+
+            return confirmationKey;
+        }
+
+        public bool RevokeConfirmationKey(ConfirmationKey key)
+        {
+            try
+            {
+                _userRepository.RevokeConfirmationKey(key);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+
+        }
+
+        public bool DeleteConfirmationKey(ConfirmationKey key)
+        {
+            try
+            {
+                _userRepository.DeleteConfirmationKey(key);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

@@ -167,6 +167,21 @@ namespace InterOn.Api.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("{userId}/{key}")]
+        public IActionResult ConfirmEmail(int userId, string key)
+        {
+            var confirmationKey = _userService.GetConfirmationKey(userId, key);
+
+            if (confirmationKey == null)
+                return BadRequest();
+
+            var confirmEmailFlag = _userService.ConfirmEmail(confirmationKey);
+            var revokeConfirmationKeyFlag = _userService.RevokeConfirmationKey(confirmationKey);
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult Register([FromBody] UserDto userDto)
         {
@@ -175,6 +190,7 @@ namespace InterOn.Api.Controllers
             try
             {
                 _userService.Create(user, userDto.Password);
+                _userService.SendConfirmationEmail(user); // ToDo
                 return Ok();
             }
             catch (AppException ex)
