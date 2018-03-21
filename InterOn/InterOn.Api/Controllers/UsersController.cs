@@ -198,7 +198,7 @@ namespace InterOn.Api.Controllers
 
             if (_userService.CheckPassword(changePasswordDto.OldPassword, userId))
             {
-                return BadRequest("Złe hasło");
+                return BadRequest("Złe haslo");
             }
 
             if (_userService.ChangePassword(userId, changePasswordDto))
