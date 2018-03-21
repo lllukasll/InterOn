@@ -10,6 +10,7 @@ namespace InterOn.Service.Interfaces
     {
         User Authenticate(string username, string password);
         User Create(User user, string password);
+        User GetUserById(int userId);
 
         //Moze zrobic to oddzielnie ? 
         //Role
@@ -30,5 +31,9 @@ namespace InterOn.Service.Interfaces
         ConfirmationKey GetConfirmationKey(int userId, string key);
         bool RevokeConfirmationKey(ConfirmationKey key);
         bool DeleteConfirmationKey(ConfirmationKey key);
+
+        //Password
+        bool CheckPassword(string password, int userId);
+        bool ChangePassword(int userId, ChangePasswordDto changePasswordDto);
     }
 }

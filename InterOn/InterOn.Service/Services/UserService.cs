@@ -27,7 +27,7 @@ namespace InterOn.Service.Services
                 return null;
 
             var user = _userRepository.GetUser(username, password);
-
+            
             if (user == null)
                 return null;
 
@@ -53,6 +53,13 @@ namespace InterOn.Service.Services
 
             _userRepository.CreateUser(user);
             _userRepository.Save();
+
+            return user;
+        }
+
+        public User GetUserById(int userId)
+        {
+            var user = _userRepository.GetUserById(userId);
 
             return user;
         }
@@ -212,6 +219,37 @@ namespace InterOn.Service.Services
             }
             return true;
 
+        }
+
+        public bool ChangePassword(int userId, ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                var user = _userRepository.GetUserById(userId);
+
+                byte[] passwordHash, passwordSalt;
+                CreatePasswordHash(changePasswordDto.NewPassword, out passwordHash, out passwordSalt);
+
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+
+                _userRepository.UpdateUser(user);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool CheckPassword(string password, int userId)
+        {
+            var user = _userRepository.GetUserById(userId);
+
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+                return true;
+
+            return false;
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

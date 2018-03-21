@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace InterOn.Api.Controllers
 {
     [Authorize]
-    [Route("api")]
+    [Route("users")]
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
@@ -35,13 +35,13 @@ namespace InterOn.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [HttpPost("auth")]
         public IActionResult Authenticate([FromBody] UserDto userDto)
         {
             if (userDto == null)
             {
                 //mozna udostepnic jakies dane
-                return BadRequest();
+                return BadRequest("Niepoprawne dane");
             }
 
             if (userDto.GrantType == "password")
@@ -55,7 +55,7 @@ namespace InterOn.Api.Controllers
             else
             {
                 //mozna wyswietlic jakis blad
-                return BadRequest();
+                return BadRequest("Wystąpił problem podczas autentykacji");
             }
         }
 
@@ -65,7 +65,12 @@ namespace InterOn.Api.Controllers
 
             if (user == null)
             {
-                return BadRequest();
+                return BadRequest("Email i/lub hasło są nie poprawne");
+            }
+
+            if (user.EmailConfirmed == false)
+            {
+                return BadRequest("W celu zalogowania wymagana jest aktywacja konta");
             }
 
             var refreshToken = GenerateRefreshToken();
@@ -93,12 +98,12 @@ namespace InterOn.Api.Controllers
 
             if (token == null)
             {
-                return BadRequest();
+                return BadRequest("Nieprawidłowy token");
             }
 
             if (token.IsStop == 1) //Token stracił ważność
             {
-                return BadRequest();
+                return BadRequest("Token stracił ważność");
             }
 
             var refreshToken = GenerateRefreshToken();
@@ -164,6 +169,45 @@ namespace InterOn.Api.Controllers
             var token = Guid.NewGuid().ToString().Replace("-", "");
 
             return token;
+        }
+
+        [Authorize]
+        [HttpPost("{userId}/changePassword")]
+        public IActionResult ChangePassword(int userId, [FromBody]ChangePasswordDto changePasswordDto )
+        {
+            if (_userService.GetUserById(userId) == null)
+            {
+                return BadRequest("Brak użytkownika o id : " + userId);
+            }
+
+            if (changePasswordDto == null)
+            {
+                return BadRequest("Nie podano danych");
+            }
+
+            if (changePasswordDto.OldPassword == null || changePasswordDto.NewPassword == null ||
+                changePasswordDto.NewPassword2 == null)
+            {
+                return BadRequest("Niepoprawne dane");
+            }
+
+            if (changePasswordDto.NewPassword != changePasswordDto.NewPassword2)
+            {
+                return BadRequest("Hasła nie zgadzają się");
+            }
+
+            if (_userService.CheckPassword(changePasswordDto.OldPassword, userId))
+            {
+                return BadRequest("Złe hasło");
+            }
+
+            if (_userService.ChangePassword(userId, changePasswordDto))
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+            //return Ok("Zmiana hasła : " + userId + " | OldPassword : " + changePasswordDto.OldPassword + " | NewPassword : " + changePasswordDto.NewPassword + " | NewPassword2 : " + changePasswordDto.NewPassword2);
         }
 
         [AllowAnonymous]

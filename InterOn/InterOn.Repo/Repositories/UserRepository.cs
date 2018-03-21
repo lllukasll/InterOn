@@ -81,8 +81,16 @@ namespace InterOn.Repo.Repositories
 
         public void UpdateUser(User user)
         {
-            _context.Users.Update(user);
-            _context.SaveChanges();
+            try
+            {
+                _context.Users.Update(user);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                throw new Exception();
+            }
+            
         }
 
         public UserToken GetUserToken(string refreshToken, int userId)
@@ -143,7 +151,6 @@ namespace InterOn.Repo.Repositories
             _context.ConfirmationKeys.Remove(key);
             _context.SaveChanges();
         }
-
 
         public void Save()
         {
