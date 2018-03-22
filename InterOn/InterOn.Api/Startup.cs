@@ -85,8 +85,6 @@ namespace InterOn.Api
             app.UseAuthentication();
 
             app.UseMvc();
-
-
         }
     }
 }

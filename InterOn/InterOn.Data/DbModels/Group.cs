@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace InterOn.Data.DbModels
+{
+    [Table("Groups")]
+    public class Group
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public DateTime CreateDateTime { get; set; }
+
+        public string AvatarUrl { get; set; }
+
+       ///  public int AdminId{ get; set; }
+       public ICollection<GroupCategory> SubCategory { get; set; }
+
+        public Group()
+        {
+            SubCategory = new Collection<GroupCategory>();
+        }
+    }
+}
