@@ -16,7 +16,7 @@ namespace InterOn.Api.Controllers
     [Route("roles")]
     public class RolesController : Controller
     {
-        private IRoleService _roleService;
+        private readonly IRoleService _roleService;
         private readonly IMapper _mapper;
 
         public RolesController(IRoleService roleService, IMapper mapper)
@@ -25,7 +25,7 @@ namespace InterOn.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("")]
+        [HttpGet]
         public IActionResult GetAll()
         {
             var roles = _roleService.GetAll();

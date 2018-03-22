@@ -17,6 +17,13 @@ namespace InterOn.Repo
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<ConfirmationKey> ConfirmationKeys { get; set; }
-       
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GroupCategory>().HasKey(vf =>
+                new { vf.SubCategoryId, vf.GroupId });
+
+        }
     }
+   
 }

@@ -69,7 +69,7 @@ namespace InterOn.Api
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IRoleService, RoleService>();
         }
-
+     
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -85,8 +85,6 @@ namespace InterOn.Api
             app.UseAuthentication();
 
             app.UseMvc();
-
-
         }
     }
 }
