@@ -17,6 +17,7 @@ namespace InterOn.Repo
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<ConfirmationKey> ConfirmationKeys { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

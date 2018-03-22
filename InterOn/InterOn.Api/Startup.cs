@@ -68,6 +68,8 @@ namespace InterOn.Api
             //services.AddScoped<IRepository<T entity>, Repository<T>>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
         }
      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,11 +20,12 @@ namespace InterOn.Data.DbModels
         public string AvatarUrl { get; set; }
 
        ///  public int AdminId{ get; set; }
-       public ICollection<GroupCategory> SubCategory { get; set; }
+        public ICollection<GroupCategory> SubCategories { get; set; }
+
 
         public Group()
         {
-            SubCategory = new Collection<GroupCategory>();
+            SubCategories = new Collection<GroupCategory>();
         }
     }
 }

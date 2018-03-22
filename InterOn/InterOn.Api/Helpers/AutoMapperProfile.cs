@@ -23,6 +23,14 @@ namespace InterOn.Api.Helpers
 
             CreateMap<UserToken, UserTokenDto>();
             CreateMap<UserTokenDto, UserToken>();
+
+            CreateMap<GroupDto, Group>()
+                .ForMember(g => g.SubCategories,
+                    opt => opt.MapFrom(gdt => gdt.SubCategory.Select(id => new GroupCategory {SubCategoryId = id})));
+
+            CreateMap<Group, GroupDto>()
+                .ForMember(gdt => gdt.SubCategory,
+                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));
         }
     }
 }
