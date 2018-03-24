@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations.Schema;
+using InterOn.Data.DbModels;
 
-namespace InterOn.Data.DbModels
+namespace InterOn.Data.ModelsDto
 {
-    [Table("Groups")]
-    public class Group
+    public class GroupDto
     {
         public int Id { get; set; }
 
@@ -19,11 +17,11 @@ namespace InterOn.Data.DbModels
 
         public string AvatarUrl { get; set; }
 
-       ///  public int AdminId{ get; set; }
+        ///  public int AdminId{ get; set; }
         public ICollection<GroupCategory> SubCategories { get; set; }
 
 
-        public Group()
+        public GroupDto()
         {
             SubCategories = new Collection<GroupCategory>();
         }
