@@ -20,11 +20,15 @@ namespace InterOn.Repo.Repositories
            await _context.AddAsync(group);
         }
 
-        public async Task<Group> GetGroup(int id)
+        public async Task<Group> GetGroup(int id,bool includeRelated = true)
         {
+            if (!includeRelated)
+                return await _context.Groups.FindAsync(id);
+
             return await _context.Groups
                 .Include(g => g.SubCategories)
-                .ThenInclude(gc => gc.SubCategory)
+                    .ThenInclude(gc => gc.SubCategory)
+
                 .SingleOrDefaultAsync(g => g.Id == id);
         }
 
@@ -35,6 +39,11 @@ namespace InterOn.Repo.Repositories
                     .ThenInclude(g=>g.SubCategory)
                     .ThenInclude(gmc=>gmc.MainCategory)
                 .ToListAsync();
+        }
+
+        public async void GetAllGroup()
+        {
+            await _context.Groups.Include(g => g.SubCategories).ToArrayAsync();
         }
 
         public void Remove(Group group)

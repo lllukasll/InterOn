@@ -7,9 +7,11 @@ namespace InterOn.Repo.Interfaces
 {
     public interface IGroupRepository
     {
+        
         void AddAsync(Group group);
-        Task<Group> GetGroup(int id);
+        Task<Group> GetGroup(int id, bool includeRelated = true);
         void Remove(Group group);
         Task<IEnumerable<Group>> GetGroups();
+        
     }
 }

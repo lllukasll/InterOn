@@ -5,25 +5,24 @@ using InterOn.Data.DbModels;
 
 namespace InterOn.Data.ModelsDto
 {
-    public class GroupDto
+    public class UpdateGroupDto
     {
+        
         public int Id { get; set; }
 
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public DateTime CreateDateTime { get; set; }
-
         public string AvatarUrl { get; set; }
 
         ///  public int AdminId{ get; set; }
-        public ICollection<GroupCategory> SubCategories { get; set; }
+        public ICollection<int> SubCategories { get; set; }
 
-
-        public GroupDto()
+        public UpdateGroupDto()
         {
-            SubCategories = new Collection<GroupCategory>();
+            SubCategories = new Collection<int>();
         }
+        
     }
 }
