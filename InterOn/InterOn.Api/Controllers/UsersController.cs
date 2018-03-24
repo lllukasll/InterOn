@@ -36,30 +36,42 @@ namespace InterOn.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("auth")]
-        public IActionResult Authenticate([FromBody] UserDto userDto)
+        public IActionResult Authenticate([FromBody] LoginUserDto userDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (userDto == null)
-            {
-                //mozna udostepnic jakies dane
                 return BadRequest("Niepoprawne dane");
-            }
+            
 
             if (userDto.GrantType == "password")
             {
+                if (userDto.Username == null)
+                    return BadRequest("Pole nazwa użytkownika jest wymagane.");
+
+                if (userDto.Password == null)
+                    return BadRequest("Pole hasło jest wymagane.");
+
                 return DoPassword(userDto);
             }
             else if (userDto.GrantType == "refresh_token")
             {
+                if (userDto.UserId == null)
+                    return BadRequest("Pole id uzytkownika jest wymagane.");
+
+                if (userDto.RefreshToken == null)
+                    return BadRequest("Pole refreshToken jest wymagane.");
+
                 return DoRefreshToken(userDto);
             }
             else
             {
-                //mozna wyswietlic jakis blad
                 return BadRequest("Wystąpił problem podczas autentykacji");
             }
         }
 
-        private IActionResult DoPassword(UserDto userDto)
+        private IActionResult DoPassword(LoginUserDto userDto)
         {
             var user = _userService.Authenticate(userDto.Username, userDto.Password);
 
@@ -92,19 +104,15 @@ namespace InterOn.Api.Controllers
             return BadRequest();
         }
 
-        private IActionResult DoRefreshToken(UserDto userDto)
+        private IActionResult DoRefreshToken(LoginUserDto userDto)
         {
-            var token = _userService.GetUserToken(userDto.RefreshToken, userDto.Id);
+            var token = _userService.GetUserToken(userDto.RefreshToken, userDto.UserId);
 
             if (token == null)
-            {
                 return BadRequest("Nieprawidłowy token");
-            }
 
-            if (token.IsStop == 1) //Token stracił ważność
-            {
+            if (token.IsStop == 1)
                 return BadRequest("Token stracił ważność");
-            }
 
             var refreshToken = GenerateRefreshToken();
 
@@ -114,7 +122,7 @@ namespace InterOn.Api.Controllers
 
             var addFlag = _userService.AddToken(new UserToken
             {
-                UserId = userDto.Id,
+                UserId = userDto.UserId,
                 IsStop = 0,
                 Token = refreshToken
             });
@@ -136,8 +144,7 @@ namespace InterOn.Api.Controllers
 
             //====Moj kod do roli ====
             var roles = _userService.GetUserRoles(user);
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+            var claims = new List<Claim> {new Claim(ClaimTypes.Name, user.Id.ToString())};
             foreach (var v in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, v.Name));
@@ -175,20 +182,12 @@ namespace InterOn.Api.Controllers
         [HttpPost("{userId}/changePassword")]
         public IActionResult ChangePassword(int userId, [FromBody]ChangePasswordDto changePasswordDto )
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (_userService.GetUserById(userId) == null)
             {
                 return BadRequest("Brak użytkownika o id : " + userId);
-            }
-
-            if (changePasswordDto == null)
-            {
-                return BadRequest("Nie podano danych");
-            }
-
-            if (changePasswordDto.OldPassword == null || changePasswordDto.NewPassword == null ||
-                changePasswordDto.NewPassword2 == null)
-            {
-                return BadRequest("Niepoprawne dane");
             }
 
             if (changePasswordDto.NewPassword != changePasswordDto.NewPassword2)
@@ -207,7 +206,6 @@ namespace InterOn.Api.Controllers
             }
 
             return BadRequest();
-            //return Ok("Zmiana hasła : " + userId + " | OldPassword : " + changePasswordDto.OldPassword + " | NewPassword : " + changePasswordDto.NewPassword + " | NewPassword2 : " + changePasswordDto.NewPassword2);
         }
 
         [AllowAnonymous]
@@ -227,14 +225,20 @@ namespace InterOn.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserDto userDto)
+        public IActionResult Register([FromBody] CreateUserDto userDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_userService.CheckIfLoginUnique(userDto.Username))
+                return BadRequest("Login " + userDto.Username + " jest zajęty");
+
             var user = _mapper.Map<User>(userDto);
 
             try
             {
                 _userService.Create(user, userDto.Password);
-                _userService.SendConfirmationEmail(user); // ToDo
+                _userService.SendConfirmationEmail(user);
                 return Ok();
             }
             catch (AppException ex)
@@ -250,6 +254,9 @@ namespace InterOn.Api.Controllers
             if (userRoleDto == null)
                 return BadRequest();
 
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var userRole = _mapper.Map<UserRole>(userRoleDto);
 
             try
@@ -261,6 +268,25 @@ namespace InterOn.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("{userId}")]
+        public IActionResult GetUser(int userId)
+        {
+            var user = _userService.GetUserById(userId);
+
+            if (user == null)
+                return BadRequest();
+
+            return Ok(user);
+        }
+
+        [HttpGet()]
+        public IActionResult GetUsers()
+        {
+            var users = _userService.GetAllUsers();
+
+            return Ok(users);
         }
     }
 }

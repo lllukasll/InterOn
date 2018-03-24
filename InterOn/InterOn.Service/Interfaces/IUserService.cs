@@ -11,8 +11,9 @@ namespace InterOn.Service.Interfaces
         User Authenticate(string username, string password);
         User Create(User user, string password);
         User GetUserById(int userId);
+        IEnumerable<User> GetAllUsers();
+        bool CheckIfLoginUnique(string login);
 
-        //Moze zrobic to oddzielnie ? 
         //Role
         void AssignRoleToUser(UserRole userRole);
         IEnumerable<Role> GetUserRoles(User user);

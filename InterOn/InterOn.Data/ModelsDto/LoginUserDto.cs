@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace InterOn.Data.ModelsDto
 {
-    public class UserDto
+    public class LoginUserDto
     {
-        public int Id { get; set; }
+        [Required]
         public string GrantType { get; set; }
+
+        //Do refreshToken
+        public int UserId { get; set; }
         public string RefreshToken { get; set; }
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+
+        //Do password
         public string Username { get; set; }
         public string Password { get; set; }
-
-        public string OutMessage { get; set; }
     }
 }
