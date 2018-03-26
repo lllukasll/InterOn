@@ -114,19 +114,17 @@ namespace InterOn.Repo.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AvatarUrl");
-
                     b.Property<string>("Email");
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
 
                     b.Property<byte[]>("PasswordHash");
 
                     b.Property<byte[]>("PasswordSalt");
-
-                    b.Property<string>("Surname");
 
                     b.Property<string>("Username");
 
@@ -180,7 +178,7 @@ namespace InterOn.Repo.Migrations
             modelBuilder.Entity("InterOn.Data.DbModels.GroupCategory", b =>
                 {
                     b.HasOne("InterOn.Data.DbModels.Group", "Group")
-                        .WithMany("SubCategories")
+                        .WithMany("SubCategory")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 

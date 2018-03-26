@@ -32,13 +32,6 @@ namespace InterOn.Repo.Repositories
             return user;
         }
 
-        public IEnumerable<User> GetAllUsers()
-        {
-            var users = _context.Users.AsEnumerable();
-
-            return users;
-        }
-
         public bool CheckLogin(string username)
         {
             var user = _context.Users.Any(x => x.Username == username);

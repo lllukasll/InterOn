@@ -10,7 +10,6 @@ namespace InterOn.Repo.Interfaces
     {
         User GetUser(string username, string password);
         User GetUserById(int id);
-        IEnumerable<User> GetAllUsers();
         bool CheckLogin(string username);
 
         void UpdateUser(User user);
