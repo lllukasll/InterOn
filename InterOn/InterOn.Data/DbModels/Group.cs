@@ -7,10 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace InterOn.Data.DbModels
 {
     [Table("Groups")]
-    public class Group
+    public class Group : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }

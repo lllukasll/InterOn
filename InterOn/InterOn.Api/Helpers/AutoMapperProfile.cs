@@ -56,11 +56,7 @@ namespace InterOn.Api.Helpers
                         .ToList();
                     foreach (var c in addedCategories.ToList())
                         g.SubCategories.Add(c);
-                  
-
-
                 });
-
         }
     }
 }
