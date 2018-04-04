@@ -26,9 +26,12 @@ namespace InterOn.Api.Helpers
 
             CreateMap<CreateUserDto, User>();
             CreateMap<User, CreateUserDto>();
-            
+
+            CreateMap<LoginUserDto, User>()
+                .ForMember(gdt => gdt.Id, opt => opt.MapFrom(g => g.UserId));
+
             //Group
-           
+
             CreateMap<Group, CreateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));
