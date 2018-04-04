@@ -38,9 +38,9 @@ namespace InterOn.Service.Services
 
         public void DeleteRole(long id)
         {
-            Role role = GetRole(id);
+            var role = GetRole(id);
             _roleRepository.Remove(role);
-            _roleRepository.SaveChanges();
+            _roleRepository.Save();
         }
     }
 }

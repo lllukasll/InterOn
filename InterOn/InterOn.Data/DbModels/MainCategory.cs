@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace InterOn.Data.DbModels
 {
     [Table("MainCategories")]
-    public class MainCategory
+    public class MainCategory : BaseEntity
     {
-        public int Id { get; set; }
+       // public int Id { get; set; }
 
         public string Name { get; set; }
 

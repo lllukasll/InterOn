@@ -6,6 +6,7 @@ using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
 using InterOn.Repo.Interfaces;
+using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterOn.Api.Controllers
@@ -15,9 +16,9 @@ namespace InterOn.Api.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IGroupRepository _groupRepository;
+        private readonly IGroupService _groupRepository;
 
-        public GroupController(IMapper mapper,IGroupRepository groupRepository,IUnitOfWork unitOfWork)
+        public GroupController(IMapper mapper,IGroupService groupRepository,IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _groupRepository = groupRepository;
@@ -32,7 +33,7 @@ namespace InterOn.Api.Controllers
 
             var group = _mapper.Map<CreateGroupDto, Group>(groupDto);
             group.CreateDateTime = DateTime.Now;
-            _groupRepository.AddAsync(group);
+            await _groupRepository.AddAsyn(group);
             await _unitOfWork.CompleteAsync();
 
             var result = _mapper.Map<Group, CreateGroupDto>(group);
