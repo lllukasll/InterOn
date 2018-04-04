@@ -12,8 +12,8 @@ namespace InterOn.Api.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
+            //CreateMap<User, UserDto>();
+            //CreateMap<UserDto, User>();
 
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();
@@ -23,6 +23,9 @@ namespace InterOn.Api.Helpers
 
             CreateMap<UserToken, UserTokenDto>();
             CreateMap<UserTokenDto, UserToken>();
+
+            CreateMap<CreateUserDto, User>();
+            CreateMap<User, CreateUserDto>();
             
             //Group
            

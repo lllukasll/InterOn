@@ -39,11 +39,11 @@ namespace InterOn.Service.Services
 
         public User Create(User user, string password)
         {
-            if(string.IsNullOrWhiteSpace(password))
-                throw new Exception("Password is required");
+            //if(string.IsNullOrWhiteSpace(password))
+            //    throw new Exception("Password is required");
 
-            if(_userRepository.CheckLogin(user.Username))
-                throw new Exception("Username " + user.Username + " is already taken");
+            //if(_userRepository.CheckLogin(user.Username))
+            //    throw new Exception("Username " + user.Username + " is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -57,11 +57,25 @@ namespace InterOn.Service.Services
             return user;
         }
 
+        public bool CheckIfLoginUnique(string login)
+        {
+            if (_userRepository.CheckLogin(login))
+                return false;
+            return true;
+        }
+
         public User GetUserById(int userId)
         {
             var user = _userRepository.GetUserById(userId);
 
             return user;
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            var users = _userRepository.GetAllUsers();
+
+            return users;
         }
 
         public void AssignRoleToUser(UserRole userRole)
@@ -139,7 +153,7 @@ namespace InterOn.Service.Services
                     message.To.Add(new MailAddress(user.Email));
                     message.From = new MailAddress("mailinteron@gmail.com");
                     message.Subject = "Link aktywacyjny";
-                    message.Body = "http://localhost:58200/api/" + key.UserId + "/" + key.Key + "<br />Link aktywacyjny<br />Klucz : " + key.Key + "<br />UserId : " + key.UserId;
+                    message.Body = "http://localhost:58200/users/" + key.UserId + "/" + key.Key + "<br />Link aktywacyjny<br />Klucz : " + key.Key + "<br />UserId : " + key.UserId;
                     message.IsBodyHtml = true;
 
                     client.Send(message);
@@ -161,7 +175,7 @@ namespace InterOn.Service.Services
 
                 _userRepository.ConfirmEmail(key);
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }
