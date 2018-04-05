@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace InterOn.Data.ModelsDto
+namespace InterOn.Data.ModelsDto.Group
 {
     public class CreateGroupDto
     {
@@ -14,7 +14,7 @@ namespace InterOn.Data.ModelsDto
 
         public string AvatarUrl { get; set; }
 
-        
+        public DateTime CreateDateTime { get; set; }
 
         ///  public int AdminId{ get; set; }
         public ICollection<int> SubCategories { get; set; }

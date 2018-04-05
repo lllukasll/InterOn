@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
+using InterOn.Data.ModelsDto.Category;
+using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Api.Controllers
 {
-    [Route("group")]
+    [Route("/api/group")]
     public class GroupController : Controller
     {
         private readonly IMapper _mapper;
@@ -81,6 +83,8 @@ namespace InterOn.Api.Controllers
             _groupRepository.Remove(group);
             await _unitOfWork.CompleteAsync();
             return Ok(id);
-        } 
+        }
+       
+        
     }
 }

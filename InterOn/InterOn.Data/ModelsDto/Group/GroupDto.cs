@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using InterOn.Data.DbModels;
 
-namespace InterOn.Data.ModelsDto
+namespace InterOn.Data.ModelsDto.Group
 {
     public class GroupDto
     {

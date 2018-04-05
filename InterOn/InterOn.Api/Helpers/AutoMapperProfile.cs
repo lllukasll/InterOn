@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
+using InterOn.Data.ModelsDto.Category;
+using InterOn.Data.ModelsDto.Group;
 
 namespace InterOn.Api.Helpers
 {
@@ -57,6 +59,14 @@ namespace InterOn.Api.Helpers
                     foreach (var c in addedCategories.ToList())
                         g.SubCategories.Add(c);
                 });
+
+            //MainCategory
+            CreateMap<SaveMainCategoryDto, MainCategory>()
+                .ForMember(g => g.Id, opt => opt.Ignore());
+
+            CreateMap<MainCategory, SaveMainCategoryDto>();
+            CreateMap<SubCategory, SubCategoryDto>();
+
         }
     }
 }
