@@ -35,5 +35,9 @@ namespace InterOn.Service.Services
         {
             return _repository.ExistMainCategory(id);
         }
+        public async Task AddAsync(MainCategory category)
+        {
+            await _repository.AddAsyn(category);
+        }
     }
 }

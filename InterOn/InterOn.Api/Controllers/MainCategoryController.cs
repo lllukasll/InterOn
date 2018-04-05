@@ -30,7 +30,7 @@ namespace InterOn.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var categories = _mapper.Map<SaveMainCategoryDto, MainCategory>(saveMainCategoryDto);
-            await _repository.AddAsyn(categories);
+            await _repository.AddAsync(categories);
             await _unitOfWork.CompleteAsync();
 
             var result = _mapper.Map<MainCategory, SaveMainCategoryDto>(categories);

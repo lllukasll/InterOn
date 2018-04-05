@@ -51,18 +51,25 @@ namespace InterOn.Test
         [Fact]
         public void test2()
         {
-            //var group = new Group
-            //{
-            //    Id = 1
-            //};
-            //var id = 1;
+            var group = new Group
+            {
+                Id = 1
+            };
+            var id = 1;
 
+            var grouprepository = new
+                Mock<IGroupRepository>();
+            var groupService = new GroupService(grouprepository.Object);
 
-            //var groupService = new Mock<IGroupService>();
-            //groupService
-            //    .Setup(x => x.GetGroupAsync(It.IsAny<int>(),false)).ReturnsAsync(groups);
-            //var controller = new GroupController(_mapper, groupService.Object, _unitOfWork);
-            //var result = controller.GetGroup(id)
+            
+            grouprepository
+                .Setup(x => x.GetGroup(It.IsAny<int>(), false)).ReturnsAsync(group);
+            var controller = new GroupController(_mapper, groupService, _unitOfWork);
+            var groupResult = controller.GetGroup(id);
+            var okResultGroup = Assert.IsType<OkObjectResult>(groupResult);
+            var resultValueGroup = Assert.IsAssignableFrom<Group>(okResultGroup.Value);
+            //assert
+            Assert.Equal(id, resultValueGroup.Id);
         }
     }
 }

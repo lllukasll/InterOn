@@ -10,5 +10,6 @@ namespace InterOn.Service.Interfaces
         bool ExistMainCategory(int id);
         Task<MainCategory> GetMainCategory(int id, bool includeRelated = true);       
         Task<IEnumerable<MainCategory>> GetMainCategories();
+        Task AddAsync(MainCategory category);
     }
 }
