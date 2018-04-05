@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InterOn.Data.DbModels
@@ -15,7 +16,7 @@ namespace InterOn.Data.DbModels
 
         public MainCategory()
         {
-            SubCategories = new List<SubCategory>();
+            SubCategories = new Collection<SubCategory>();
         }
     }
 }

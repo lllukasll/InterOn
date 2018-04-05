@@ -30,6 +30,9 @@ namespace InterOn.Service.Services
             return await _context.Set<MainCategory>().Include(s=>s.SubCategories).ToListAsync();
         }
 
-      
+        public bool ExistMainCategory(int id)
+        {
+            return _context.MainCategories.Any(a => a.Id == id);
+        }
     }
 }
