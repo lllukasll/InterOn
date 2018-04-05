@@ -10,29 +10,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
-    public class MainCategoryService : Repository<MainCategory>, IMainCategoryService
+    public class MainCategoryService :  IMainCategoryService
     {
-        
+        private readonly IMainCategoryRepository _repository;
 
-        public MainCategoryService(DataContext context) : base(context)
+
+        public MainCategoryService(IMainCategoryRepository repository)
         {
-            
+            _repository = repository;
         }   
         public async Task<MainCategory> GetMainCategory(int id, bool includeRelated = true)
         {
             if (!includeRelated == true)
-                return await GetAsync(id);
-            return await _context.Set<MainCategory>().Include(s => s.SubCategories).SingleOrDefaultAsync(c => c.Id == id);
+                return await _repository.GetAsync(id);
+            return await _repository.GetMainCategory(id);
         }
 
         public async Task<IEnumerable<MainCategory>> GetMainCategories()
-        {  
-            return await _context.Set<MainCategory>().Include(s=>s.SubCategories).ToListAsync();
+        {
+            return await _repository.GetMainCategories();
         }
 
         public bool ExistMainCategory(int id)
         {
-            return _context.MainCategories.Any(a => a.Id == id);
+            return _repository.ExistMainCategory(id);
         }
     }
 }

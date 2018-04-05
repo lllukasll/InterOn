@@ -5,8 +5,8 @@ using InterOn.Repo.Interfaces;
 
 namespace InterOn.Service.Interfaces
 {
-    public interface ISubCategoryService : IRepository<SubCategory>
+    public interface ISubCategoryService 
     {
-        Task<IEnumerable<SubCategory>> GetSubCategoryForMainCategory(int mainCategoryId);
+       
     }
 }

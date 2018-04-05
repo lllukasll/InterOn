@@ -5,10 +5,11 @@ using InterOn.Repo.Interfaces;
 
 namespace InterOn.Service.Interfaces
 {
-    public interface IGroupService :IRepository<Group>
+    public interface IGroupService
     {
-        Task<Group> GetGroup(int id, bool includeRelated = true);
-
-        Task<IEnumerable<Group>> GetGroups();
+        Task<Group> GetGroupAsync(int id, bool includeRelated = true);
+        Task<IEnumerable<Group>> GetGroupsAsync();
+        Task AddAsync(Group group);
+        void Remove(Group group);
     }
 }

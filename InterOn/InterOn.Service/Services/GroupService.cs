@@ -9,30 +9,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
-    public class GroupService : Repository<Group>, IGroupService 
+    public class GroupService : IGroupService
     {
-        public GroupService(DataContext context):base(context)
+       
+        private readonly IGroupRepository _context;
+
+        public GroupService(IGroupRepository repository)
         {
-            
+            _context = repository;
         }
-        public async Task<Group> GetGroup(int id, bool includeRelated = true)
+        public async Task<Group> GetGroupAsync(int id, bool includeRelated = true)
         {
             if (!includeRelated)
-                return await _context.Groups.FindAsync(id);
+                return await _context.GetGroup(id);
 
-            return await _context.Groups
-                .Include(g => g.SubCategories)
-                .ThenInclude(gc => gc.SubCategory)
-                .SingleOrDefaultAsync(g => g.Id == id);
+            return await _context.GetGroup(id);
         }
 
-        public async Task<IEnumerable<Group>> GetGroups()
+        public async Task<IEnumerable<Group>> GetGroupsAsync()
         {
-            return await _context.Groups
-                .Include(g => g.SubCategories)
-                .ThenInclude(g => g.SubCategory)
-                .ThenInclude(gmc => gmc.MainCategory)
-                .ToListAsync();
+            return await _context.GetGroups();
+        }
+
+        public async Task AddAsync(Group group)
+        {
+            await _context.AddAsyn(group);
+        }
+
+        public void Remove(Group group)
+        {
+            _context.Remove(group);
         }
     }
 }

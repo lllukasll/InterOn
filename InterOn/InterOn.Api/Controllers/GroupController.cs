@@ -35,7 +35,7 @@ namespace InterOn.Api.Controllers
 
             var group = _mapper.Map<CreateGroupDto, Group>(groupDto);
             group.CreateDateTime = DateTime.Now;
-            await _groupRepository.AddAsyn(group);
+            await _groupRepository.AddAsync(group);
             await _unitOfWork.CompleteAsync();
 
             var result = _mapper.Map<Group, CreateGroupDto>(group);
@@ -49,7 +49,7 @@ namespace InterOn.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var group = await _groupRepository.GetGroup(id);
+            var group = await _groupRepository.GetGroupAsync(id);
             if (group == null)
                 return NotFound();
 
@@ -57,7 +57,7 @@ namespace InterOn.Api.Controllers
 
             await _unitOfWork.CompleteAsync();
 
-            group = await _groupRepository.GetGroup(group.Id);
+            group = await _groupRepository.GetGroupAsync(group.Id);
             var result = _mapper.Map<Group, UpdateGroupDto>(group);
 
             return Ok(result);
@@ -65,7 +65,7 @@ namespace InterOn.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroup(int id)
         {
-            var group = await _groupRepository.GetGroup(id);
+            var group = await _groupRepository.GetGroupAsync(id);
             if (group == null)
                 return NotFound();
             
@@ -76,7 +76,7 @@ namespace InterOn.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
-            var group = await _groupRepository.GetGroup(id, includeRelated: false);
+            var group = await _groupRepository.GetGroupAsync(id, includeRelated: false);
             if (group == null)
                 return NotFound();
 

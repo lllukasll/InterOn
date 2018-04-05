@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using InterOn.Data.DbModels;
-using InterOn.Repo.Interfaces;
 
-namespace InterOn.Service.Interfaces
+namespace InterOn.Repo.Interfaces
 {
-    public interface IMainCategoryService
+    public interface IMainCategoryRepository : IRepository<MainCategory>
     {
         bool ExistMainCategory(int id);
-        Task<MainCategory> GetMainCategory(int id, bool includeRelated = true);       
+        Task<MainCategory> GetMainCategory(int id, bool includeRelated = true);
         Task<IEnumerable<MainCategory>> GetMainCategories();
     }
 }
