@@ -21,7 +21,7 @@ namespace InterOn.Service.Services
         }   
         public async Task<MainCategory> GetMainCategory(int id, bool includeRelated = true)
         {
-            if (!includeRelated == true)
+            if (!includeRelated == false)
                 return await _repository.GetAsync(id);
             return await _repository.GetMainCategory(id);
         }
@@ -38,6 +38,11 @@ namespace InterOn.Service.Services
         public async Task AddAsync(MainCategory category)
         {
             await _repository.AddAsyn(category);
+        }
+
+        public void Remove(MainCategory category)
+        {
+             _repository.Remove(category);
         }
     }
 }

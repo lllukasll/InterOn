@@ -67,11 +67,17 @@ namespace InterOn.Api.Helpers
                 });
 
             //MainCategory
-            CreateMap<SaveMainCategoryDto, MainCategory>()
+            CreateMap<SaveCategoryDto, MainCategory>()
                 .ForMember(g => g.Id, opt => opt.Ignore());
 
-            CreateMap<MainCategory, SaveMainCategoryDto>();
+            CreateMap<MainCategory, SaveCategoryDto>();
+            
+            //SubCategory
+            CreateMap<SubCategoryDto, SubCategory>();
             CreateMap<SubCategory, SubCategoryDto>();
+           
+            CreateMap<SaveCategoryDto, SubCategory>()
+                .ForMember(g => g.Id, opt => opt.Ignore());
 
         }
     }

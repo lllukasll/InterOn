@@ -62,16 +62,19 @@ namespace InterOn.Api
                         ValidateAudience = false
                     };
                 });
-
+           
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             //services.AddScoped<IRepository<T entity>, Repository<T>>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IMainCategoryService, MainCategoryService>();
+            services.AddScoped<IMainCategoryRepository, MainCategoryRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<ISubCategoryService, SubCategoryService>();
+            services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
 
         }
      
