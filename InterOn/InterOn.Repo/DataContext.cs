@@ -20,11 +20,16 @@ namespace InterOn.Repo
         public DbSet<Group> Groups { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<MainCategory> MainCategories { get; set; }
+        public DbSet<GroupPhoto> GroupPhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GroupCategory>().HasKey(vf =>
                 new { vf.SubCategoryId, vf.GroupId });
+            modelBuilder.Entity<Group>()
+                .HasOne(a => a.GroupPhoto)
+                .WithOne(b => b.Group)
+                .HasForeignKey<GroupPhoto>(b => b.GroupRef);
 
         }
     }

@@ -79,6 +79,10 @@ namespace InterOn.Api.Helpers
             CreateMap<SaveCategoryDto, SubCategory>()
                 .ForMember(g => g.Id, opt => opt.Ignore());
 
+            //photo
+
+            CreateMap<GroupPhoto, GroupPhotoDto>();
+
         }
     }
 }

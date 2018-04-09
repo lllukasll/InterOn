@@ -1,9 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using AutoMapper;
-using InterOn.Data.DbModels;
+﻿using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Group;
-using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,94 +8,57 @@ namespace InterOn.Api.Controllers
     [Route("/api/group")]
     public class GroupController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IGroupService _groupRepository;
 
-        public GroupController(IMapper mapper,IGroupService groupRepository,IUnitOfWork unitOfWork)
+        private readonly IGroupService _groupService;
+
+        public GroupController(IGroupService groupRepository)
         {
-            _mapper = mapper;
-            _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
+            _groupService = groupRepository;         
         }
         [HttpPost]
         public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                var group = _mapper.Map<CreateGroupDto, Group>(groupDto);
-                group.CreateDateTime = DateTime.Now;
-                await _groupRepository.AddAsync(group);
-                await _unitOfWork.CompleteAsync();
-
-                var result = _mapper.Map<Group, CreateGroupDto>(group);
-
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest($"{e.Message} {e.InnerException}");
-            }
-           
+            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _groupService.CreateGroup(groupDto);        
+            return Ok(result);
+          
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGroup(int id,[FromBody] UpdateGroupDto groupDto)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _groupService.UpdateGroup(groupDto, id);
 
-                var group = await _groupRepository.GetGroupAsync(id);
-                if (group == null)
-                    return NotFound();
-
-                _mapper.Map(groupDto, group);
-
-                await _unitOfWork.CompleteAsync();
-
-                group = await _groupRepository.GetGroupAsync(group.Id);
-                var result = _mapper.Map<Group, UpdateGroupDto>(group);
-
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest($"{e.InnerException},{e.Message}");
-            }  
+            if (result == null)
+                return NotFound();
+            
+            return Ok(result);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroup(int id)
         {
-            try
-            {
-                var group = await _groupRepository.GetGroupAsync(id);
-                if (group == null)
-                    return NotFound();
 
-                var resultMap = _mapper.Map<Group, CreateGroupDto>(group);
-                return Ok(resultMap);
-            }
-            catch (Exception e)
-            {
-                return BadRequest($"{e.InnerException},{e.Message}");
-            }
-           
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(int id)
-        {
-            var group = await _groupRepository.GetGroupAsync(id, includeRelated: false);
+            var group = await _groupService.GetGroupMappedAsync(id);
             if (group == null)
                 return NotFound();
 
-            _groupRepository.Remove(group);
-            await _unitOfWork.CompleteAsync();
+            return Ok(group);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteGroup(int id)
+        {
+           
+            if (_groupService.IfExist(id) == false)
+                return NotFound();
+
+              _groupService.Remove(id);
+
             return Ok(id);
         }
     }

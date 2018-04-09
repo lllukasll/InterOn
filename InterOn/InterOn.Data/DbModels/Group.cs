@@ -15,7 +15,7 @@ namespace InterOn.Data.DbModels
 
         public DateTime CreateDateTime { get; set; }
 
-        public string AvatarUrl { get; set; }
+        public GroupPhoto GroupPhoto{ get; set; }
 
        ///  public int AdminId{ get; set; }
         public ICollection<GroupCategory> SubCategories { get; set; }

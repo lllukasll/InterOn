@@ -12,8 +12,6 @@ namespace InterOn.Data.ModelsDto.Group
 
         public string Description { get; set; }
 
-        public string AvatarUrl { get; set; }
-
         ///  public int AdminId{ get; set; }
         public ICollection<int> SubCategories { get; set; }
 

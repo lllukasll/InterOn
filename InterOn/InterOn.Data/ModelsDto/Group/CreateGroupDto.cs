@@ -12,8 +12,6 @@ namespace InterOn.Data.ModelsDto.Group
 
         public string Description { get; set; }
 
-        public string AvatarUrl { get; set; }
-
         public DateTime CreateDateTime { get; set; }
 
         ///  public int AdminId{ get; set; }

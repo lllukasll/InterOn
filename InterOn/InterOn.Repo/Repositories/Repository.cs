@@ -24,6 +24,10 @@ namespace InterOn.Repo.Repositories
         {
             return _entities;
         }
+        public bool Exist(Expression<Func<T, bool>> match)
+        {
+            return _context.Set<T>().Any(match);
+        }
 
         public T Get(long id)
         {

@@ -11,9 +11,10 @@ using System;
 namespace InterOn.Repo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180408122455_AddGroupPhoto")]
+    partial class AddGroupPhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +43,8 @@ namespace InterOn.Repo.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AvatarUrl");
 
                     b.Property<DateTime>("CreateDateTime");
 
@@ -76,12 +79,7 @@ namespace InterOn.Repo.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<int>("GroupRef");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupRef")
-                        .IsUnique();
 
                     b.ToTable("GroupPhotos");
                 });
@@ -204,14 +202,6 @@ namespace InterOn.Repo.Migrations
                     b.HasOne("InterOn.Data.DbModels.SubCategory", "SubCategory")
                         .WithMany("Groups")
                         .HasForeignKey("SubCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("InterOn.Data.DbModels.GroupPhoto", b =>
-                {
-                    b.HasOne("InterOn.Data.DbModels.Group", "Group")
-                        .WithOne("GroupPhoto")
-                        .HasForeignKey("InterOn.Data.DbModels.GroupPhoto", "GroupRef")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -42,7 +42,7 @@ namespace InterOn.Api
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-
+            services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
@@ -75,7 +75,7 @@ namespace InterOn.Api
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ISubCategoryService, SubCategoryService>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
-
+            services.AddScoped<IGroupPhotoService, GroupPhotoService>();
         }
      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
