@@ -11,7 +11,6 @@ namespace InterOn.Service.Interfaces
         Task<CreateGroupDto> CreateGroup(CreateGroupDto groupDto);
         Task<Group> GetGroupAsync(int id, bool includeRelated = true);
         Task<IEnumerable<GroupDto>> GetGroupsAsync();
-        Task AddAsync(Group group);
         void Remove(int id);
         Task<UpdateGroupDto> UpdateGroup(UpdateGroupDto groupDto, int id);
         bool IfExist(int id);

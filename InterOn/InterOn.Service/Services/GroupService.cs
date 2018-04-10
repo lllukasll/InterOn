@@ -11,20 +11,18 @@ namespace InterOn.Service.Services
 {
     public class GroupService : IGroupService
     {
-       
         private readonly IGroupRepository _repository;
         private readonly IMapper _mapper;
 
-        public GroupService(IGroupRepository repository,IMapper mapper)
+        public GroupService(IGroupRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
+
         public async Task<Group> GetGroupAsync(int id, bool includeRelated = true)
         {
-            if (!includeRelated)
-                return await _repository.GetGroup(id,false);
-
+            if (!includeRelated) return await _repository.GetGroup(id, false);
             return await _repository.GetGroup(id);
         }
 
@@ -42,15 +40,9 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public async Task AddAsync(Group group)
-        {
-            await _repository.AddAsyn(group);
-        }
-
         public async void Remove(int id)
         {
             var group = await _repository.GetGroup(id, includeRelated: false);
-
             _repository.Remove(group);
             await _repository.SaveAsync();
         }
@@ -65,12 +57,11 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public async Task<UpdateGroupDto> UpdateGroup(UpdateGroupDto groupDto,int id)
+        public async Task<UpdateGroupDto> UpdateGroup(UpdateGroupDto groupDto, int id)
         {
             var group = await _repository.GetGroup(id);
-              _mapper.Map(groupDto, group);
+            _mapper.Map(groupDto, group);
             await _repository.SaveAsync();
-
             var groupResult = await _repository.GetGroup(group.Id);
             var result = _mapper.Map<Group, UpdateGroupDto>(groupResult);
             return result;

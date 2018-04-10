@@ -7,9 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Repo.Repositories
 {
-    public class SubCategoryRepository: Repository<SubCategory>, ISubCategoryRepository
+    public class SubCategoryRepository : Repository<SubCategory>, ISubCategoryRepository
     {
-
         public SubCategoryRepository(DataContext context) : base(context)
         {
         }
@@ -22,21 +21,16 @@ namespace InterOn.Repo.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> ExistSubCategoryAsync(int id)
+        public bool ExistMainCategory(int id)
         {
-            return await _context.SubCategories.AnyAsync(c => c.Id == id);
+            return _context.Set<MainCategory>().Any(a => a.Id == id);
         }
-
-      
 
         public async Task<SubCategory> GetSubCategoryForMainCategory(int mainId, int subId)
         {
-            return await _context.Set<SubCategory>().Where(s => s.Id == subId && s.MainCategoryId == mainId).SingleOrDefaultAsync();
-        }
-
-        public void Added(SubCategory subCategory)
-        {
-            Add(subCategory);
+            return await _context.Set<SubCategory>()
+                .Where(s => s.Id == subId && s.MainCategoryId == mainId)
+                .SingleOrDefaultAsync();
         }
     }
 }

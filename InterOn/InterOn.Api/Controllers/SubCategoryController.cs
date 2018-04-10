@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using InterOn.Data.DbModels;
+﻿using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Category;
-using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,109 +8,73 @@ namespace InterOn.Api.Controllers
     [Route("/api/maincategories/{mainId}/subcategories")]
     public class SubCategoryController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ISubCategoryService _repository;
+        private readonly ISubCategoryService _service;
 
-        public SubCategoryController(IMapper mapper, ISubCategoryService repository, IUnitOfWork unitOfWork)
+        public SubCategoryController(ISubCategoryService repository)
         {
-            _mapper = mapper;
-            _repository = repository;
-            _unitOfWork = unitOfWork;
+            _service = repository;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetSubCategoriesForMainCategory(int mainId)
         {
-            if (await _repository.ExistMainCategoryAsync(mainId)==false)
+            if (_service.ExistMainCategory(mainId) == false)
             {
                 return NotFound();
             }
-            var category = await _repository.GetSubCategoriesForMainCategoryAsync(mainId);
-            var result = _mapper.Map<IEnumerable<SubCategoryDto>>(category);
 
+            var result = await _service.GetSubCategoriesForMainCategoryAsync(mainId);
             return Ok(result);
         }
 
         [HttpGet("{subId}")]
         public async Task<IActionResult> GetSubCategoryForMainCategory(int mainId, int subId)
         {
-            if (_repository.ExistMainCategoryAsync(mainId) == null)
+            if (_service.ExistMainCategory(mainId) == false)
             {
-                return NotFound("Nie ma MainCategory o tym Id");
+                return BadRequest("Nie ma MainCategory o tym Id");
             }
-            var subCategory = await _repository.GetSubCategoryForMainCategoryAsync(mainId, subId);
-            var result = _mapper.Map<SubCategoryDto>(subCategory);
 
+            var result = await _service.GetSubCategoryForMainCategoryAsync(mainId, subId);
             return Ok(result);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateSubCategory(int mainId, [FromBody] SaveCategoryDto category)
         {
-            try
+            if (_service.ExistMainCategory(mainId) == false)
             {
-                if (_repository.ExistMainCategoryAsync(mainId) == null)
-                {
-                    return BadRequest("Nie ma MainCategory o tym Id");
-                }
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-                var subCategory = _mapper.Map<SaveCategoryDto, SubCategory>(category);
-                subCategory.MainCategoryId = mainId;
-                await _repository.AddAsync(subCategory);
-                await _unitOfWork.CompleteAsync();
-
-                var result = _mapper.Map<SubCategory, SubCategoryDto>(subCategory);
-
-                return Ok(result);
-
+                return BadRequest("Nie ma MainCategory o tym Id");
             }
-            catch (Exception e)
-            {
-                return BadRequest($"{e.Message}");
-            }
-           
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _service.CreateSubCategoryForMainCategory(mainId, category);
+            return Ok(result);
         }
+
         [HttpPut("{subId}")]
-        public async Task<IActionResult> UpdateSubCategory(int mainId,int subId, [FromBody] SaveCategoryDto categoryDto)
+        public async Task<IActionResult> UpdateSubCategory(int mainId, int subId,
+            [FromBody] SaveCategoryDto categoryDto)
         {
-            try
+            if (_service.ExistMainCategory(mainId) == false)
             {
-                if (_repository.ExistMainCategoryAsync(mainId) == null)
-                {
-                    return BadRequest("Nie ma MainCategory o tym Id");
-                }
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                var subCategoryFromRepo = await _repository.GetSubCategoryForMainCategoryAsync(mainId, subId);
-                if (subCategoryFromRepo == null)
-                {
-                    return NotFound();
-                }
-                _mapper.Map(categoryDto,subCategoryFromRepo);
-                await _unitOfWork.CompleteAsync();
-                subCategoryFromRepo = await _repository.GetSubCategoryForMainCategoryAsync(subCategoryFromRepo.Id, subCategoryFromRepo.MainCategoryId);
-
-                var result = _mapper.Map<SubCategory, SaveCategoryDto>(subCategoryFromRepo);
-                return Ok(result);
+                return BadRequest("Nie ma MainCategory o tym Id");
             }
-            catch (Exception e)
-            {
-                return BadRequest($"{e.Message}");
-            }
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _service.UpdateSubCategoryForMainCategory(subId, mainId, categoryDto);
+            return Ok(result);
         }
 
         [HttpDelete("{subId}")]
-        public async Task<IActionResult> DeleteSubCategory(int subId,int mainId)
+        public IActionResult DeleteSubCategory(int subId, int mainId)
         {
-           var subCategoryFromRepo = await _repository.GetSubCategoryForMainCategoryAsync(mainId, subId);
-            if (subCategoryFromRepo==null)
+            if (_service.ExistMainCategory(mainId) == false || _service.ExistSubCategory(subId) == false)
             {
-                return NotFound();
+                return BadRequest("Nie ma MainCategory lub SubCategory o tym Id ");
             }
-            _repository.Remove(subCategoryFromRepo);
 
-            await _unitOfWork.CompleteAsync();
+            _service.Remove(mainId, subId);
             return Ok(subId);
         }
     }

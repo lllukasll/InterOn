@@ -22,7 +22,7 @@ namespace InterOn.Test
     {
         private readonly IMapper _mapper;
         private readonly IOptions<AppSettings> _appSettings;
-        private readonly IUnitOfWork _unitOfWork;
+     
 
         [Fact]
         public void Test1()
@@ -49,7 +49,7 @@ namespace InterOn.Test
             //Assert.Equal(3, resultValueUsers.Count());
         }
         [Fact]
-        public void test2()
+        public void Test2()
         {
             var group = new Group
             {
@@ -59,12 +59,12 @@ namespace InterOn.Test
 
             var grouprepository = new
                 Mock<IGroupRepository>();
-            var groupService = new GroupService(grouprepository.Object);
+            var groupService = new GroupService(grouprepository.Object,_mapper);
 
             
             grouprepository
                 .Setup(x => x.GetGroup(It.IsAny<int>(), false)).ReturnsAsync(group);
-            var controller = new GroupController(_mapper, groupService, _unitOfWork);
+            var controller = new GroupController(groupService);
             var groupResult = controller.GetGroup(id);
             var okResultGroup = Assert.IsType<OkObjectResult>(groupResult);
             var resultValueGroup = Assert.IsAssignableFrom<Group>(okResultGroup.Value);

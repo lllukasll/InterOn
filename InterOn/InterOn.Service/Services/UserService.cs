@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
 using InterOn.Repo.Interfaces;

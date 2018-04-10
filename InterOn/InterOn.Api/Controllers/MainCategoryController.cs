@@ -9,31 +9,26 @@ namespace InterOn.Api.Controllers
     public class MainCategoryController : Controller
     {
         private readonly IMainCategoryService _repository;
-      
+
         public MainCategoryController(IMainCategoryService repository)
         {
-            _repository = repository;   
+            _repository = repository;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateMainCategory([FromBody] SaveCategoryDto saveMainCategoryDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             var result = await _repository.CreateMainCategory(saveMainCategoryDto);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMainCategory(int id,[FromBody] SaveCategoryDto saveMainCategoryDto)
+        public async Task<IActionResult> UpdateMainCategory(int id, [FromBody] SaveCategoryDto saveMainCategoryDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            if ( _repository.ExistMainCategory(id) == false)
-                return NotFound();
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (_repository.ExistMainCategory(id) == false) return NotFound();
             var result = await _repository.UpdateMainCategory(id, saveMainCategoryDto);
-          
-         
             return Ok(result);
         }
 
@@ -41,27 +36,23 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> GetMainCategories()
         {
             var result = await _repository.GetMainCategories();
-            if (result == null)
-                return NotFound();
-            return  Ok(result);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMainCategory(int id)
         {
-            if ( _repository.ExistMainCategory(id) == false)
-                return NotFound();
+            if (_repository.ExistMainCategory(id) == false) return NotFound();
             var result = await _repository.GetMainCategory(id);
-           return Ok(result);     
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteMainCategory(int id)
         {
-            if (_repository.ExistMainCategory(id) == false)
-                return NotFound();
-             _repository.Remove(id);
-
+            if (_repository.ExistMainCategory(id) == false) return NotFound();
+            _repository.Remove(id);
             return Ok(id);
         }
     }

@@ -7,8 +7,7 @@ namespace InterOn.Repo.Interfaces
     public interface ISubCategoryRepository:IRepository<SubCategory>
     {
         Task<IEnumerable<SubCategory>> GetSubCategoriesForMainCategory(int mainCategoryId);
-        Task<bool> ExistSubCategoryAsync(int id);
-        void Added(SubCategory subCategory);
+        bool ExistMainCategory(int id);
         Task<SubCategory> GetSubCategoryForMainCategory(int mainId, int subId);
     }
 }
