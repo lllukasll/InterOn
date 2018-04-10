@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using InterOn.Data.DbModels;
+﻿using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Category;
-using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,14 +8,10 @@ namespace InterOn.Api.Controllers
     [Route("/api/maincategories")]
     public class MainCategoryController : Controller
     {
-        private readonly IMapper _mapper;
         private readonly IMainCategoryService _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        
-        public MainCategoryController(IMainCategoryService repository, IMapper mapper, IUnitOfWork unitOfWork)
+      
+        public MainCategoryController(IMainCategoryService repository)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
             _repository = repository;   
         }
 
@@ -28,11 +20,7 @@ namespace InterOn.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var categories = _mapper.Map<SaveCategoryDto, MainCategory>(saveMainCategoryDto);
-            await _repository.AddAsync(categories);
-            await _unitOfWork.CompleteAsync();
-
-            var result = _mapper.Map<MainCategory, SaveCategoryDto>(categories);
+            var result = await _repository.CreateMainCategory(saveMainCategoryDto);
             return Ok(result);
         }
 
@@ -41,44 +29,38 @@ namespace InterOn.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var category = await _repository.GetMainCategory(id);
-            if (category == null)
+            if ( _repository.ExistMainCategory(id) == false)
                 return NotFound();
-            _mapper.Map(saveMainCategoryDto,category);
-            await _unitOfWork.CompleteAsync();
-            category = await _repository.GetMainCategory(category.Id);
-
-            var result = _mapper.Map<MainCategory, SaveCategoryDto>(category);
+            var result = await _repository.UpdateMainCategory(id, saveMainCategoryDto);
+          
+         
             return Ok(result);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<MainCategoryDto>> GetMainCategories()
-        {  
-            var categories = await _repository.GetMainCategories();   
-            return _mapper.Map<IEnumerable<MainCategory>, IEnumerable<MainCategoryDto>>(categories);
+        public async Task<IActionResult> GetMainCategories()
+        {
+            var result = await _repository.GetMainCategories();
+            if (result == null)
+                return NotFound();
+            return  Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMainCategory(int id)
         {
-           var category = await _repository.GetMainCategory(id);
-             if (category == null)
+            if ( _repository.ExistMainCategory(id) == false)
                 return NotFound();
-           var categoryDto = _mapper.Map<MainCategory, MainCategoryDto>(category);
-           return Ok(categoryDto);     
+            var result = await _repository.GetMainCategory(id);
+           return Ok(result);     
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMainCategory(int id)
+        public IActionResult DeleteMainCategory(int id)
         {
-            var category = await _repository.GetMainCategory(id);
-            if (category == null)
-            {
+            if (_repository.ExistMainCategory(id) == false)
                 return NotFound();
-            }
-            _repository.Remove(category);
-            await _unitOfWork.CompleteAsync();
+             _repository.Remove(id);
 
             return Ok(id);
         }

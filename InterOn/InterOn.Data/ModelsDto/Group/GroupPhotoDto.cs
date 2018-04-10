@@ -1,4 +1,4 @@
-﻿namespace InterOn.Data.ModelsDto
+﻿namespace InterOn.Data.ModelsDto.Group
 {
     public class GroupPhotoDto
     {

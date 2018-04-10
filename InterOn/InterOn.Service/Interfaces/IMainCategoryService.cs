@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using InterOn.Data.DbModels;
-using InterOn.Repo.Interfaces;
+using InterOn.Data.ModelsDto.Category;
 
 namespace InterOn.Service.Interfaces
 {
     public interface IMainCategoryService
     {
+        Task<SaveCategoryDto> UpdateMainCategory(int id, SaveCategoryDto categoryDto);
+        Task<SaveCategoryDto> CreateMainCategory(SaveCategoryDto categoryDto);
         bool ExistMainCategory(int id);
-        Task<MainCategory> GetMainCategory(int id, bool includeRelated = true);       
-        Task<IEnumerable<MainCategory>> GetMainCategories();
+        Task<MainCategoryDto> GetMainCategory(int id);       
+        Task<IEnumerable<MainCategoryDto>> GetMainCategories();
         Task AddAsync(MainCategory category);
-        void Remove(MainCategory category);
+        void Remove(int id);
     }
 }

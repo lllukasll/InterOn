@@ -4,11 +4,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Group;
-using InterOn.Repo;
 using InterOn.Repo.Interfaces;
-using InterOn.Repo.Repositories;
 using InterOn.Service.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
@@ -38,9 +35,11 @@ namespace InterOn.Service.Services
             return resultMap;
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsAsync()
+        public async Task<IEnumerable<GroupDto>> GetGroupsAsync()
         {
-            return await _repository.GetGroups();
+            var group = await _repository.GetGroups();
+            var result = _mapper.Map<IEnumerable<Group>, IEnumerable<GroupDto>>(group);
+            return result;
         }
 
         public async Task AddAsync(Group group)

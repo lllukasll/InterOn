@@ -49,6 +49,16 @@ namespace InterOn.Api.Controllers
 
             return Ok(group);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetGroups()
+        {
+
+            var group = await _groupService.GetGroupsAsync();
+            if (group == null)
+                return NotFound();
+
+            return Ok(group);
+        }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteGroup(int id)

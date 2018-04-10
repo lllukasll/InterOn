@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using InterOn.Data.DbModels;
+using InterOn.Data.ModelsDto.Category;
 using InterOn.Repo;
 using InterOn.Repo.Interfaces;
 using InterOn.Repo.Repositories;
@@ -13,36 +15,66 @@ namespace InterOn.Service.Services
     public class MainCategoryService :  IMainCategoryService
     {
         private readonly IMainCategoryRepository _repository;
+        private readonly IMapper _mapper;
 
 
-        public MainCategoryService(IMainCategoryRepository repository)
+        public MainCategoryService(IMainCategoryRepository repository,IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }   
-        public async Task<MainCategory> GetMainCategory(int id, bool includeRelated = true)
+        public async Task<MainCategoryDto> GetMainCategory(int id)
         {
-            if (!includeRelated == false)
-                return await _repository.GetAsync(id);
-            return await _repository.GetMainCategory(id);
+            var category = await _repository.GetMainCategory(id);
+
+            var categoryDto = _mapper.Map<MainCategory, MainCategoryDto>(category);
+            return categoryDto;
         }
 
-        public async Task<IEnumerable<MainCategory>> GetMainCategories()
+        public async Task<IEnumerable<MainCategoryDto>> GetMainCategories()
         {
-            return await _repository.GetMainCategories();
+            var categories = await _repository.GetMainCategories();
+
+            var result = _mapper.Map<IEnumerable<MainCategory>, IEnumerable<MainCategoryDto>>(categories);
+            return  result;
         }
 
         public bool ExistMainCategory(int id)
         {
-            return _repository.ExistMainCategory(id);
+            return _repository.Exist(a=>a.Id==id);
         }
         public async Task AddAsync(MainCategory category)
         {
             await _repository.AddAsyn(category);
         }
 
-        public void Remove(MainCategory category)
+        public void Remove(int id)
         {
-             _repository.Remove(category);
+            var category = _repository.Get(id);
+            _repository.Remove(category);
+            _repository.Save();
+        }
+
+        public async Task<SaveCategoryDto> CreateMainCategory(SaveCategoryDto categoryDto)
+        {
+            var categories = _mapper.Map<SaveCategoryDto, MainCategory>(categoryDto);
+            await _repository.AddAsyn(categories);
+            await _repository.SaveAsync();
+
+            var result = _mapper.Map<MainCategory, SaveCategoryDto>(categories);
+            return result;
+        }
+
+        public async Task<SaveCategoryDto> UpdateMainCategory(int id, SaveCategoryDto categoryDto)
+        {
+            var category = await _repository.GetMainCategory(id);
+            
+            _mapper.Map(categoryDto, category);
+            await _repository.SaveAsync();
+            category = await _repository.GetMainCategory(category.Id);
+
+            var result = _mapper.Map<MainCategory, SaveCategoryDto>(category);
+            return result;
         }
     }
 }

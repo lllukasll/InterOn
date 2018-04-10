@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
@@ -33,7 +30,11 @@ namespace InterOn.Api.Helpers
                 .ForMember(gdt => gdt.Id, opt => opt.MapFrom(g => g.UserId));
 
             //Group
-
+            CreateMap<Group, GroupDto>()
+                .ForMember(gdt => gdt.SubCategories,
+                    otp => otp.MapFrom(g => g.SubCategories.Select(id =>
+                        new GroupSubCategoryDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})));
+              
             CreateMap<Group, CreateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
+using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
