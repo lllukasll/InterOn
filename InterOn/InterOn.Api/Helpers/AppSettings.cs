@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace InterOn.Api.Helpers
+﻿namespace InterOn.Api.Helpers
 {
     public class AppSettings
     {

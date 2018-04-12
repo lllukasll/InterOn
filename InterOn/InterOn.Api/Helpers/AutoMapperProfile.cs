@@ -23,34 +23,44 @@ namespace InterOn.Api.Helpers
             CreateMap<UserToken, UserTokenDto>();
             CreateMap<UserTokenDto, UserToken>();
 
-            CreateMap<CreateUserDto, User>();
+            CreateMap<CreateUserDto, User>()
+                .ForMember(u=>u.Groups,opt=>opt.Ignore());
             CreateMap<User, CreateUserDto>();
 
             CreateMap<LoginUserDto, User>()
+                .ForMember(lu=>lu.Groups,opt=>opt.Ignore())
                 .ForMember(gdt => gdt.Id, opt => opt.MapFrom(g => g.UserId));
 
             //Group
             CreateMap<Group, GroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new GroupSubCategoryDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})));
+                        new GroupSubCategoryDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})))
+                .ForMember(gdt => gdt.Users,
+                    opt => opt.MapFrom(g => g.Users.Select(id => new UserGroupDto {Id = id.User.Id,UserName = id.User.Username})));
               
             CreateMap<Group, CreateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
-                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));
+                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)))
+                .ForMember(gdt => gdt.Users,
+                    opt => opt.MapFrom(g => g.Users.Select(gd => gd.UserId))); 
             CreateMap<CreateGroupDto, Group>()
                 .ForMember(g => g.SubCategories,
-                    opt => opt.MapFrom(gdt => gdt.SubCategories.Select(id => new GroupCategory { SubCategoryId = id })));
+                    opt => opt.MapFrom(gdt => gdt.SubCategories.Select(id => new GroupCategory {SubCategoryId = id})))
+                .ForMember(g => g.Users, opt => opt.Ignore());
 
 
             CreateMap<Group, UpdateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
-                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));
+                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)))
+                .ForMember(gdt=>gdt.Users,
+                    opt=>opt.MapFrom(g=>g.Users.Select(gd=>gd.UserId)));
             CreateMap<UpdateGroupDto, Group>()
                 .ForMember(g => g.Id, opt => opt.Ignore())
                 .ForMember(g => g.SubCategories,
                     opt => opt.MapFrom(gdt => gdt.SubCategories.Select(id => new GroupCategory {SubCategoryId = id})))
                 .ForMember(g => g.SubCategories, opt => opt.Ignore())
+                .ForMember(g=>g.Users,opt=>opt.Ignore())
                 .AfterMap((gdto, g) =>
                 {
                     //Remove

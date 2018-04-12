@@ -16,10 +16,11 @@ namespace InterOn.Data.ModelsDto.Group
 
         ///  public int AdminId{ get; set; }
         public ICollection<GroupSubCategoryDto> SubCategories { get; set; }
-
+        public ICollection<UserGroupDto> Users { get; set; }
 
         public GroupDto()
         {
+            Users =new Collection<UserGroupDto>();
             SubCategories = new Collection<GroupSubCategoryDto>();
         }
     }

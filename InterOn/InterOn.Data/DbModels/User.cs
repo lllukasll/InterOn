@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace InterOn.Data.DbModels
@@ -15,5 +16,12 @@ namespace InterOn.Data.DbModels
         public bool EmailConfirmed { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+
+        public ICollection<UserGroup> Groups { get; set; }
+
+        public User()
+        {
+            Groups = new Collection<UserGroup>();
+        }
     }
 }

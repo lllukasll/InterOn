@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using InterOn.Data.DbModels;
+﻿using InterOn.Data.DbModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Repo
@@ -22,15 +19,17 @@ namespace InterOn.Repo
         public DbSet<MainCategory> MainCategories { get; set; }
         public DbSet<GroupPhoto> GroupPhotos { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupCategory>().HasKey(vf =>
-                new { vf.SubCategoryId, vf.GroupId });
+            modelBuilder.Entity<GroupCategory>().HasKey(gc =>
+                new { gc.SubCategoryId, gc.GroupId });
             modelBuilder.Entity<Group>()
                 .HasOne(a => a.GroupPhoto)
                 .WithOne(b => b.Group)
                 .HasForeignKey<GroupPhoto>(b => b.GroupRef);
-
+            modelBuilder.Entity<UserGroup>().HasKey(ug =>
+                new { ug.UserId, ug.GroupId });
         }
     }
    

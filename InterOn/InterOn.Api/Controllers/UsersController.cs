@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Api.Helpers;
 using InterOn.Data.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.AzureAppServices;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using InterOn.Data.ModelsDto;
 using InterOn.Service.Interfaces;
-using Newtonsoft.Json;
 
 namespace InterOn.Api.Controllers
 {
