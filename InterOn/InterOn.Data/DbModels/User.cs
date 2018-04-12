@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace InterOn.Data.DbModels
 {
@@ -19,9 +17,11 @@ namespace InterOn.Data.DbModels
 
         public ICollection<UserGroup> Groups { get; set; }
 
+        public ICollection<Post> Posts { get; set; }
         public User()
         {
-            Groups = new Collection<UserGroup>();
+            Posts = new Collection<Post>();
+            Groups = new Collection<UserGroup>();           
         }
     }
 }

@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180412131717_AddPost_Comment_Event_Address_UserEvents_EventSubCategories.cs" />
+    <Compile Remove="Migrations\20180412131945_AddPost_Comment_Event_Address_UserEvents_EventSubCategories.cs" />
+    <Compile Remove="Migrations\20180412132253_AddPost_Comment_Event_Address_UserEvents_EventSubCategories.cs" />
+    <Compile Remove="Migrations\20180412132612_AddPost_Comment_Event_Address_UserEvents_EventSubCategories.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
   </ItemGroup>
 

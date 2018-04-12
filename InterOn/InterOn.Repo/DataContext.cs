@@ -18,18 +18,27 @@ namespace InterOn.Repo
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<MainCategory> MainCategories { get; set; }
         public DbSet<GroupPhoto> GroupPhotos { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<EventSubCategory> EventSubCategories { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupCategory>().HasKey(gc =>
-                new { gc.SubCategoryId, gc.GroupId });
+            modelBuilder.Entity<GroupCategory>().HasKey(gc => new {gc.SubCategoryId, gc.GroupId});
             modelBuilder.Entity<Group>()
                 .HasOne(a => a.GroupPhoto)
                 .WithOne(b => b.Group)
                 .HasForeignKey<GroupPhoto>(b => b.GroupRef);
-            modelBuilder.Entity<UserGroup>().HasKey(ug =>
-                new { ug.UserId, ug.GroupId });
+            modelBuilder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});
+            modelBuilder.Entity<Event>()
+                .HasOne(a => a.Address)
+                .WithOne(b => b.Event)
+                .HasForeignKey<Address>(b => b.EventRef);         
+            modelBuilder.Entity<EventSubCategory>().HasKey(es => new {es.EventId, es.SubCategoryId});  
         }
     }
    
