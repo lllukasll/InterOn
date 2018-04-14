@@ -36,6 +36,8 @@ namespace InterOn.Api.Helpers
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
                         new GroupSubCategoryDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})))
+                .ForMember(gdt=>gdt.GroupPhoto,
+                    otp=>otp.MapFrom(g=>new GroupPhoto{FileName = g.GroupPhoto.FileName,GroupRef = g.Id}))
                 .ForMember(gdt => gdt.Users,
                     opt => opt.MapFrom(g => g.Users.Select(id => new UserGroupDto {Id = id.User.Id,UserName = id.User.Username})));
               
@@ -93,6 +95,7 @@ namespace InterOn.Api.Helpers
             //photo
 
             CreateMap<GroupPhoto, GroupPhotoDto>();
+            CreateMap<GroupPhoto, GetGroupPhotoDto>();
 
         }
     }

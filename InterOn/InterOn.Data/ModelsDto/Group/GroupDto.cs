@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using InterOn.Data.DbModels;
 
 namespace InterOn.Data.ModelsDto.Group
 {
@@ -14,6 +15,7 @@ namespace InterOn.Data.ModelsDto.Group
 
         public DateTime CreateDateTime { get; set; }
 
+        public GroupPhoto GroupPhoto { get; set; }
         ///  public int AdminId{ get; set; }
         public ICollection<GroupSubCategoryDto> SubCategories { get; set; }
         public ICollection<UserGroupDto> Users { get; set; }

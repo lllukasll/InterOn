@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
@@ -47,5 +49,19 @@ namespace InterOn.Service.Services
         {
             return _repository.Exist(p => p.GroupRef == id);
         }
+
+        public IEnumerable<GetGroupPhotoDto> MapPhotoDtoQueryable(IEnumerable<GroupPhoto> photo)
+        {
+            var result = _mapper.Map<IEnumerable<GroupPhoto>, IEnumerable<GetGroupPhotoDto>>(photo);
+            return result;
+        }
+
+        public async Task<IEnumerable<GroupPhoto>> GetGroupPhoto(int id)
+        {
+            var photo = await _repository.FindByAsyn(a => a.GroupRef == id);
+            return photo.AsEnumerable();
+        }
+
+      
     }
 }

@@ -40,5 +40,17 @@ namespace InterOn.Api.Controllers
             var result = _photoService.MapPhoto(photo);
             return Ok(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetGroupPhoto(int groupId)
+        {
+
+            if (_groupService.IfExist(groupId) == false)
+                return NotFound();
+            var photo = await _photoService.GetGroupPhoto(groupId);
+            
+            var result = _photoService.MapPhotoDtoQueryable(photo);
+
+            return Ok(result);
+        }
     }
 }
