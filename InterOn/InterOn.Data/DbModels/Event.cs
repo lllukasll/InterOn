@@ -29,8 +29,10 @@ namespace InterOn.Data.DbModels
         public ICollection<Post> Posts { get; set; }
 
         public ICollection<EventSubCategory> SubCategories { get; set; }
+        public ICollection<UserEvent> Users { get; set; }
         public Event()
         {
+            Users= new Collection<UserEvent>();
             Posts = new Collection<Post>();
             SubCategories = new Collection<EventSubCategory>();
         }

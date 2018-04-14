@@ -18,8 +18,11 @@ namespace InterOn.Data.DbModels
         public ICollection<UserGroup> Groups { get; set; }
 
         public ICollection<Post> Posts { get; set; }
+
+        public ICollection<UserEvent> Events { get; set; }
         public User()
         {
+            Events=new Collection<UserEvent>();
             Posts = new Collection<Post>();
             Groups = new Collection<UserGroup>();           
         }

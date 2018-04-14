@@ -9,6 +9,9 @@
     <Compile Remove="Migrations\20180412131945_AddPost_Comment_Event_Address_UserEvents_EventSubCategories.cs" />
     <Compile Remove="Migrations\20180412132253_AddPost_Comment_Event_Address_UserEvents_EventSubCategories.cs" />
     <Compile Remove="Migrations\20180412132612_AddPost_Comment_Event_Address_UserEvents_EventSubCategories.cs" />
+    <Compile Remove="Migrations\20180414112718_test.cs" />
+    <Compile Remove="Migrations\20180414114224_test.cs" />
+    <Compile Remove="Migrations\20180414115415_AddUserEvent.cs" />
   </ItemGroup>
 
   <ItemGroup>
