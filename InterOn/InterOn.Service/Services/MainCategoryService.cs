@@ -33,9 +33,9 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public bool ExistMainCategory(int id)
+        public async Task<bool> ExistMainCategory(int id)
         {
-            return _repository.Exist(a => a.Id == id);
+            return await _repository.Exist(a => a.Id == id);
         }
 
         public async Task AddAsync(MainCategory category)

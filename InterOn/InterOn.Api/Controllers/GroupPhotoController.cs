@@ -28,8 +28,8 @@ namespace InterOn.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(int groupId, IFormFile file)
         {
-            if (_groupService.IfExist(groupId) == false) return NotFound();
-            if (_photoService.IsExist(groupId)) return BadRequest("Przy tej grupie już jest avatar");
+            if (await _groupService.IfExist(groupId) == false) return NotFound();
+            if (await _photoService.IsExist(groupId)) return BadRequest("Przy tej grupie już jest avatar");
             if (file == null) return BadRequest("Brak Pliku");
             if (file.Length == 0) return BadRequest("Pusty plik");
             if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
@@ -44,7 +44,7 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> GetGroupPhoto(int groupId)
         {
 
-            if (_groupService.IfExist(groupId) == false)
+            if (await _groupService.IfExist(groupId) == false)
                 return NotFound();
             var photo = await _photoService.GetGroupPhoto(groupId);
             

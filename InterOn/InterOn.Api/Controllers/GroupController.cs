@@ -1,10 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterOn.Api.Controllers
 {
+
+    [Authorize]
     [Route("/api/group")]
     public class GroupController : Controller
     {
@@ -18,25 +22,41 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var result = await _groupService.CreateGroup(groupDto);
-            return Ok(result);
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            var result = await _groupService.CreateGroup(groupDto,userId);
+            return Ok(result);  
         }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGroup(int id,[FromBody] UpdateGroupDto groupDto)
         {
+            if (await _groupService.IfExist(id) == false)
+                return NotFound();
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var result = await _groupService.UpdateGroup(groupDto, id);
             if (result == null) return NotFound();
             return Ok(result);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroup(int id)
         {
-            var group = await _groupService.GetGroupMappedAsync(id);
-            if (group == null) return NotFound();
-            return Ok(group);
+            try
+            {
+
+                var group = await _groupService.GetGroupMappedAsync(id);
+                if (group == null) return NotFound();
+
+                return Ok(group);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"{e.Message}");
+            }
+
+            
         }
+
         [HttpGet]
         public async Task<IActionResult> GetGroups()
         {
@@ -46,9 +66,9 @@ namespace InterOn.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteGroup(int id)
+        public async Task<IActionResult> DeleteGroup(int id)
         {
-            if (_groupService.IfExist(id) == false)
+            if (await _groupService.IfExist(id) == false)
                 return NotFound();
 
             _groupService.Remove(id);

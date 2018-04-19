@@ -18,6 +18,7 @@ namespace InterOn.Repo.Repositories
                 return await _context.Groups.FindAsync(id);
 
             return await _context.Groups
+                .Include(gp => gp.GroupPhoto)
                 .Include(g => g.SubCategories)
                 .ThenInclude(gc => gc.SubCategory)
                 .SingleOrDefaultAsync(g => g.Id == id);
@@ -26,6 +27,7 @@ namespace InterOn.Repo.Repositories
         public async Task<IEnumerable<Group>> GetGroups()
         {
             return await _context.Groups
+                .Include(gp => gp.GroupPhoto)
                 .Include(g => g.SubCategories)
                 .ThenInclude(g => g.SubCategory)
                 .ThenInclude(gmc => gmc.MainCategory)

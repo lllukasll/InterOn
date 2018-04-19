@@ -9,7 +9,7 @@ namespace InterOn.Service.Interfaces
     {
         Task<SaveCategoryDto> UpdateMainCategory(int id, SaveCategoryDto categoryDto);
         Task<SaveCategoryDto> CreateMainCategory(SaveCategoryDto categoryDto);
-        bool ExistMainCategory(int id);
+        Task<bool> ExistMainCategory(int id);
         Task<MainCategoryDto> GetMainCategory(int id);       
         Task<IEnumerable<MainCategoryDto>> GetMainCategories();
         Task AddAsync(MainCategory category);

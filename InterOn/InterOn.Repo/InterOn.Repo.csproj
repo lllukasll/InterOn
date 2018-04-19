@@ -12,6 +12,10 @@
     <Compile Remove="Migrations\20180414112718_test.cs" />
     <Compile Remove="Migrations\20180414114224_test.cs" />
     <Compile Remove="Migrations\20180414115415_AddUserEvent.cs" />
+    <Compile Remove="Migrations\20180414191940_EventSomeChange1.cs" />
+    <Compile Remove="Migrations\20180414192453_EventUserAdmin.cs" />
+    <Compile Remove="Migrations\20180418170655_addAdminForGroup.cs" />
+    <Compile Remove="Migrations\20180418171110_addAdminForGroup.cs" />
   </ItemGroup>
 
   <ItemGroup>

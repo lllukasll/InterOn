@@ -3,6 +3,7 @@ using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
 using InterOn.Data.ModelsDto.Category;
+using InterOn.Data.ModelsDto.Event;
 using InterOn.Data.ModelsDto.Group;
 
 namespace InterOn.Api.Helpers
@@ -36,16 +37,14 @@ namespace InterOn.Api.Helpers
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
                         new GroupSubCategoryDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})))
-                .ForMember(gdt=>gdt.GroupPhoto,
-                    otp=>otp.MapFrom(g=>new GroupPhoto{FileName = g.GroupPhoto.FileName,GroupRef = g.Id}))
+                .ForMember(gdt=>gdt.AvatarUrl,
+                    otp=>otp.MapFrom(g=>g.GroupPhoto.FileName))
                 .ForMember(gdt => gdt.Users,
                     opt => opt.MapFrom(g => g.Users.Select(id => new UserGroupDto {Id = id.User.Id,UserName = id.User.Username})));
-              
+
             CreateMap<Group, CreateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
-                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)))
-                .ForMember(gdt => gdt.Users,
-                    opt => opt.MapFrom(g => g.Users.Select(gd => gd.UserId))); 
+                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));
             CreateMap<CreateGroupDto, Group>()
                 .ForMember(g => g.SubCategories,
                     opt => opt.MapFrom(gdt => gdt.SubCategories.Select(id => new GroupCategory {SubCategoryId = id})))
@@ -84,10 +83,15 @@ namespace InterOn.Api.Helpers
                 .ForMember(g => g.Id, opt => opt.Ignore());
 
             CreateMap<MainCategory, SaveCategoryDto>();
-            
+            CreateMap<MainCategory, MainCategoryDto>()
+                .ForMember(gdt => gdt.AvatarUrl,
+                    otp => otp.MapFrom(g => g.MainCategoryPhoto.FileName));
+                
             //SubCategory
             CreateMap<SubCategoryDto, SubCategory>();
-            CreateMap<SubCategory, SubCategoryDto>();
+            CreateMap<SubCategory, SubCategoryDto>()
+                .ForMember(gdt => gdt.AvatarUrl,
+                    otp => otp.MapFrom(g => g.SubCategoryPhoto.FileName));
            
             CreateMap<SaveCategoryDto, SubCategory>()
                 .ForMember(g => g.Id, opt => opt.Ignore());
@@ -96,6 +100,44 @@ namespace InterOn.Api.Helpers
 
             CreateMap<GroupPhoto, GroupPhotoDto>();
             CreateMap<GroupPhoto, GetGroupPhotoDto>();
+            CreateMap<SubCategoryPhoto, SubCategoryPhotoDto>();
+            CreateMap<MainCategoryPhoto, MainCategoryPhotoDto>();
+            //Event
+
+            CreateMap<CreateEventDto, Event>()
+                .ForMember(g => g.SubCategories,
+                    opt => opt.MapFrom(gdt =>
+                        gdt.SubCategories.Select(id => new EventSubCategory {SubCategoryId = id})))
+              .ForMember(g => g.Users, opt => opt.Ignore())
+               
+              .ForMember(e=>e.User,opt=>opt.Ignore())
+              .ForMember(e=>e.UserId,opt=>opt.Ignore())
+              .ForMember(e => e.Address, opt => opt.Ignore());
+            CreateMap<Event, CreateEventDto>()
+                .ForMember(gdt => gdt.SubCategories,
+                    opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));
+            CreateMap<UpdateGroupDto,Event>()
+                .ForMember(g => g.Id, opt => opt.Ignore())
+                .ForMember(g => g.SubCategories, opt => opt.Ignore())
+                .ForMember(g => g.Users, opt => opt.Ignore())
+                .AfterMap((gdto, g) =>
+                {
+                    //Remove
+                    var removeCategories = g.SubCategories.Where(s => !gdto.SubCategories.Contains(s.SubCategoryId))
+                        .ToList();
+                    foreach (var s in removeCategories.ToList())
+                        g.SubCategories.Remove(s);
+                    //add
+                    var addedCategories = gdto.SubCategories
+                        .Where(id => g.SubCategories.All(s => s.SubCategoryId != id))
+                        .Select(id => new EventSubCategory { SubCategoryId = id })
+                        .ToList();
+                    foreach (var c in addedCategories.ToList())
+                        g.SubCategories.Add(c);
+                });
+            CreateMap<Event, UpdateEventDto>()
+                .ForMember(ue => ue.SubCategories,
+                    opt => opt.MapFrom(ev => ev.SubCategories.Select(esc => esc.SubCategoryId)));
 
         }
     }

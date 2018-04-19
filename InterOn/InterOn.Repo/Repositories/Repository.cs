@@ -24,9 +24,9 @@ namespace InterOn.Repo.Repositories
         {
             return _entities;
         }
-        public bool Exist(Expression<Func<T, bool>> match)
+        public async Task<bool> Exist(Expression<Func<T, bool>> match)
         {
-            return _context.Set<T>().Any(match);
+            return await _context.Set<T>().AnyAsync(match);
         }
 
         public T Get(long id)
