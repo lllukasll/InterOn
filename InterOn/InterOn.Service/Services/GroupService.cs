@@ -49,7 +49,7 @@ namespace InterOn.Service.Services
             await _repository.SaveAsync();
         }
  
-        public async Task<Group> CreateGroup(CreateGroupDto groupDto,int userId)
+        public async Task<GroupDto> CreateGroup(CreateGroupDto groupDto, int userId)
         {
             
             var group = _mapper.Map<CreateGroupDto, Group>(groupDto);
@@ -57,8 +57,9 @@ namespace InterOn.Service.Services
             group.UserId = userId;
             await _repository.AddAsyn(group);
             await _repository.SaveAsync();
-            
-            return group;
+            var groupResult = await _repository.GetGroup(group.Id);
+            var result = _mapper.Map<Group, GroupDto>(groupResult);
+            return result;
         }
 
         public async Task<UpdateGroupDto> UpdateGroup(UpdateGroupDto groupDto, int id)

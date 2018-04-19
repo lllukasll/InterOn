@@ -21,10 +21,19 @@ namespace InterOn.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var userId = int.Parse(HttpContext.User.Identity.Name);
-            var result = await _groupService.CreateGroup(groupDto,userId);
-            return Ok(result);  
+            try
+            {
+
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var userId = int.Parse(HttpContext.User.Identity.Name);
+                var result = await _groupService.CreateGroup(groupDto, userId);
+                return Ok(result);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGroup(int id,[FromBody] UpdateGroupDto groupDto)

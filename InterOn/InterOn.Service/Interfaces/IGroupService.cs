@@ -8,7 +8,7 @@ namespace InterOn.Service.Interfaces
     public interface IGroupService
     {
         Task<GroupDto> GetGroupMappedAsync(int id);
-        Task<Group> CreateGroup(CreateGroupDto groupDto,int userId);
+        Task<GroupDto> CreateGroup(CreateGroupDto groupDto, int userId);
         Task<Group> GetGroupAsync(int id, bool includeRelated = true);
         Task<IEnumerable<GroupDto>> GetGroupsAsync();
         void Remove(int id);
