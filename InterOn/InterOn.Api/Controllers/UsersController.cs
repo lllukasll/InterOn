@@ -277,6 +277,18 @@ namespace InterOn.Api.Controllers
             return Ok(user);
         }
 
+        [HttpGet("getLoggedUser")]
+        public IActionResult GetLoggedUser()
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            var user = _userService.GetUserById(userId);
+
+            if (user == null)
+                return BadRequest();
+
+            return Ok(user);
+        }
+
         [HttpGet()]
         public IActionResult GetUsers()
         {

@@ -152,7 +152,7 @@ namespace InterOn.Service.Services
                     message.To.Add(new MailAddress(user.Email));
                     message.From = new MailAddress("mailinteron@gmail.com");
                     message.Subject = "Link aktywacyjny";
-                    message.Body = "http://localhost:58200/users/" + key.UserId + "/" + key.Key + "<br />Link aktywacyjny<br />Klucz : " + key.Key + "<br />UserId : " + key.UserId;
+                    message.Body = "http://localhost:58200/api/" + key.UserId + "/" + key.Key + "<br />Link aktywacyjny<br />Klucz : " + key.Key + "<br />UserId : " + key.UserId;
                     message.IsBodyHtml = true;
 
                     client.Send(message);
