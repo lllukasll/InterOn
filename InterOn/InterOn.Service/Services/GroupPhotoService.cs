@@ -9,6 +9,7 @@ using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
@@ -39,6 +40,11 @@ namespace InterOn.Service.Services
             return photo;
         }
 
+        public async void RemovePhoto(int groupId)
+        {
+            var photo = await _repository.FindBy(g => g.GroupRef == groupId).SingleAsync();
+                _repository.Remove(photo);      
+        }
         public GroupPhotoDto MapPhoto(GroupPhoto photo)
         {
             var result = _mapper.Map<GroupPhoto, GroupPhotoDto>(photo);

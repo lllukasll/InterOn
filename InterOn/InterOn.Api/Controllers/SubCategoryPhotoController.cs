@@ -30,12 +30,14 @@ namespace InterOn.Api.Controllers
         {
             if (await _subCategoryService.ExistMainCategory(mainCategoryId) == false) return NotFound();
             if (await _subCategoryService.ExistSubCategory(subCategoryId) == false) return NotFound();
-            if (await _photoService.IsExist(subCategoryId)) return BadRequest("Przy tej grupie już jest avatar");
             if (file == null) return BadRequest("Brak Pliku");
             if (file.Length == 0) return BadRequest("Pusty plik");
             if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
             if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
-
+            if (await _photoService.IsExist(subCategoryId))
+            {
+                _photoService.RemovePhoto(subCategoryId);
+            }
             var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
             var photo = await _photoService.UploadPhoto(subCategoryId, file, uploadsFolderPath);
             var result = _photoService.MapPhoto(photo);

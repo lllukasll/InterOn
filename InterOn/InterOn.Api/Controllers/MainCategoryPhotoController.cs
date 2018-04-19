@@ -29,12 +29,15 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> UploadPhoto(int mainCategoryId,IFormFile file)
         {
             if (await _mainCategoryService.ExistMainCategory(mainCategoryId) == false) return NotFound();
-            if (await _photoService.IsExist(mainCategoryId)) return BadRequest("Przy tej grupie już jest avatar");
+            
             if (file == null) return BadRequest("Brak Pliku");
             if (file.Length == 0) return BadRequest("Pusty plik");
             if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
             if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
-
+            if (await _photoService.IsExist(mainCategoryId))
+            {
+                _photoService.RemovePhoto(mainCategoryId);
+            }
             var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
             var photo = await _photoService.UploadPhoto(mainCategoryId, file, uploadsFolderPath);
             var result = _photoService.MapPhoto(photo);

@@ -7,6 +7,7 @@ using InterOn.Data.ModelsDto.Category;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
@@ -45,6 +46,12 @@ namespace InterOn.Service.Services
         public async Task<bool> IsExist(int id)
         {
             return await _repository.Exist(p => p.MainCategoryRef == id);
+        }
+
+        public async void RemovePhoto(int mainCategoryId)
+        {
+            var photo = await _repository.FindBy(mc => mc.MainCategoryRef == mainCategoryId).SingleAsync();
+            _repository.Remove(photo);
         }
     }
 }

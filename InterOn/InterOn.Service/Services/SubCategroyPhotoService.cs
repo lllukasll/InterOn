@@ -7,10 +7,11 @@ using InterOn.Data.ModelsDto.Category;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
-    public class SubCategroyPhotoService :ISubCategoryPhotoService
+    public class SubCategroyPhotoService : ISubCategoryPhotoService
     {
         private readonly IRepository<SubCategoryPhoto> _repository;
         private readonly IMapper _mapper;
@@ -45,6 +46,12 @@ namespace InterOn.Service.Services
         public async Task<bool> IsExist(int id)
         {
             return await _repository.Exist(p => p.SubCategoryRef == id);
+        }
+
+        public async void RemovePhoto(int subCategoryId)
+        {
+            var photo = await _repository.FindBy(mc => mc.SubCategoryRef == subCategoryId).SingleAsync();
+            _repository.Remove(photo);
         }
     }
 }
