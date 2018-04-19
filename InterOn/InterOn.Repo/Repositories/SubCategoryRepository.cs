@@ -34,5 +34,12 @@ namespace InterOn.Repo.Repositories
                 .Where(s => s.Id == subId && s.MainCategoryId == mainId)
                 .SingleOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<SubCategory>> GetAllSubCategoriesAsync()
+        {
+            return await _context.Set<SubCategory>()
+                .Include(p => p.SubCategoryPhoto)
+                .ToListAsync();
+        }
     }
 }

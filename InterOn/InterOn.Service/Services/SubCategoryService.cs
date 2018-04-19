@@ -19,6 +19,12 @@ namespace InterOn.Service.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<SubCategoryDto>> GetAllSubCategoriesAsync()
+        {
+            var categries = await _repository.GetAllSubCategoriesAsync();
+            var result = _mapper.Map<IEnumerable<SubCategory>, IEnumerable<SubCategoryDto>>(categries);
+            return result;
+        }
         public async Task<bool> ExistMainCategory(int id)
         {
             return await _repository.ExistMainCategoryAsync(id);

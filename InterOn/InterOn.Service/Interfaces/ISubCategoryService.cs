@@ -6,6 +6,7 @@ namespace InterOn.Service.Interfaces
 {
     public interface ISubCategoryService
     {
+        Task<IEnumerable<SubCategoryDto>> GetAllSubCategoriesAsync();
         Task<bool> ExistSubCategory(int id);
         Task<SubCategoryDto> UpdateSubCategoryForMainCategory(int subId, int mainId, SaveCategoryDto categoryDto);
         Task<SubCategoryDto> CreateSubCategoryForMainCategory(int mainId, SaveCategoryDto categoryDto);

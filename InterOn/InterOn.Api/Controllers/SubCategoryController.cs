@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InterOn.Api.Controllers
 {
-    [Route("/api/maincategories/{mainId}/subcategories")]
+    
     public class SubCategoryController : Controller
     {
         private readonly ISubCategoryService _service;
@@ -15,7 +15,7 @@ namespace InterOn.Api.Controllers
             _service = repository;
         }
 
-        [HttpGet]
+        [HttpGet("/api/maincategories/{mainId}/subcategories")]
         public async Task<IActionResult> GetSubCategoriesForMainCategory(int mainId)
         {
             if (await _service.ExistMainCategory(mainId) == false)
@@ -27,7 +27,7 @@ namespace InterOn.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{subId}")]
+        [HttpGet("/api/maincategories/{mainId}/subcategories/{subId}")]
         public async Task<IActionResult> GetSubCategoryForMainCategory(int mainId, int subId)
         {
             if (await _service.ExistMainCategory(mainId) == false)
@@ -39,7 +39,7 @@ namespace InterOn.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("/api/maincategories/{mainId}/subcategories")]
         public async Task<IActionResult> CreateSubCategory(int mainId, [FromBody] SaveCategoryDto category)
         {
             if (await _service.ExistMainCategory(mainId) == false)
@@ -52,7 +52,7 @@ namespace InterOn.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{subId}")]
+        [HttpPut("/api/maincategories/{mainId}/subcategories/{subId}")]
         public async Task<IActionResult> UpdateSubCategory(int mainId, int subId,
             [FromBody] SaveCategoryDto categoryDto)
         {
@@ -66,7 +66,7 @@ namespace InterOn.Api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{subId}")]
+        [HttpDelete("/api/maincategories/{mainId}/subcategories/{subId}")]
         public async Task<IActionResult> DeleteSubCategory(int subId, int mainId)
         {
             if (await _service.ExistMainCategory(mainId) == false || await _service.ExistSubCategory(subId) == false)
@@ -76,6 +76,14 @@ namespace InterOn.Api.Controllers
 
             _service.Remove(mainId, subId);
             return Ok(subId);
+        }
+        [HttpGet("/api/subcategories")]
+        public async Task<IActionResult> GetAllSubCategories()
+        {
+            var categories = await _service.GetAllSubCategoriesAsync();
+            if (categories == null)
+                return NotFound();
+            return Ok(categories);
         }
     }
 }
