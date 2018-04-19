@@ -27,7 +27,7 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> UpdateMainCategory(int id, [FromBody] SaveCategoryDto saveMainCategoryDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (_repository.ExistMainCategory(id) == false) return NotFound();
+            if (await _repository.ExistMainCategory(id) == false) return NotFound();
             var result = await _repository.UpdateMainCategory(id, saveMainCategoryDto);
             return Ok(result);
         }
@@ -43,15 +43,15 @@ namespace InterOn.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMainCategory(int id)
         {
-            if (_repository.ExistMainCategory(id) == false) return NotFound();
+            if (await _repository.ExistMainCategory(id) == false) return NotFound();
             var result = await _repository.GetMainCategory(id);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteMainCategory(int id)
+        public async Task<IActionResult> DeleteMainCategory(int id)
         {
-            if (_repository.ExistMainCategory(id) == false) return NotFound();
+            if (await _repository.ExistMainCategory(id) == false) return NotFound();
             _repository.Remove(id);
             return Ok(id);
         }

@@ -15,6 +15,8 @@ namespace InterOn.Data.DbModels
         [StringLength(20)]
         public string Name { get; set; }
 
+        public MainCategoryPhoto MainCategoryPhoto { get; set; }
+
         public ICollection<SubCategory> SubCategories { get; set; }
 
         public MainCategory()

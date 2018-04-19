@@ -17,12 +17,12 @@ namespace InterOn.Repo.Repositories
         {
             if (!includeRelated == true)
                 return await GetAsync(id);
-            return await _context.Set<MainCategory>().Include(s => s.SubCategories).SingleOrDefaultAsync(c => c.Id == id);
+            return await _context.Set<MainCategory>().Include(s => s.SubCategories).Include(p=>p.MainCategoryPhoto).SingleOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<MainCategory>> GetMainCategories()
         {
-            return await _context.Set<MainCategory>().Include(s => s.SubCategories).ToListAsync();
+            return await _context.Set<MainCategory>().Include(s => s.SubCategories).Include(p=>p.MainCategoryPhoto).ToListAsync();
         }
 
        

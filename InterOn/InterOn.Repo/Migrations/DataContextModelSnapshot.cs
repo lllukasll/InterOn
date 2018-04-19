@@ -96,7 +96,7 @@ namespace InterOn.Repo.Migrations
                         .IsRequired()
                         .HasMaxLength(500);
 
-                    b.Property<int>("GroupId");
+                    b.Property<int?>("GroupId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -104,11 +104,9 @@ namespace InterOn.Repo.Migrations
 
                     b.Property<string>("PhotoUrl");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
 
                     b.HasIndex("UserId");
 
@@ -143,7 +141,11 @@ namespace InterOn.Repo.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<int?>("UserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Groups");
                 });
@@ -192,6 +194,25 @@ namespace InterOn.Repo.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MainCategories");
+                });
+
+            modelBuilder.Entity("InterOn.Data.DbModels.MainCategoryPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<int>("MainCategoryRef");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MainCategoryRef")
+                        .IsUnique();
+
+                    b.ToTable("MainCategoryPhoto");
                 });
 
             modelBuilder.Entity("InterOn.Data.DbModels.Post", b =>
@@ -251,6 +272,25 @@ namespace InterOn.Repo.Migrations
                     b.HasIndex("MainCategoryId");
 
                     b.ToTable("SubCategories");
+                });
+
+            modelBuilder.Entity("InterOn.Data.DbModels.SubCategoryPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<int>("SubCategoryRef");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubCategoryRef")
+                        .IsUnique();
+
+                    b.ToTable("SubCategoryPhoto");
                 });
 
             modelBuilder.Entity("InterOn.Data.DbModels.User", b =>
@@ -370,15 +410,9 @@ namespace InterOn.Repo.Migrations
 
             modelBuilder.Entity("InterOn.Data.DbModels.Event", b =>
                 {
-                    b.HasOne("InterOn.Data.DbModels.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("InterOn.Data.DbModels.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("InterOn.Data.DbModels.EventSubCategory", b =>
@@ -392,6 +426,13 @@ namespace InterOn.Repo.Migrations
                         .WithMany("Events")
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("InterOn.Data.DbModels.Group", b =>
+                {
+                    b.HasOne("InterOn.Data.DbModels.User", "User")
+                        .WithMany("GroupAdmin")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("InterOn.Data.DbModels.GroupCategory", b =>
@@ -415,6 +456,14 @@ namespace InterOn.Repo.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("InterOn.Data.DbModels.MainCategoryPhoto", b =>
+                {
+                    b.HasOne("InterOn.Data.DbModels.MainCategory", "MainCategory")
+                        .WithOne("MainCategoryPhoto")
+                        .HasForeignKey("InterOn.Data.DbModels.MainCategoryPhoto", "MainCategoryRef")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("InterOn.Data.DbModels.Post", b =>
                 {
                     b.HasOne("InterOn.Data.DbModels.Event", "Event")
@@ -435,6 +484,14 @@ namespace InterOn.Repo.Migrations
                     b.HasOne("InterOn.Data.DbModels.MainCategory", "MainCategory")
                         .WithMany("SubCategories")
                         .HasForeignKey("MainCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("InterOn.Data.DbModels.SubCategoryPhoto", b =>
+                {
+                    b.HasOne("InterOn.Data.DbModels.SubCategory", "SubCategory")
+                        .WithOne("SubCategoryPhoto")
+                        .HasForeignKey("InterOn.Data.DbModels.SubCategoryPhoto", "SubCategoryRef")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -45,9 +45,9 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public bool IsExist(int id)
+        public async Task<bool> IsExist(int id)
         {
-            return _repository.Exist(p => p.GroupRef == id);
+            return await _repository.Exist(p => p.GroupRef == id);
         }
 
         public IEnumerable<GetGroupPhotoDto> MapPhotoDtoQueryable(IEnumerable<GroupPhoto> photo)

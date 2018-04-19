@@ -15,6 +15,8 @@ namespace InterOn.Data.DbModels
         public int MainCategoryId { get; set; }
         public MainCategory MainCategory { get; set; }
 
+        public SubCategoryPhoto SubCategoryPhoto { get; set; }
+
         public ICollection<GroupCategory> Groups { get; set; }
         public ICollection<EventSubCategory> Events { get; set; }
 

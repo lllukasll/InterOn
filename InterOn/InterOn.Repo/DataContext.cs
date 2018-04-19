@@ -36,12 +36,23 @@ namespace InterOn.Repo
                 .WithOne(b => b.Group)
                 .HasForeignKey<GroupPhoto>(b => b.GroupRef)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<MainCategory>()
+                .HasOne(a => a.MainCategoryPhoto)
+                .WithOne(b => b.MainCategory)
+                .HasForeignKey<MainCategoryPhoto>(b => b.MainCategoryRef)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<SubCategory>()
+                .HasOne(a => a.SubCategoryPhoto)
+                .WithOne(b => b.SubCategory)
+                .HasForeignKey<SubCategoryPhoto>(b => b.SubCategoryRef)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<UserEvent>().HasKey(ug => new { ug.EventId, ug.UserId });
             modelBuilder.Entity<UserEvent>()
                 .HasOne(bc => bc.User)
                 .WithMany(b => b.Events)
                 .HasForeignKey(bc => bc.EventId)
                 .OnDelete(DeleteBehavior.Restrict);
+          
             modelBuilder.Entity<UserEvent>()
                 .HasOne(bc => bc.Event)
                 .WithMany(c => c.Users)

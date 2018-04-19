@@ -6,6 +6,8 @@ using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace InterOn.Service.Services
 {
@@ -26,10 +28,10 @@ namespace InterOn.Service.Services
             return await _repository.GetGroup(id);
         }
 
-        public async Task<CreateGroupDto> GetGroupMappedAsync(int id)
+        public async Task<GroupDto> GetGroupMappedAsync(int id)
         {
             var group = await GetGroupAsync(id);
-            var resultMap = _mapper.Map<Group, CreateGroupDto>(group);
+            var resultMap = _mapper.Map<Group, GroupDto>(group);
             return resultMap;
         }
 
@@ -46,15 +48,17 @@ namespace InterOn.Service.Services
             _repository.Remove(group);
             await _repository.SaveAsync();
         }
-
-        public async Task<CreateGroupDto> CreateGroup(CreateGroupDto groupDto)
+ 
+        public async Task<Group> CreateGroup(CreateGroupDto groupDto,int userId)
         {
+            
             var group = _mapper.Map<CreateGroupDto, Group>(groupDto);
             group.CreateDateTime = DateTime.Now;
+            group.UserId = userId;
             await _repository.AddAsyn(group);
             await _repository.SaveAsync();
-            var result = _mapper.Map<Group, CreateGroupDto>(group);
-            return result;
+            
+            return group;
         }
 
         public async Task<UpdateGroupDto> UpdateGroup(UpdateGroupDto groupDto, int id)
@@ -67,9 +71,9 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public bool IfExist(int id)
+        public async Task<bool> IfExist(int id)
         {
-            return _repository.Exist(g => g.Id == id);
+            return await _repository.Exist(g => g.Id == id);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace InterOn.Repo.Interfaces
         void Update(T entity);
         void Delete(T entity);
         void Remove(T entity);
-        bool Exist(Expression<Func<T, bool>> match);
+        Task<bool> Exist(Expression<Func<T, bool>> match);
         Task<T> AddAsyn(T t);
         Task<int> DeleteAsyn(T entity);
         T Find(Expression<Func<T, bool>> match);

@@ -18,7 +18,7 @@ namespace InterOn.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSubCategoriesForMainCategory(int mainId)
         {
-            if (_service.ExistMainCategory(mainId) == false)
+            if (await _service.ExistMainCategory(mainId) == false)
             {
                 return NotFound();
             }
@@ -30,7 +30,7 @@ namespace InterOn.Api.Controllers
         [HttpGet("{subId}")]
         public async Task<IActionResult> GetSubCategoryForMainCategory(int mainId, int subId)
         {
-            if (_service.ExistMainCategory(mainId) == false)
+            if (await _service.ExistMainCategory(mainId) == false)
             {
                 return BadRequest("Nie ma MainCategory o tym Id");
             }
@@ -42,7 +42,7 @@ namespace InterOn.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSubCategory(int mainId, [FromBody] SaveCategoryDto category)
         {
-            if (_service.ExistMainCategory(mainId) == false)
+            if (await _service.ExistMainCategory(mainId) == false)
             {
                 return BadRequest("Nie ma MainCategory o tym Id");
             }
@@ -56,7 +56,7 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> UpdateSubCategory(int mainId, int subId,
             [FromBody] SaveCategoryDto categoryDto)
         {
-            if (_service.ExistMainCategory(mainId) == false)
+            if (await _service.ExistMainCategory(mainId) == false)
             {
                 return BadRequest("Nie ma MainCategory o tym Id");
             }
@@ -67,9 +67,9 @@ namespace InterOn.Api.Controllers
         }
 
         [HttpDelete("{subId}")]
-        public IActionResult DeleteSubCategory(int subId, int mainId)
+        public async Task<IActionResult> DeleteSubCategory(int subId, int mainId)
         {
-            if (_service.ExistMainCategory(mainId) == false || _service.ExistSubCategory(subId) == false)
+            if (await _service.ExistMainCategory(mainId) == false || await _service.ExistSubCategory(subId) == false)
             {
                 return BadRequest("Nie ma MainCategory lub SubCategory o tym Id ");
             }

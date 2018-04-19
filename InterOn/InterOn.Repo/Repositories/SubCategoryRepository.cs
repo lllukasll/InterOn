@@ -16,19 +16,21 @@ namespace InterOn.Repo.Repositories
         public async Task<IEnumerable<SubCategory>> GetSubCategoriesForMainCategory(int mainCategoryId)
         {
             return await _context.Set<SubCategory>()
+                .Include(p=>p.SubCategoryPhoto)
                 .Where(sc => sc.MainCategoryId == mainCategoryId)
                 .OrderBy(o => o.Name)
                 .ToListAsync();
         }
 
-        public bool ExistMainCategory(int id)
+        public async Task<bool> ExistMainCategoryAsync(int id)
         {
-            return _context.Set<MainCategory>().Any(a => a.Id == id);
+            return await _context.Set<MainCategory>().AnyAsync(a => a.Id == id);
         }
 
         public async Task<SubCategory> GetSubCategoryForMainCategory(int mainId, int subId)
         {
             return await _context.Set<SubCategory>()
+                .Include(p=>p.SubCategoryPhoto)
                 .Where(s => s.Id == subId && s.MainCategoryId == mainId)
                 .SingleOrDefaultAsync();
         }

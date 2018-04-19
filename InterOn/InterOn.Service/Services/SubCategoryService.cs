@@ -19,9 +19,9 @@ namespace InterOn.Service.Services
             _mapper = mapper;
         }
 
-        public bool ExistMainCategory(int id)
+        public async Task<bool> ExistMainCategory(int id)
         {
-            return _repository.ExistMainCategory(id);
+            return await _repository.ExistMainCategoryAsync(id);
         }
 
         public async Task<IEnumerable<SubCategoryDto>> GetSubCategoriesForMainCategoryAsync(int mainCategoryId)
@@ -55,9 +55,9 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public bool ExistSubCategory(int id)
+        public async Task<bool> ExistSubCategory(int id)
         {
-            return _repository.Exist(sc => sc.Id == id);
+            return await _repository.Exist(sc => sc.Id == id);
         }
 
         public async Task<SubCategoryDto> UpdateSubCategoryForMainCategory(int subId, int mainId,
