@@ -36,7 +36,7 @@ namespace InterOn.Api.Controllers
             if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
             if (await _photoService.IsExist(subCategoryId))
             {
-                _photoService.RemovePhoto(subCategoryId);
+               await _photoService.RemovePhoto(subCategoryId);
             }
             var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
             var photo = await _photoService.UploadPhoto(subCategoryId, file, uploadsFolderPath);

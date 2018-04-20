@@ -13,6 +13,6 @@ namespace InterOn.Service.Interfaces
         Task<bool> ExistMainCategory(int id);
         Task<IEnumerable<SubCategoryDto>> GetSubCategoriesForMainCategoryAsync(int mainCategoryId);   
         Task<SubCategoryDto> GetSubCategoryForMainCategoryAsync(int mainId, int subId);
-        void Remove(int mainId, int subId);
+        Task Remove(int mainId, int subId);
     }
 }

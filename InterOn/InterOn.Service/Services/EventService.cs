@@ -66,6 +66,14 @@ namespace InterOn.Service.Services
             return result;
         }
 
+        public async Task RemoveUserEvent(int userId, int eventId)
+        {
+            var userEvent = await _repository.GetUserEvent(userId, eventId);
+            _repository.RemoveUserEvent(userEvent);
+            await _repository.SaveAsync();
+           
+        }
+
         public async Task<bool> ExistEvent(int id)
         {
             return await _repository.Exist(e => e.Id == id);
@@ -76,7 +84,7 @@ namespace InterOn.Service.Services
             return await _repository.IfGroupExist(id);
         }
 
-        public async Task<bool> IfUserBelongToGroup(int eventId, int userId)
+        public async Task<bool> IfUserBelongToEvent(int eventId, int userId)
         {
             return await _repository.IfBelongToEventAsync(eventId, userId);
         }

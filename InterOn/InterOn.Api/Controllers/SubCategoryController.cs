@@ -74,7 +74,7 @@ namespace InterOn.Api.Controllers
                 return BadRequest("Nie ma MainCategory lub SubCategory o tym Id ");
             }
 
-            _service.Remove(mainId, subId);
+            await _service.Remove(mainId, subId);
             return Ok(subId);
         }
         [HttpGet("/api/subcategories")]

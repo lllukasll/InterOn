@@ -13,6 +13,6 @@ namespace InterOn.Service.Interfaces
         Task<MainCategoryDto> GetMainCategory(int id);       
         Task<IEnumerable<MainCategoryDto>> GetMainCategories();
         Task AddAsync(MainCategory category);
-        void Remove(int id);
+        Task Remove(int id);
     }
 }

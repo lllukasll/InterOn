@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using InterOn.Data.DbModels;
+﻿using InterOn.Data.DbModels;
 using InterOn.Repo.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace InterOn.Repo.Repositories
 {
@@ -27,6 +25,16 @@ namespace InterOn.Repo.Repositories
         public async Task<bool> IfBelongToEventAsync(int eventId, int userId)
         {
             return await _context.UserEvents.AnyAsync(a => a.EventId == eventId & a.UserId == userId);
+        }
+
+        public async Task<UserEvent> GetUserEvent(int userId, int eventId)
+        {
+            return await _context.UserEvents.Where(a => a.EventId == eventId & a.UserId == userId).SingleAsync();
+        }
+
+        public void RemoveUserEvent(UserEvent userEvent)
+        {
+            _context.UserEvents.Remove(userEvent);
         }
     }
 }

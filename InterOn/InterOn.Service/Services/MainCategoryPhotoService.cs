@@ -48,7 +48,7 @@ namespace InterOn.Service.Services
             return await _repository.Exist(p => p.MainCategoryRef == id);
         }
 
-        public async void RemovePhoto(int mainCategoryId)
+        public async Task RemovePhoto(int mainCategoryId)
         {
             var photo = await _repository.FindBy(mc => mc.MainCategoryRef == mainCategoryId).SingleAsync();
             _repository.Remove(photo);

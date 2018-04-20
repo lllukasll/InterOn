@@ -44,7 +44,7 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public async void Remove(int mainId, int subId)
+        public async Task Remove(int mainId, int subId)
         {
             var subCategoryFromRepo = await _repository.GetSubCategoryForMainCategory(mainId, subId);
             _repository.Remove(subCategoryFromRepo);

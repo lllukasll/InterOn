@@ -10,6 +10,6 @@ namespace InterOn.Service.Interfaces
         Task<SubCategoryPhoto> UploadPhoto(int subCategoryId, IFormFile file, string uploadsFolderPath);
         SubCategoryPhotoDto MapPhoto(SubCategoryPhoto photo);
         Task<bool> IsExist(int id);
-        void RemovePhoto(int subCategoryId);
+        Task RemovePhoto(int subCategoryId);
     }
 }
