@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using InterOn.Data.ModelsDto.Event;
+﻿using InterOn.Data.ModelsDto.Event;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace InterOn.Api.Controllers
 {
@@ -15,7 +14,6 @@ namespace InterOn.Api.Controllers
         public EventController(IEventService service)
         {
             _service = service;
-            
         }
 
         [HttpPost]
@@ -41,15 +39,30 @@ namespace InterOn.Api.Controllers
             return Ok(result);
         }
         [Authorize]
-        [HttpPost("{eventId}")]
+        [HttpPost("user/{eventId}")]
         public async Task<IActionResult> CreateUserEvent(int eventId)
         {
+            if (await _service.ExistEvent(eventId) == false)
+            {
+                return NotFound();
+            }
             var userId = int.Parse(HttpContext.User.Identity.Name);
-            if (await _service.IfUserBelongToGroup(eventId, userId))
+            if (await _service.IfUserBelongToEvent(eventId, userId))
                 return BadRequest("Użytkownik należy już do Wydarzenia");
 
             var result = await _service.CreateEventUserAsync(eventId, userId);
             return Ok(result);
+        }
+        [Authorize]
+        [HttpDelete("user/{eventId}")]
+        public async Task<IActionResult> RemoveUserEvent(int eventId)
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.IfUserBelongToEvent(eventId, userId)==false)
+                return BadRequest("Użytkownik nie należy do grupy");
+            await _service.RemoveUserEvent(userId, eventId);
+
+            return Ok();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace InterOn.Repo.Repositories
 
         public void RemoveUserGroup(UserGroup userGroup)
         {
-            _context.Set<UserGroup>().Remove(userGroup);
+            _context.UserGroups.Remove(userGroup);
         }
 
         public async Task<Group> GetGroup(int id, bool includeRelated = true)
@@ -59,5 +59,11 @@ namespace InterOn.Repo.Repositories
         {
             return await _context.UserGroups.AnyAsync(a => a.GroupId == groupId & a.UserId == userId);
         }
+
+        public async Task<UserGroup> GetUserGroupAsync(int groupId, int userId)
+        {
+            return await _context.UserGroups.Where(a => a.GroupId == groupId & a.UserId == userId).SingleAsync();
+        }
+
     }
 }

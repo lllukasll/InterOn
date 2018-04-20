@@ -40,9 +40,9 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public async void Remove(int id)
+        public async Task Remove(int id)
         {
-            var group = await _repository.GetGroup(id, includeRelated: false);
+            var group = await _repository.GetGroup(id, false);
             _repository.Remove(group);
             await _repository.SaveAsync();
         }
@@ -83,6 +83,13 @@ namespace InterOn.Service.Services
             var group = await _repository.GetGroup(groupId);
             var result = _mapper.Map<Group, GroupDto>(group);
             return result;
+        }
+
+        public async Task RemoveUserGroup(int userId, int groupId)
+        {
+            var userGroup = await _repository.GetUserGroupAsync(groupId, userId);
+            _repository.RemoveUserGroup(userGroup);
+            await _repository.SaveAsync();
         }
 
         public async Task<bool> IfUserBelongToGroupAsync(int userId, int groupId)

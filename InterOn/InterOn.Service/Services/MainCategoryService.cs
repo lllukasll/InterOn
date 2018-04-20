@@ -43,11 +43,11 @@ namespace InterOn.Service.Services
             await _repository.AddAsyn(category);
         }
 
-        public void Remove(int id)
+        public async Task Remove(int id)
         {
-            var category = _repository.Get(id);
+            var category = await _repository.GetAsync(id);
             _repository.Remove(category);
-            _repository.Save();
+            await _repository.SaveAsync();
         }
 
         public async Task<SaveCategoryDto> CreateMainCategory(SaveCategoryDto categoryDto)

@@ -40,7 +40,7 @@ namespace InterOn.Service.Services
             return photo;
         }
 
-        public async void RemovePhoto(int groupId)
+        public async Task RemovePhoto(int groupId)
         {
             var photo = await _repository.FindBy(g => g.GroupRef == groupId).SingleAsync();
                 _repository.Remove(photo);      

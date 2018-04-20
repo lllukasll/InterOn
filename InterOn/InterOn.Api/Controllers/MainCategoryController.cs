@@ -52,7 +52,7 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> DeleteMainCategory(int id)
         {
             if (await _repository.ExistMainCategory(id) == false) return NotFound();
-            _repository.Remove(id);
+            await _repository.Remove(id);
             return Ok(id);
         }
     }

@@ -175,11 +175,13 @@ namespace InterOn.Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("{userId}/changePassword")]
-        public IActionResult ChangePassword(int userId, [FromBody]ChangePasswordDto changePasswordDto )
+        [HttpPost("changePassword")]
+        public IActionResult ChangePassword([FromBody]ChangePasswordDto changePasswordDto )
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var userId = int.Parse(HttpContext.User.Identity.Name);
 
             if (_userService.GetUserById(userId) == null)
             {
