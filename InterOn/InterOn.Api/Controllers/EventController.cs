@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Event;
 using InterOn.Service.Interfaces;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterOn.Api.Controllers
@@ -13,12 +11,11 @@ namespace InterOn.Api.Controllers
     public class EventController : Controller
     {
         private readonly IEventService _service;
-        private readonly IHostingEnvironment _hosting;
 
-        public EventController(IEventService service,IHostingEnvironment hosting)
+        public EventController(IEventService service)
         {
             _service = service;
-            _hosting = hosting;
+            
         }
 
         [HttpPost]
@@ -41,6 +38,17 @@ namespace InterOn.Api.Controllers
 
             var result = await _service.UpdateEventAsync(id, eventDto);
 
+            return Ok(result);
+        }
+        [Authorize]
+        [HttpPost("{eventId}")]
+        public async Task<IActionResult> CreateUserEvent(int eventId)
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.IfUserBelongToGroup(eventId, userId))
+                return BadRequest("Użytkownik należy już do Wydarzenia");
+
+            var result = await _service.CreateEventUserAsync(eventId, userId);
             return Ok(result);
         }
     }

@@ -84,5 +84,17 @@ namespace InterOn.Api.Controllers
 
             return Ok(id);
         }
+        [HttpPost("{groupId}")]
+        public async Task<IActionResult> AddUserForGroup(int groupId)
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _groupService.IfUserBelongToGroupAsync(userId, groupId))
+                return BadRequest("Już użytkownik należy do grupy");
+            
+            var result = await _groupService.CreateUserGroup(groupId, userId);
+
+            return Ok(result);
+
+        }
     }
 }

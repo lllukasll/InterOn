@@ -51,6 +51,21 @@ namespace InterOn.Service.Services
             return result;
         }
 
+        public async Task<UpdateEventDto> CreateEventUserAsync(int eventId, int userId)
+        {
+            var userEvent = new UserEvent
+            {
+                UserId = userId,
+                EventId = eventId
+            };
+
+            await _repository.AddUserEvent(userEvent);
+            await _repository.SaveAsync();
+            var eventt = await _repository.GetAsync(eventId);
+            var result = _mapper.Map<Event, UpdateEventDto>(eventt);
+            return result;
+        }
+
         public async Task<bool> ExistEvent(int id)
         {
             return await _repository.Exist(e => e.Id == id);
@@ -59,6 +74,11 @@ namespace InterOn.Service.Services
         public async Task<bool> ExistGroup(int id)
         {
             return await _repository.IfGroupExist(id);
+        }
+
+        public async Task<bool> IfUserBelongToGroup(int eventId, int userId)
+        {
+            return await _repository.IfBelongToEventAsync(eventId, userId);
         }
     }
 }

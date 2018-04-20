@@ -11,9 +11,10 @@ using System;
 namespace InterOn.Repo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20180420144831_TestTableUserEvent")]
+    partial class TestTableUserEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -497,13 +498,13 @@ namespace InterOn.Repo.Migrations
 
             modelBuilder.Entity("InterOn.Data.DbModels.UserEvent", b =>
                 {
-                    b.HasOne("InterOn.Data.DbModels.Event", "Event")
-                        .WithMany("Users")
+                    b.HasOne("InterOn.Data.DbModels.User", "User")
+                        .WithMany("Events")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("InterOn.Data.DbModels.User", "User")
-                        .WithMany("Events")
+                    b.HasOne("InterOn.Data.DbModels.Event", "Event")
+                        .WithMany("Users")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

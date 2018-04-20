@@ -7,6 +7,8 @@ namespace InterOn.Service.Interfaces
 {
     public interface IGroupService
     {
+        Task<bool> IfUserBelongToGroupAsync(int userId, int groupId);
+        Task<GroupDto> CreateUserGroup(int groupId, int userId);
         Task<GroupDto> GetGroupMappedAsync(int id);
         Task<GroupDto> CreateGroup(CreateGroupDto groupDto, int userId);
         Task<Group> GetGroupAsync(int id, bool includeRelated = true);

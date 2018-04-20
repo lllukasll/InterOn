@@ -40,7 +40,8 @@ namespace InterOn.Api.Helpers
                 .ForMember(gdt=>gdt.AvatarUrl,
                     otp=>otp.MapFrom(g=>g.GroupPhoto.FileName))
                 .ForMember(gdt => gdt.Users,
-                    opt => opt.MapFrom(g => g.Users.Select(id => new UserGroupDto {Id = id.User.Id,UserName = id.User.Username})));
+                    opt => opt.MapFrom(g => g.Users.Select(id =>
+                        new UserGroupDto {Id = id.User.Id,UserName = id.User.Username})));
 
             CreateMap<Group, CreateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using InterOn.Data.DbModels;
+﻿using InterOn.Data.DbModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Repo
@@ -47,29 +46,7 @@ namespace InterOn.Repo
                 .HasForeignKey<SubCategoryPhoto>(b => b.SubCategoryRef)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<UserEvent>().HasKey(ug => new { ug.EventId, ug.UserId });
-            modelBuilder.Entity<UserEvent>()
-                .HasOne(bc => bc.User)
-                .WithMany(b => b.Events)
-                .HasForeignKey(bc => bc.EventId)
-                .OnDelete(DeleteBehavior.Restrict);
-          
-            modelBuilder.Entity<UserEvent>()
-                .HasOne(bc => bc.Event)
-                .WithMany(c => c.Users)
-                .HasForeignKey(bc => bc.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});
-            modelBuilder.Entity<UserGroup>()
-                .HasOne(bc => bc.User)
-                .WithMany(b => b.Groups)
-                .HasForeignKey(bc => bc.GroupId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<UserGroup>()
-                .HasOne(bc => bc.Group)
-                .WithMany(c => c.Users)
-                .HasForeignKey(bc => bc.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Event>()
                 .HasOne(a => a.Address)
                 .WithOne(b => b.Event)

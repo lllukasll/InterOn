@@ -16,6 +16,7 @@
     <Compile Remove="Migrations\20180414192453_EventUserAdmin.cs" />
     <Compile Remove="Migrations\20180418170655_addAdminForGroup.cs" />
     <Compile Remove="Migrations\20180418171110_addAdminForGroup.cs" />
+    <Compile Remove="Migrations\20180420142559_nullableUserEvent.cs" />
   </ItemGroup>
 
   <ItemGroup>

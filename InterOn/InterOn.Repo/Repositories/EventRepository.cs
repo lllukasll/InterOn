@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using InterOn.Data.DbModels;
@@ -16,6 +17,16 @@ namespace InterOn.Repo.Repositories
         public async Task<bool> IfGroupExist(int id)
         {
             return await _context.Set<Group>().AnyAsync(g => g.Id == id);
+        }
+
+        public async Task AddUserEvent(UserEvent userEvent)
+        {
+            await _context.UserEvents.AddAsync(userEvent);
+        }
+
+        public async Task<bool> IfBelongToEventAsync(int eventId, int userId)
+        {
+            return await _context.UserEvents.AnyAsync(a => a.EventId == eventId & a.UserId == userId);
         }
     }
 }

@@ -6,8 +6,6 @@ using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 
 namespace InterOn.Service.Services
 {
@@ -75,6 +73,21 @@ namespace InterOn.Service.Services
         public async Task<bool> IfExist(int id)
         {
             return await _repository.Exist(g => g.Id == id);
+        }
+
+        public async Task<GroupDto> CreateUserGroup(int groupId, int userId)
+        {
+            var userGroup = new UserGroup {GroupId = groupId, UserId = userId};
+            await _repository.AddUserGroupAsync(userGroup);
+            await _repository.SaveUserGroupAsync();
+            var group = await _repository.GetGroup(groupId);
+            var result = _mapper.Map<Group, GroupDto>(group);
+            return result;
+        }
+
+        public async Task<bool> IfUserBelongToGroupAsync(int userId, int groupId)
+        {
+            return await _repository.IfBelongToGroup(groupId, userId);
         }
     }
 }
