@@ -62,10 +62,16 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public async Task<IEnumerable<GroupPhoto>> GetGroupPhoto(int id)
+        public async Task<GroupPhoto> GetPhoto(string fileName)
         {
-            var photo = await _repository.FindByAsyn(a => a.GroupRef == id);
-            return photo.AsEnumerable();
+            var photo = await _repository.FindBy(g => g.FileName == fileName).SingleAsync();
+            return photo;
+        }
+
+        public async Task<GroupPhoto> GetGroupPhoto(int id)
+        {
+            var photo = await _repository.FindBy(g => g.GroupRef == id).SingleAsync();
+            return photo;
         }
 
       

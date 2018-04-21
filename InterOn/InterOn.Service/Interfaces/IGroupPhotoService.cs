@@ -11,7 +11,8 @@ namespace InterOn.Service.Interfaces
     {
         Task RemovePhoto(int groupId);
         IEnumerable<GetGroupPhotoDto> MapPhotoDtoQueryable(IEnumerable<GroupPhoto> photo);
-        Task<IEnumerable<GroupPhoto>> GetGroupPhoto(int id);
+        Task<GroupPhoto> GetPhoto(string fileName);
+        Task<GroupPhoto> GetGroupPhoto(int id);
         Task<bool> IsExist(int id);
         Task<GroupPhoto> UploadPhoto(int groupId, IFormFile file, string uploadsFolderPath);
         GroupPhotoDto MapPhoto(GroupPhoto photo);

@@ -1,6 +1,8 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using InterOn.Api.Helpers;
+using InterOn.Data.DbModels;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {
-    [Route("api/group/{groupId}/photo")]
+    
     public class GroupPhotoController : Controller
     {
         private readonly IHostingEnvironment _host;
@@ -26,6 +28,7 @@ namespace InterOn.Api.Controllers
         }
 
         [HttpPost]
+        [Route("api/group/{groupId}/photo")]
         public async Task<IActionResult> Upload(int groupId, IFormFile file)
         {
             if (await _groupService.IfExist(groupId) == false) return NotFound();
@@ -43,6 +46,18 @@ namespace InterOn.Api.Controllers
             var result = _photoService.MapPhoto(photo);
             return Ok(result);
         }
+
+
+        //GET api/file/id
+        [HttpGet]
+        [Route("api/photo/{fileName}")]
+        public async Task<IActionResult> GetFile(string fileName)
+        {
+            var stream = _host.WebRootPath + "\\uploads\\" + fileName;
+            var imageFileStream = System.IO.File.OpenRead(stream);
+            return File(imageFileStream, "image/jpeg");
+        }
+        /*
         [HttpGet]
         public async Task<IActionResult> GetGroupPhoto(int groupId)
         {
@@ -55,5 +70,6 @@ namespace InterOn.Api.Controllers
 
             return Ok(result);
         }
+        */
     }
 }
