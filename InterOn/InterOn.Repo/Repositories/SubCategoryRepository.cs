@@ -41,5 +41,15 @@ namespace InterOn.Repo.Repositories
                 .Include(p => p.SubCategoryPhoto)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Group>> GetAllGroupForSubCategoryAsync(int categoryId)
+        {
+            var query = await _context.Groups
+                .Include(a=>a.GroupPhoto)
+                .Where(a => a.SubCategories
+                    .Any(c => c.SubCategoryId == categoryId))
+                .ToListAsync();
+            return query;
+        }
     }
 }

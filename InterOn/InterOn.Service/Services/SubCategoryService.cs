@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Category;
+using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
 
@@ -77,6 +78,15 @@ namespace InterOn.Service.Services
                     subCategoryFromRepo.MainCategoryId);
             var result = _mapper.Map<SubCategory, SubCategoryDto>(subCategoryFromRepo);
             return result;
+        }
+
+        public async Task<IEnumerable<GroupUnauthorizedDto>> GetAllGroupsForSubCategory(int categoryId)
+        {
+            var groups = await _repository.GetAllGroupForSubCategoryAsync(categoryId);
+            var result = _mapper.Map<IEnumerable<Group>, IEnumerable<GroupUnauthorizedDto>>(groups);
+            
+            return result;
+
         }
     }
 }

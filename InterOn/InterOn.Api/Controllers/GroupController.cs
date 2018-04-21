@@ -53,7 +53,7 @@ namespace InterOn.Api.Controllers
             if (group == null) return NotFound();
             return Ok(group);
         }
-
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {

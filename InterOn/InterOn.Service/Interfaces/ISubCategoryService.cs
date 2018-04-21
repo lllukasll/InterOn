@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Category;
+using InterOn.Data.ModelsDto.Group;
 
 namespace InterOn.Service.Interfaces
 {
     public interface ISubCategoryService
     {
+        Task<IEnumerable<GroupUnauthorizedDto>> GetAllGroupsForSubCategory(int categoryId);
         Task<IEnumerable<SubCategoryDto>> GetAllSubCategoriesAsync();
         Task<bool> ExistSubCategory(int id);
         Task<SubCategoryDto> UpdateSubCategoryForMainCategory(int subId, int mainId, SaveCategoryDto categoryDto);
