@@ -33,6 +33,13 @@ namespace InterOn.Api.Helpers
                 .ForMember(gdt => gdt.Id, opt => opt.MapFrom(g => g.UserId));
 
             //Group
+            CreateMap<Group, GroupUnauthorizedDto>()
+                .ForMember(gdt => gdt.AvatarUrl,
+                    otp => otp.MapFrom(g => g.GroupPhoto.FileName));
+
+
+
+
             CreateMap<Group, GroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
@@ -78,7 +85,7 @@ namespace InterOn.Api.Helpers
                     foreach (var c in addedCategories.ToList())
                         g.SubCategories.Add(c);
                 });
-
+             
             //MainCategory
             CreateMap<SaveCategoryDto, MainCategory>()
                 .ForMember(g => g.Id, opt => opt.Ignore());
@@ -87,13 +94,14 @@ namespace InterOn.Api.Helpers
             CreateMap<MainCategory, MainCategoryDto>()
                 .ForMember(gdt => gdt.AvatarUrl,
                     otp => otp.MapFrom(g => g.MainCategoryPhoto.FileName));
-                
+          
             //SubCategory
             CreateMap<SubCategoryDto, SubCategory>();
             CreateMap<SubCategory, SubCategoryDto>()
                 .ForMember(gdt => gdt.AvatarUrl,
                     otp => otp.MapFrom(g => g.SubCategoryPhoto.FileName));
-           
+               
+               
             CreateMap<SaveCategoryDto, SubCategory>()
                 .ForMember(g => g.Id, opt => opt.Ignore());
 

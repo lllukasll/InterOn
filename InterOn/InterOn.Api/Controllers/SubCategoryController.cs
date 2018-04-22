@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using InterOn.Data.ModelsDto.Category;
+﻿using InterOn.Data.ModelsDto.Category;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace InterOn.Api.Controllers
 {
-    
+
     public class SubCategoryController : Controller
     {
         private readonly ISubCategoryService _service;
@@ -84,6 +84,14 @@ namespace InterOn.Api.Controllers
             if (categories == null)
                 return NotFound();
             return Ok(categories);
+        }
+
+        [HttpGet("/api/subcategories/{categoryId}/group")]
+        public async Task<IActionResult> GetGroupForSubCategories(int categoryId)
+        {
+            var group = await _service.GetAllGroupsForSubCategory(categoryId);
+            if (group == null) return NotFound();
+            return Ok(group);
         }
     }
 }
