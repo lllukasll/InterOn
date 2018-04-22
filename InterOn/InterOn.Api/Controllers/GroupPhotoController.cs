@@ -53,6 +53,9 @@ namespace InterOn.Api.Controllers
         [Route("api/photo/{fileName}")]
         public async Task<IActionResult> GetFile(string fileName)
         {
+            if (fileName == null || fileName == "null")
+                return BadRequest();
+
             var stream = _host.WebRootPath + "\\uploads\\" + fileName;
             var imageFileStream = System.IO.File.OpenRead(stream);
             return File(imageFileStream, "image/jpeg");
