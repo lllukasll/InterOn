@@ -5,6 +5,7 @@ using InterOn.Data.ModelsDto;
 using InterOn.Data.ModelsDto.Category;
 using InterOn.Data.ModelsDto.Event;
 using InterOn.Data.ModelsDto.Group;
+using InterOn.Data.ModelsDto.Post;
 
 namespace InterOn.Api.Helpers
 {
@@ -118,14 +119,12 @@ namespace InterOn.Api.Helpers
                     opt => opt.MapFrom(gdt =>
                         gdt.SubCategories.Select(id => new EventSubCategory {SubCategoryId = id})))
               .ForMember(g => g.Users, opt => opt.Ignore())
-               
               .ForMember(e=>e.User,opt=>opt.Ignore())
-              .ForMember(e=>e.UserId,opt=>opt.Ignore())
-              .ForMember(e => e.Address, opt => opt.Ignore());
+              .ForMember(e => e.Address, opt => opt.MapFrom(id=>new Address()));
             CreateMap<Event, CreateEventDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     opt => opt.MapFrom(g => g.SubCategories.Select(gd => gd.SubCategoryId)));
-            CreateMap<UpdateGroupDto,Event>()
+            CreateMap<UpdateEventDto,Event>()
                 .ForMember(g => g.Id, opt => opt.Ignore())
                 .ForMember(g => g.SubCategories, opt => opt.Ignore())
                 .ForMember(g => g.Users, opt => opt.Ignore())
@@ -147,6 +146,12 @@ namespace InterOn.Api.Helpers
             CreateMap<Event, UpdateEventDto>()
                 .ForMember(ue => ue.SubCategories,
                     opt => opt.MapFrom(ev => ev.SubCategories.Select(esc => esc.SubCategoryId)));
+            //post
+            CreateMap<UpdateGroupPostDto, Post>()
+                .ForMember(dto => dto.Id,
+                    opt => opt.Ignore());
+            CreateMap<CreateGroupPostDto, Post>();
+            CreateMap<Post, PostGroupDto>();
 
         }
     }

@@ -21,7 +21,8 @@ namespace InterOn.Api.Controllers
                 return BadRequest("Nie ma grupy o tym Id");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-             var result = await _service.CreateEventForGroupAsync(eventDto, groupId);
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            var result = await _service.CreateEventForGroupAsync(eventDto, groupId);
             return Ok(result);
         }
     }

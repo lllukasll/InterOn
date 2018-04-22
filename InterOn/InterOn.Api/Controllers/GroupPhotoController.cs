@@ -57,19 +57,6 @@ namespace InterOn.Api.Controllers
             var imageFileStream = System.IO.File.OpenRead(stream);
             return File(imageFileStream, "image/jpeg");
         }
-        /*
-        [HttpGet]
-        public async Task<IActionResult> GetGroupPhoto(int groupId)
-        {
 
-            if (await _groupService.IfExist(groupId) == false)
-                return NotFound();
-            var photo = await _photoService.GetGroupPhoto(groupId);
-            
-            var result = _photoService.MapPhotoDtoQueryable(photo);
-
-            return Ok(result);
-        }
-        */
     }
 }

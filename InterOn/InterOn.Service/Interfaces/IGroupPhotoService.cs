@@ -10,7 +10,6 @@ namespace InterOn.Service.Interfaces
     public interface IGroupPhotoService
     {
         Task RemovePhoto(int groupId);
-        IEnumerable<GetGroupPhotoDto> MapPhotoDtoQueryable(IEnumerable<GroupPhoto> photo);
         Task<GroupPhoto> GetPhoto(string fileName);
         Task<GroupPhoto> GetGroupPhoto(int id);
         Task<bool> IsExist(int id);
