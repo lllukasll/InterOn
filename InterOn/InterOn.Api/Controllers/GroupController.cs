@@ -1,8 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
+using InterOn.Api.Helpers;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {
@@ -10,20 +15,40 @@ namespace InterOn.Api.Controllers
     [Route("/api/group")]
     public class GroupController : Controller
     {
+        private readonly IGroupPhotoService _photoService;
         private readonly IGroupService _groupService;
+        private readonly IHostingEnvironment _host;
+        private PhotoSettings _photoSettings;
 
-        public GroupController(IGroupService groupRepository)
+        public GroupController(IGroupPhotoService photoService, IGroupService groupRepository, IOptions<PhotoSettings> options, IHostingEnvironment host)
         {
+            _photoService = photoService;
             _groupService = groupRepository;
+            _host = host;
+            _photoSettings = options.Value;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto)
+        public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto, IFormFile file)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
-            var result = await _groupService.CreateGroup(groupDto, userId);
-            return Ok(result);
+            var groupId = await _groupService.CreateGroup(groupDto, userId);
+
+            if (await _groupService.IfExist(groupId) == false) return NotFound();
+
+            if (file == null) return BadRequest("Brak Pliku");
+            if (file.Length == 0) return BadRequest("Pusty plik");
+            if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
+            if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
+            if (await _photoService.IsExist(groupId))
+            {
+                await _photoService.RemovePhoto(groupId);
+            }
+            var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
+            await _photoService.UploadPhoto(groupId, file, uploadsFolderPath);
+            var resultGroup = _groupService.GetGroupMappedAsync(groupId);
+            return Ok(resultGroup);
         }
 
         [HttpPut("{id}")]

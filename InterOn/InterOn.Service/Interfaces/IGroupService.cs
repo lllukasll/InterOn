@@ -11,7 +11,7 @@ namespace InterOn.Service.Interfaces
         Task<bool> IfUserBelongToGroupAsync(int userId, int groupId);
         Task<GroupDto> CreateUserGroup(int groupId, int userId);
         Task<GroupDto> GetGroupMappedAsync(int id);
-        Task<GroupDto> CreateGroup(CreateGroupDto groupDto, int userId);
+        Task<int> CreateGroup(CreateGroupDto groupDto, int userId);
         Task<Group> GetGroupAsync(int id, bool includeRelated = true);
         Task<IEnumerable<GroupDto>> GetGroupsAsync();
         Task Remove(int id);
