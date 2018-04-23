@@ -76,7 +76,8 @@ namespace InterOn.Api
             services.AddScoped<ISubCategoryPhotoService, SubCategroyPhotoService>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostService, PostService>();
-
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<ICommentService, CommentService>();
         }
      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

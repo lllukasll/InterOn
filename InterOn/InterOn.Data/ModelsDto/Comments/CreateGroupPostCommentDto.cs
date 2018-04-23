@@ -2,7 +2,7 @@
 
 namespace InterOn.Data.ModelsDto.Comments
 {
-    public class CreateGroupCommentsDto
+    public class CreateGroupPostCommentDto
     {
         public string Content { get; set; }
         public DateTime CreateDateTime { get; set; }

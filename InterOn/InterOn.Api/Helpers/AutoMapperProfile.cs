@@ -3,6 +3,7 @@ using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto;
 using InterOn.Data.ModelsDto.Category;
+using InterOn.Data.ModelsDto.Comments;
 using InterOn.Data.ModelsDto.Event;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Data.ModelsDto.Post;
@@ -152,7 +153,11 @@ namespace InterOn.Api.Helpers
                     opt => opt.Ignore());
             CreateMap<CreateGroupPostDto, Post>();
             CreateMap<Post, PostGroupDto>();
+            //comment
 
+            CreateMap<CreateGroupPostCommentDto, Comment>();
+            CreateMap<UpdateGroupPostCommentDto, Comment>();
+            CreateMap<Comment, CommentDto>();
         }
     }
 }
