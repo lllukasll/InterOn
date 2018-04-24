@@ -18,10 +18,13 @@ namespace InterOn.Data.DbModels
 
         public string PhotoUrl { get; set; }
 
-        public Address Address { get; set; }
-
         public int? GroupId { get; set; }
-        
+
+        [Required]
+        public string Longitude { get; set; }
+        [Required]
+        public string Latitude { get; set; }
+
 
         //Admin
         public int? UserId { get; set; }

@@ -36,6 +36,7 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> UpdateCommentsForPostGroup(int groupId, int postId, int commentId,
             [FromBody] UpdateGroupPostCommentDto commentsDto)
         {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             if (await _service.IfGroupExistAsync(groupId) == false)
@@ -44,10 +45,11 @@ namespace InterOn.Api.Controllers
                 return NotFound("Nie ma Takiego Postu");
             if (await _service.IfCommentExistAsync(commentId) == false)
                 return NotFound("Nie ma Takiego Komentarza");
+            if (await _service.IfUserAddCommentAsync(commentId, userId)==false)
+                return BadRequest("Ten użytkownik nie może edytować tego Komentarza");
             await _service.UpdateCommentForGroupAsync(commentId, commentsDto);
             return Ok();
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetAllCommentsForPostGroup(int postId, int groupId)
@@ -63,12 +65,15 @@ namespace InterOn.Api.Controllers
         [HttpDelete("{commentId}")]
         public async Task<IActionResult> DeleteCommentForPostGroup(int commentId, int postId, int groupId)
         {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
             if (await _service.IfGroupExistAsync(groupId) == false)
                 return NotFound("Nie ma takiej Grupy");
             if (await _service.IfPostExistAsync(postId) == false)
                 return NotFound("Nie ma Takiego Postu");
             if (await _service.IfCommentExistAsync(commentId) == false)
                 return NotFound("Nie ma Takiego Komentarza");
+            if (await _service.IfUserAddCommentAsync(commentId, userId)==false)
+                return BadRequest("Ten użytkownik nie może usunąć tego Komentarza");
             await _service.DeleteComment(commentId);
 
             return Ok();

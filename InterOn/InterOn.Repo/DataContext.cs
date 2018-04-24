@@ -19,7 +19,6 @@ namespace InterOn.Repo
         public DbSet<MainCategory> MainCategories { get; set; }
         public DbSet<GroupPhoto> GroupPhotos { get; set; }
         public DbSet<Event> Events { get; set; }
-        public DbSet<Address> Addresses { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<EventSubCategory> EventSubCategories { get; set; }
@@ -46,11 +45,7 @@ namespace InterOn.Repo
                 .HasForeignKey<SubCategoryPhoto>(b => b.SubCategoryRef)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<UserEvent>().HasKey(ug => new { ug.EventId, ug.UserId });
-            modelBuilder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});
-            modelBuilder.Entity<Event>()
-                .HasOne(a => a.Address)
-                .WithOne(b => b.Event)
-                .HasForeignKey<Address>(b => b.EventRef);         
+            modelBuilder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});    
             modelBuilder.Entity<EventSubCategory>().HasKey(es => new {es.EventId, es.SubCategoryId});
           
         }

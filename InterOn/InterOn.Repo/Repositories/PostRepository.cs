@@ -12,10 +12,10 @@ namespace InterOn.Repo.Repositories
         {
         }
 
-        public async Task<bool> IfGroupExist(int groupId)
-        {
-            return await _context.Groups.AnyAsync(a => a.Id == groupId);
-        }
+        public async Task<bool> IfGroupExist(int groupId) => await _context.Groups.AnyAsync(a => a.Id == groupId);
+
+        public async Task<bool> IfUserAddPost(int postId, int userId) =>
+            await _context.Posts.AnyAsync(p => p.UserId == userId & p.Id == postId);
 
         public async Task<Post> GetPostGroup(int groupId, int postId)
         {

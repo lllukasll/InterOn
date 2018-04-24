@@ -7,9 +7,10 @@ namespace InterOn.Service.Interfaces
 {
     public interface IPostService
     {
+        Task<bool> IfUserAddPostAsync(int postId, int userId);
         Task<PostGroupDto> MapPostDto(int postId);
         Task<bool> IfExistPost(int postId);
-        Task<bool> IfExistGroup(int groupId);
+        Task<bool> IfExistGroupAsync(int groupId);
         Task<PostGroupDto> CreatePostGroupAsync(int groupId, int userId, CreateGroupPostDto createGroupPostDto);
         Task<Post> UpdatePostGroupAsync(int groupId, int postId, UpdateGroupPostDto updateGroupPost);
         Task RemovePost(int postId);

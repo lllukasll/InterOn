@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace InterOn.Data.DbModels
@@ -21,6 +23,12 @@ namespace InterOn.Data.DbModels
         public int? GroupId { get; set; }
         public Group Group { get; set; }
 
+        public ICollection<Comment> Comments { get; set; }
+
+        public Post()
+        {
+            Comments = new Collection<Comment>();
+        }
 
     }
 }

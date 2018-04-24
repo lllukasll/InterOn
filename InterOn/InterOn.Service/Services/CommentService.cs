@@ -14,7 +14,7 @@ namespace InterOn.Service.Services
         private readonly ICommentRepository _repository;
         private readonly IMapper _mapper;
 
-        public CommentService(ICommentRepository repository,IMapper mapper)
+        public CommentService(ICommentRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -24,12 +24,14 @@ namespace InterOn.Service.Services
         public async Task<bool> IfCommentExistAsync(int commentId) => await _repository.Exist(a => a.Id == commentId);
         public async Task<bool> IfPostExistAsync(int postId) => await _repository.IfPostExist(postId);
 
+        public async Task<bool> IfUserAddCommentAsync(int commentId, int userId) =>
+            await _repository.IfUserAddComment(commentId, userId);
+
         public async Task UpdateCommentForGroupAsync(int commentId, UpdateGroupPostCommentDto commentsDto)
         {
             var comment = await _repository.GetAsync(commentId);
             comment.UpdateDateTime = DateTime.Now;
             _mapper.Map(commentsDto, comment);
-
             await _repository.SaveAsync();
         }
 
@@ -40,7 +42,7 @@ namespace InterOn.Service.Services
             await _repository.SaveAsync();
         }
 
-        public async Task CreateCommentForGroupAsync(int groupId, int userId,int postId,
+        public async Task CreateCommentForGroupAsync(int groupId, int userId, int postId,
             CreateGroupPostCommentDto createGroupComment)
         {
             var comment = _mapper.Map<CreateGroupPostCommentDto, Comment>(createGroupComment);
@@ -48,7 +50,7 @@ namespace InterOn.Service.Services
             comment.UserId = userId;
             comment.CreateDateTime = DateTime.Now;
             await _repository.AddAsyn(comment);
-            await _repository.SaveAsync();     
+            await _repository.SaveAsync();
         }
 
         public async Task<IEnumerable<CommentDto>> GetAllCommentsFromPostGroup(int postId)
@@ -57,6 +59,5 @@ namespace InterOn.Service.Services
             var resultComments = _mapper.Map<IEnumerable<Comment>, IEnumerable<CommentDto>>(comments);
             return resultComments;
         }
-
     }
 }

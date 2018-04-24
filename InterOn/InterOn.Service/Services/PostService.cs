@@ -21,10 +21,9 @@ namespace InterOn.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> IfExistGroup(int groupId)
-        {
-           return await _repository.IfGroupExist(groupId);
-        }
+        public async Task<bool> IfUserAddPostAsync(int postId, int userId) =>
+            await _repository.IfUserAddPost(postId, userId);
+        public async Task<bool> IfExistGroupAsync(int groupId) => await _repository.IfGroupExist(groupId);
 
         public async Task<PostGroupDto> CreatePostGroupAsync(int groupId, int userId, CreateGroupPostDto createGroupPostDto)
         {

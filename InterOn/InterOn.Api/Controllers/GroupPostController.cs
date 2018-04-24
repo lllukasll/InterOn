@@ -21,7 +21,7 @@ namespace InterOn.Api.Controllers
         public async Task<IActionResult> CreatePostForGroup(int groupId,[FromBody] CreateGroupPostDto createGroupPostDto )
         {
             var userId = int.Parse(HttpContext.User.Identity.Name);
-            if (await _service.IfExistGroup(groupId) == false)
+            if (await _service.IfExistGroupAsync(groupId) == false)
                 return NotFound("Nie ma takiej grupy");
             var post =  await _service.CreatePostGroupAsync(groupId, userId, createGroupPostDto);
 
@@ -31,31 +31,38 @@ namespace InterOn.Api.Controllers
         [HttpPut("{postId}")]
         public async Task<IActionResult> UpdatePostForGroup(int groupId,int postId, [FromBody] UpdateGroupPostDto updateGroupPost)
         {
-            if (await _service.IfExistGroup(groupId) == false)
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.IfExistGroupAsync(groupId) == false)
                 return NotFound("Nie ma takiej grupy");
             if (await _service.IfExistPost(postId) == false)
                 return NotFound("Nie ma takiego postu");
-             await _service.UpdatePostGroupAsync(groupId,postId,updateGroupPost);
+            if (await _service.IfUserAddPostAsync(postId, userId) == false)
+                return BadRequest("Użytkownik nie może edytować posta");
+            await _service.UpdatePostGroupAsync(userId,postId,updateGroupPost);
+            
             var result = await _service.MapPostDto(postId);
             return Ok(result);
         }
         [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePostForGroup(int postId,int groupId)
         {
-            if (await _service.IfExistGroup(groupId) == false)
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.IfExistGroupAsync(groupId) == false)
                 return NotFound("Nie ma takiej grupy");
             if (await _service.IfExistPost(postId) == false)
                 return NotFound("Nie ma takiego postu");
+            if (await _service.IfUserAddPostAsync(postId, userId) == false)
+                return BadRequest("Użytkownik nie może usunąć posta");
             await _service.RemovePost(postId);
-            return Ok();
+             return Ok();
         }
         [HttpGet]
         public async Task<IActionResult> GetPostsForGroup(int groupId)
         {
-            if (await _service.IfExistGroup(groupId) == false)
+            if (await _service.IfExistGroupAsync(groupId) == false)
                 return NotFound("Nie ma takiej grupy");
-            var sss = await _service.GetAllPostsForGroupAsync(groupId);
-            return Ok(sss);
+            var resultDtos = await _service.GetAllPostsForGroupAsync(groupId);
+            return Ok(resultDtos);
         }
     }
 }
