@@ -66,6 +66,16 @@ namespace InterOn.Service.Services
             return result;
         }
 
+        public async Task CreateEventForGroupAsync(CreateEventDto eventDto, int groupId, int userId)
+        {
+            var eventforgroup = _mapper.Map<CreateEventDto, Event>(eventDto);
+            eventforgroup.GroupId = groupId;
+            eventforgroup.UserId = userId;
+            await _repository.AddAsyn(eventforgroup);
+            await _repository.SaveAsync();
+
+        }
+
         public async Task RemoveUserEvent(int userId, int eventId)
         {
             var userEvent = await _repository.GetUserEvent(userId, eventId);

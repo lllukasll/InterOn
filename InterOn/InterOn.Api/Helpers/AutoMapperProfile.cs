@@ -119,6 +119,10 @@ namespace InterOn.Api.Helpers
                 .ForMember(g => g.SubCategories,
                     opt => opt.MapFrom(gdt =>
                         gdt.SubCategories.Select(id => new EventSubCategory {SubCategoryId = id})))
+                .ForMember(e=>e.Latitude,
+                    opt=>opt.MapFrom(a=>a.Address.Latitude))
+                .ForMember(e => e.Longitude,
+                    opt => opt.MapFrom(a => a.Address.Longitude))
                 .ForMember(g => g.Users, opt => opt.Ignore())
                 .ForMember(e => e.User, opt => opt.Ignore());
               

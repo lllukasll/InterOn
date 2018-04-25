@@ -16,7 +16,7 @@ namespace InterOn.Data.ModelsDto.Event
         public int UserId { get; set; }
 
         [Required]
-        public AddressDto AddressDto { get; set; }
+        public AddressDto Address { get; set; }
 
         public ICollection<int> SubCategories { get; set; }
 

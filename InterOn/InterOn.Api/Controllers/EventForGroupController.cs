@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Event;
 using InterOn.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterOn.Api.Controllers
-{
+{   [Authorize]
     [Route("api/group/{groupId}/event")]
     public class EventForGroupController : Controller
     {
@@ -22,8 +23,8 @@ namespace InterOn.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
-            var result = await _service.CreateEventForGroupAsync(eventDto, groupId);
-            return Ok(result);
+            await _service.CreateEventForGroupAsync(eventDto, groupId,userId);
+            return Ok();
         }
     }
 }
