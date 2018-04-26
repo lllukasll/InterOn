@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Event;
@@ -27,14 +28,11 @@ namespace InterOn.Service.Services
             await _repository.SaveAsync();
         }
 
-        public async Task<UpdateEventDto> UpdateEventAsync(int id, UpdateEventDto eventDto)
+        public async Task UpdateEventAsync(int eventId, UpdateEventDto eventDto)
         {
-            var eventt = await _repository.GetAllIncluding(a => a.SubCategories).SingleOrDefaultAsync(a => a.Id == id);
+            var eventt = await _repository.GetAllIncluding(a => a.SubCategories).SingleOrDefaultAsync(a => a.Id == eventId);
             _mapper.Map(eventDto, eventt);
             await _repository.SaveAsync();
-            eventt = await _repository.GetAsync(eventt.Id);
-            var result = _mapper.Map<Event,UpdateEventDto>(eventt);
-            return result;
         }
 
         public async Task CreateEventUserAsync(int eventId, int userId)
@@ -59,12 +57,48 @@ namespace InterOn.Service.Services
 
         }
 
+        public async Task<IEnumerable<EventGroupDto>> GetAllEventGroupAsync(int groupId)
+        {
+            var eventGroup = await _repository.GetGroupEvents(groupId);
+            var resultMap = _mapper.Map<IEnumerable<Event>, IEnumerable<EventGroupDto>>(eventGroup);
+            return resultMap;
+        }
+
+        public async Task Delete(int eventId)
+        {
+            var eventt = await _repository.GetAsync(eventId);
+             _repository.Remove(eventt);
+            await _repository.SaveAsync();
+        }
+
+        public async Task<IEnumerable<EventDto>> GetAllEventAsync()
+        {
+            var eventt = await _repository.GetEvents();
+            var resultMap = _mapper.Map<IEnumerable<Event>, IEnumerable<EventDto>>(eventt);
+            return resultMap;
+        }
+
+        public async Task<EventDto> GetEventAsync(int eventId)
+        {
+            var eventt = await _repository.GetEventAsync(eventId, 0);
+            var resultMap = _mapper.Map<Event, EventDto>(eventt);
+            return resultMap;
+        }
+        public async Task<EventGroupDto> GetEventAsync(int eventId,int groupId)
+        {
+            var eventt = await _repository.GetEventAsync(eventId, groupId);
+            var resultMap = _mapper.Map<Event, EventGroupDto>(eventt);
+            return resultMap;
+        }
+
         public async Task RemoveUserEvent(int userId, int eventId)
         {
             var userEvent = await _repository.GetUserEvent(userId, eventId);
             _repository.RemoveUserEvent(userEvent);
             await _repository.SaveAsync();
         }
+
+        
 
         public async Task<bool> ExistEvent(int id) => await _repository.Exist(e => e.Id == id);
 

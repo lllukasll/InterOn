@@ -40,10 +40,38 @@ namespace InterOn.Api.Controllers
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var result = await _service.UpdateEventAsync(id, eventDto);
+            await _service.UpdateEventAsync(id, eventDto);
 
-            return Ok(result);                
+            return Ok();                
         }
-     
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllEvent()
+        {
+            var result = await _service.GetAllEventAsync();
+            if (result == null)
+                return NotFound("Nie ma żadnego wydarzenia");
+            return Ok(result);
+        }
+
+        [HttpGet("{eventId}")]
+        public async Task<IActionResult> GetEvent(int eventId)
+        {
+            var result = await _service.GetEventAsync(eventId);
+            if (result == null)
+                return NotFound("Nie ma takiego wydarzenia publicznego");
+            return Ok(result);
+        }
+
+        [HttpDelete("{eventId}")]
+        public async Task<IActionResult> DeleteEvent(int eventId)
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.IsAdminEvent(eventId, userId) == false)
+                return BadRequest("Nie jesteś adminem eventu");
+
+            await _service.Delete(eventId);
+            return Ok();
+        }
     }
 }

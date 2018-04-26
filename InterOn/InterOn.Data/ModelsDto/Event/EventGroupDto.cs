@@ -5,7 +5,7 @@ using InterOn.Data.ModelsDto.Category;
 
 namespace InterOn.Data.ModelsDto.Event
 {
-    public class EventDto
+    public class EventGroupDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,13 +13,10 @@ namespace InterOn.Data.ModelsDto.Event
         public DateTime DateTimeEvent { get; set; }
         public string PhotoUrl { get; set; }
         public int GroupId { get; set; }
-        //Admin
-        //public int UserId { get; set; }
-        //public User User { get; set; }
-
+    
         public ICollection<SubCategoriesDto> SubCategories { get; set; }
 
-        public EventDto()
+        public EventGroupDto()
         {
             SubCategories = new Collection<SubCategoriesDto>();
         }

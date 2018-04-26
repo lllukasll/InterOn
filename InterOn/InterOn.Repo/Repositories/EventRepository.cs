@@ -1,4 +1,5 @@
-﻿using InterOn.Data.DbModels;
+﻿using System.Collections.Generic;
+using InterOn.Data.DbModels;
 using InterOn.Repo.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -28,5 +29,37 @@ namespace InterOn.Repo.Repositories
             await _context.UserEvents.Where(a => a.EventId == eventId & a.UserId == userId).SingleAsync();
 
         public void RemoveUserEvent(UserEvent userEvent) => _context.UserEvents.Remove(userEvent);
+        public async Task<IEnumerable<Event>> GetGroupEvents(int groupId)
+        {
+            return await _context.Events
+                .Include(gu => gu.Users)
+                .ThenInclude(u => u.User)
+                .Include(g => g.SubCategories)
+                .ThenInclude(g => g.SubCategory)
+                .OrderBy(a=>a.DateTimeEvent)
+                .Where(a=>a.GroupId==groupId)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Event>> GetEvents()
+        {
+            return await _context.Events
+                .Include(gu => gu.Users)
+                .ThenInclude(u => u.User)
+                .Include(g => g.SubCategories)
+                .ThenInclude(g => g.SubCategory)
+                .OrderBy(a => a.DateTimeEvent)
+                .Where(a=>a.GroupId==0)
+                .ToListAsync();
+        }
+        public async Task<Event> GetEventAsync(int eventId,int groupId)
+        {
+            return await _context.Events
+                .Include(gu => gu.Users)
+                    .ThenInclude(u => u.User)
+                .Include(g => g.SubCategories)
+                    .ThenInclude(g => g.SubCategory)
+                .Where(a => a.GroupId == groupId)
+                .SingleOrDefaultAsync(a => a.Id == eventId);
+        }
     }
 }

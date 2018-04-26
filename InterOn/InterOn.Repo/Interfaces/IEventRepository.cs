@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using InterOn.Data.DbModels;
 
 namespace InterOn.Repo.Interfaces
@@ -11,5 +12,8 @@ namespace InterOn.Repo.Interfaces
         Task AddUserEvent(UserEvent userEvent);
         Task<bool> IfGroupExist(int id);
         void RemoveUserEvent(UserEvent userEvent);
+        Task<IEnumerable<Event>> GetGroupEvents(int groupId);
+        Task<IEnumerable<Event>> GetEvents();
+        Task<Event> GetEventAsync(int eventId,int groupId);
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace InterOn.Data.ModelsDto.Group
+﻿namespace InterOn.Data.ModelsDto.Category
 {
-    public class GroupSubCategoryDto
+    public class SubCategoriesDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

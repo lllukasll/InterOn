@@ -26,5 +26,51 @@ namespace InterOn.Api.Controllers
             await _service.CreateEventForGroupAsync(eventDto, groupId,userId);
             return Ok();
         }
+        [HttpPut("{eventId}")]
+        public async Task<IActionResult> UpdateEventGroup(int eventId,int groupId, [FromBody] UpdateEventDto eventDto)
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.ExistGroup(groupId) == false)
+                return BadRequest("Nie ma grupy o tym Id");
+            if (await _service.IsAdminEvent(eventId,userId) == false)
+                return BadRequest("Nie jesteś adminem eventu");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+           
+            await _service.UpdateEventAsync(eventId,eventDto);
+            return Ok();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllEventGroup( int groupId)
+        {
+            if (await _service.ExistGroup(groupId) == false)
+                return BadRequest("Nie ma grupy o tym Id");
+            var result = await _service.GetAllEventGroupAsync(groupId);
+            if (result == null)
+                return NotFound("Nie ma żadnego wydarzenia dla tej grupy");
+            return Ok(result);
+        }
+        [HttpGet("{eventId}")]
+        public async Task<IActionResult> GetEventGroup(int eventId,int groupId)
+        {
+            if (await _service.ExistGroup(groupId) == false)
+                return BadRequest("Nie ma grupy o tym Id");
+            var result = await _service.GetEventAsync(eventId,groupId);
+            if (result == null)
+                return NotFound("Nie ma żadnego wydarzenia dla tej grupy");
+            return Ok(result);
+        }
+        [HttpDelete("{eventId}")]
+        public async Task<IActionResult> DeleteEventGroup(int eventId, int groupId)
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.ExistGroup(groupId) == false)
+                return BadRequest("Nie ma grupy o tym Id");
+            if (await _service.IsAdminEvent(eventId, userId) == false)
+                return BadRequest("Nie jesteś adminem eventu");
+
+            await _service.Delete(eventId);
+            return Ok();
+        }
     }
 }

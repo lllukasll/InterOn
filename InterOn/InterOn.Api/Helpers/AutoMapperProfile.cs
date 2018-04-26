@@ -45,12 +45,12 @@ namespace InterOn.Api.Helpers
             CreateMap<Group, GroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new GroupSubCategoryDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})))
-                .ForMember(gdt=>gdt.AvatarUrl,
-                    otp=>otp.MapFrom(g=>g.GroupPhoto.FileName))
+                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name})))
+                .ForMember(gdt => gdt.AvatarUrl,
+                    otp => otp.MapFrom(g => g.GroupPhoto.FileName))
                 .ForMember(gdt => gdt.Users,
                     opt => opt.MapFrom(g => g.Users.Select(id =>
-                        new UserGroupDto {Id = id.User.Id,UserName = id.User.Username})));
+                        new UserGroupDto { Id = id.User.Id, UserName = id.User.Username})));
 
             CreateMap<Group, CreateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
@@ -96,7 +96,7 @@ namespace InterOn.Api.Helpers
             CreateMap<MainCategory, MainCategoryDto>()
                 .ForMember(gdt => gdt.AvatarUrl,
                     otp => otp.MapFrom(g => g.MainCategoryPhoto.FileName));
-          
+
             //SubCategory
             CreateMap<SubCategoryDto, SubCategory>();
             CreateMap<SubCategory, SubCategoryDto>()
@@ -157,6 +157,14 @@ namespace InterOn.Api.Helpers
             CreateMap<Event, UpdateEventDto>()
                 .ForMember(ue => ue.SubCategories,
                     opt => opt.MapFrom(ev => ev.SubCategories.Select(esc => esc.SubCategoryId)));
+            CreateMap<Event, EventGroupDto>()
+                .ForMember(gdt => gdt.SubCategories,
+                    otp => otp.MapFrom(g => g.SubCategories.Select(id =>
+                        new SubCategoriesDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})));
+            CreateMap<Event, EventDto>()
+                .ForMember(gdt => gdt.SubCategories,
+                    otp => otp.MapFrom(g => g.SubCategories.Select(id =>
+                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name })));
             //post
             CreateMap<UpdateGroupPostDto, Post>()
                 .ForMember(dto => dto.Id,
