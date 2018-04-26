@@ -1,8 +1,6 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using InterOn.Api.Helpers;
-using InterOn.Data.DbModels;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {
-    
+
     public class GroupPhotoController : Controller
     {
         private readonly IHostingEnvironment _host;
@@ -51,7 +49,7 @@ namespace InterOn.Api.Controllers
         //GET api/file/id
         [HttpGet]
         [Route("api/photo/{fileName}")]
-        public async Task<IActionResult> GetFile(string fileName)
+        public IActionResult GetFile(string fileName)
         {
             if (fileName == null || fileName == "null")
                 return BadRequest();

@@ -7,6 +7,7 @@ namespace InterOn.Service.Interfaces
 {
     public interface IGroupService
     {
+        Task<bool> IsAdminAsync(int userId, int groupId);
         Task RemoveUserGroup(int userId, int groupId);
         Task<bool> IfUserBelongToGroupAsync(int userId, int groupId);
         Task CreateUserGroup(int groupId, int userId);

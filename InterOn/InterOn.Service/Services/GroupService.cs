@@ -92,5 +92,9 @@ namespace InterOn.Service.Services
         {
             return await _repository.IfBelongToGroup(groupId, userId);
         }
+        public async Task<bool> IsAdminAsync(int userId, int groupId)
+        {
+            return await _repository.IsAdmin(groupId, userId);
+        }
     }
 }

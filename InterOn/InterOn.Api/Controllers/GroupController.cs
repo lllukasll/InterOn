@@ -1,13 +1,8 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using InterOn.Api.Helpers;
+﻿using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {
@@ -15,47 +10,30 @@ namespace InterOn.Api.Controllers
     [Route("/api/group")]
     public class GroupController : Controller
     {
-        private readonly IGroupPhotoService _photoService;
         private readonly IGroupService _groupService;
-        private readonly IHostingEnvironment _host;
-        private readonly PhotoSettings _photoSettings;
 
-        public GroupController(IGroupPhotoService photoService, IGroupService groupRepository, IOptions<PhotoSettings> options, IHostingEnvironment host)
+        public GroupController(IGroupService groupRepository)
         {
-            _photoService = photoService;
             _groupService = groupRepository;
-            _host = host;
-            _photoSettings = options.Value;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto, IFormFile file)
+        public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
-            var groupId = await _groupService.CreateGroup(groupDto, userId);
-
-            if (await _groupService.IfExist(groupId) == false) return NotFound();
-
-            if (file == null) return BadRequest("Brak Pliku");
-            if (file.Length == 0) return BadRequest("Pusty plik");
-            if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
-            if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
-            if (await _photoService.IsExist(groupId))
-            {
-                await _photoService.RemovePhoto(groupId);
-            }
-            var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
-            await _photoService.UploadPhoto(groupId, file, uploadsFolderPath);
-            var resultGroup = _groupService.GetGroupMappedAsync(groupId);
-            return Ok(resultGroup);
+            var result = await _groupService.CreateGroup(groupDto, userId);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGroup(int id, [FromBody] UpdateGroupDto groupDto)
         {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
             if (await _groupService.IfExist(id) == false)
                 return NotFound();
+            if (await _groupService.IsAdminAsync(userId,id) == false)
+                return BadRequest("Nie jesteś Adminem Grupy");
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var result = await _groupService.UpdateGroup(groupDto, id);
             if (result == null) return NotFound();
@@ -82,9 +60,11 @@ namespace InterOn.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
             if (await _groupService.IfExist(id) == false)
                 return NotFound();
-
+            if (await _groupService.IsAdminAsync(userId, id) == false)
+                return BadRequest("Nie jesteś Adminem Grupy");
             await _groupService.Remove(id);
 
             return Ok(id);

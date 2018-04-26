@@ -6,6 +6,7 @@ namespace InterOn.Repo.Interfaces
 {
     public interface IGroupRepository : IRepository<Group>
     {
+        Task<bool> IsAdmin(int groupId, int userId);
         Task<UserGroup> GetUserGroupAsync(int groupId, int userId);
         Task<bool> IfBelongToGroup(int groupId, int userId);
         Task SaveUserGroupAsync();

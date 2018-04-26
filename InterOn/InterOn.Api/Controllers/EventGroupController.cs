@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace InterOn.Api.Controllers
 {   [Authorize]
     [Route("api/group/{groupId}/event")]
-    public class EventForGroupController : Controller
+    public class EventGroupController : Controller
     {
         private readonly IEventService _service;
 
-        public EventForGroupController(IEventService service)
+        public EventGroupController(IEventService service)
         {
             _service = service;
         }

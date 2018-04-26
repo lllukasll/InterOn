@@ -25,23 +25,23 @@ namespace InterOn.Repo.Repositories
                 return await _context.Groups.FindAsync(id);
 
             return await _context.Groups
-                .Include(u=>u.Users)
-                    .ThenInclude(u => u.User)
+                .Include(u => u.Users)
+                .ThenInclude(u => u.User)
                 .Include(gp => gp.GroupPhoto)
                 .Include(g => g.SubCategories)
-                    .ThenInclude(gc => gc.SubCategory)
+                .ThenInclude(gc => gc.SubCategory)
                 .SingleOrDefaultAsync(g => g.Id == id);
         }
 
         public async Task<IEnumerable<Group>> GetGroups()
         {
             return await _context.Groups
-                .Include(gu=>gu.Users)
-                    .ThenInclude(u=>u.User)
+                .Include(gu => gu.Users)
+                .ThenInclude(u => u.User)
                 .Include(gp => gp.GroupPhoto)
                 .Include(g => g.SubCategories)
-                    .ThenInclude(g => g.SubCategory)
-                    .ThenInclude(gmc => gmc.MainCategory)
+                .ThenInclude(g => g.SubCategory)
+                .ThenInclude(gmc => gmc.MainCategory)
                 .ToListAsync();
         }
 
@@ -65,5 +65,9 @@ namespace InterOn.Repo.Repositories
             return await _context.UserGroups.Where(a => a.GroupId == groupId & a.UserId == userId).SingleAsync();
         }
 
+        public async Task<bool> IsAdmin(int groupId, int userId)
+        {
+            return await _context.Groups.AnyAsync(a => a.Id == groupId & a.UserId == userId);
+        }
     }
 }
