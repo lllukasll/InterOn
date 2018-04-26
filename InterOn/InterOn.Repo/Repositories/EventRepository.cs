@@ -12,29 +12,21 @@ namespace InterOn.Repo.Repositories
         {
         }
 
-        public async Task<bool> IfGroupExist(int id)
-        {
-            return await _context.Set<Group>().AnyAsync(g => g.Id == id);
-        }
+        public async Task<bool> IfGroupExist(int id) => 
+            await _context.Set<Group>().AnyAsync(g => g.Id == id);
 
-        public async Task AddUserEvent(UserEvent userEvent)
-        {
+        public async Task AddUserEvent(UserEvent userEvent) => 
             await _context.UserEvents.AddAsync(userEvent);
-        }
 
-        public async Task<bool> IfBelongToEventAsync(int eventId, int userId)
-        {
-            return await _context.UserEvents.AnyAsync(a => a.EventId == eventId & a.UserId == userId);
-        }
+        public async Task<bool> IfBelongToEventAsync(int eventId, int userId) =>
+            await _context.UserEvents.AnyAsync(a => a.EventId == eventId & a.UserId == userId);
 
-        public async Task<UserEvent> GetUserEvent(int userId, int eventId)
-        {
-            return await _context.UserEvents.Where(a => a.EventId == eventId & a.UserId == userId).SingleAsync();
-        }
+        public async Task<bool> IsAdmin(int userId, int eventId) =>
+            await _context.Events.AnyAsync(e => e.UserId == userId & e.Id == eventId);
 
-        public void RemoveUserEvent(UserEvent userEvent)
-        {
-            _context.UserEvents.Remove(userEvent);
-        }
+        public async Task<UserEvent> GetUserEvent(int userId, int eventId) =>
+            await _context.UserEvents.Where(a => a.EventId == eventId & a.UserId == userId).SingleAsync();
+
+        public void RemoveUserEvent(UserEvent userEvent) => _context.UserEvents.Remove(userEvent);
     }
 }

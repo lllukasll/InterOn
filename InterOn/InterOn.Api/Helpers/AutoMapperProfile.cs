@@ -133,6 +133,12 @@ namespace InterOn.Api.Helpers
                 .ForMember(g => g.Id, opt => opt.Ignore())
                 .ForMember(g => g.SubCategories, opt => opt.Ignore())
                 .ForMember(g => g.Users, opt => opt.Ignore())
+                .ForMember(e=>e.User, opt => opt.Ignore())
+                .ForMember(e => e.UserId, opt => opt.Ignore())
+                .ForMember(e => e.Latitude,
+                    opt => opt.MapFrom(a => a.Address.Latitude))
+                .ForMember(e => e.Longitude,
+                    opt => opt.MapFrom(a => a.Address.Longitude))
                 .AfterMap((gdto, g) =>
                 {
                     //Remove

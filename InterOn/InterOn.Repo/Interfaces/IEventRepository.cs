@@ -5,6 +5,7 @@ namespace InterOn.Repo.Interfaces
 {
     public interface IEventRepository : IRepository<Event>
     {
+        Task<bool> IsAdmin(int userId, int eventId);
         Task<UserEvent> GetUserEvent(int userId, int eventId);
         Task<bool> IfBelongToEventAsync(int eventId, int userId);
         Task AddUserEvent(UserEvent userEvent);
