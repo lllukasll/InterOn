@@ -9,7 +9,7 @@ namespace InterOn.Service.Interfaces
     {
         Task RemoveUserGroup(int userId, int groupId);
         Task<bool> IfUserBelongToGroupAsync(int userId, int groupId);
-        Task<GroupDto> CreateUserGroup(int groupId, int userId);
+        Task CreateUserGroup(int groupId, int userId);
         Task<GroupDto> GetGroupMappedAsync(int id);
         Task<int> CreateGroup(CreateGroupDto groupDto, int userId);
         Task<Group> GetGroupAsync(int id, bool includeRelated = true);

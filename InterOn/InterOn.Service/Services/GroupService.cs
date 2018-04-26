@@ -74,14 +74,11 @@ namespace InterOn.Service.Services
             return await _repository.Exist(g => g.Id == id);
         }
 
-        public async Task<GroupDto> CreateUserGroup(int groupId, int userId)
+        public async Task CreateUserGroup(int groupId, int userId)
         {
             var userGroup = new UserGroup {GroupId = groupId, UserId = userId};
             await _repository.AddUserGroupAsync(userGroup);
-            await _repository.SaveUserGroupAsync();
-            var group = await _repository.GetGroup(groupId);
-            var result = _mapper.Map<Group, GroupDto>(group);
-            return result;
+            await _repository.SaveUserGroupAsync();  
         }
 
         public async Task RemoveUserGroup(int userId, int groupId)

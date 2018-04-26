@@ -18,7 +18,7 @@ namespace InterOn.Api.Controllers
         private readonly IGroupPhotoService _photoService;
         private readonly IGroupService _groupService;
         private readonly IHostingEnvironment _host;
-        private PhotoSettings _photoSettings;
+        private readonly PhotoSettings _photoSettings;
 
         public GroupController(IGroupPhotoService photoService, IGroupService groupRepository, IOptions<PhotoSettings> options, IHostingEnvironment host)
         {
@@ -88,32 +88,6 @@ namespace InterOn.Api.Controllers
             await _groupService.Remove(id);
 
             return Ok(id);
-        }
-
-        [HttpPost("user/{groupId}")]
-        public async Task<IActionResult> AddUserForGroup(int groupId)
-        {
-            if (await _groupService.IfExist(groupId) == false)
-                return NotFound();
-            var userId = int.Parse(HttpContext.User.Identity.Name);
-            if (await _groupService.IfUserBelongToGroupAsync(userId, groupId))
-                return BadRequest("Już użytkownik należy do grupy");
-
-            var result = await _groupService.CreateUserGroup(groupId, userId);
-
-            return Ok(result);
-        }
-
-        [HttpDelete("user/{groupId}")]
-        public async Task<IActionResult> RemoveUserGroup(int groupId)
-        {
-            var userId = int.Parse(HttpContext.User.Identity.Name);
-            if (await _groupService.IfUserBelongToGroupAsync(userId, groupId) == false)
-                return BadRequest("Już użytkownik nie należy do grupy");
-
-            await _groupService.RemoveUserGroup(userId, groupId);
-
-            return Ok();
         }
     }
 }

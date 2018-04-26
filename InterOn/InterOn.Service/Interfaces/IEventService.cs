@@ -12,7 +12,7 @@ namespace InterOn.Service.Interfaces
         Task<bool> ExistGroup(int id);
         Task CreateEventAsync(int userId,CreateEventDto eventDto);
         Task<UpdateEventDto> UpdateEventAsync(int id, UpdateEventDto eventDto);
-        Task<UpdateEventDto> CreateEventUserAsync(int eventId, int userId);
+        Task CreateEventUserAsync(int eventId, int userId);
         Task CreateEventForGroupAsync(CreateEventDto eventDto, int groupId, int userId);
     }
 }

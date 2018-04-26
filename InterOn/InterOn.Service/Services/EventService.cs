@@ -37,7 +37,7 @@ namespace InterOn.Service.Services
             return result;
         }
 
-        public async Task<UpdateEventDto> CreateEventUserAsync(int eventId, int userId)
+        public async Task CreateEventUserAsync(int eventId, int userId)
         {
             var userEvent = new UserEvent
             {
@@ -47,9 +47,6 @@ namespace InterOn.Service.Services
 
             await _repository.AddUserEvent(userEvent);
             await _repository.SaveAsync();
-            var eventt = await _repository.GetAsync(eventId);
-            var result = _mapper.Map<Event, UpdateEventDto>(eventt);
-            return result;
         }
 
         public async Task CreateEventForGroupAsync(CreateEventDto eventDto, int groupId, int userId)
