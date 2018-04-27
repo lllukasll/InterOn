@@ -16,6 +16,17 @@ namespace InterOn.Api.Helpers
         {
             //CreateMap<User, UserDto>();
             //CreateMap<UserDto, User>();
+            CreateMap<Event, Event>()
+                .ForMember(e => e.Id, opt => opt.Ignore())
+                .ForMember(e => e.User, opt => opt.Ignore())
+                .ForMember(e => e.DateTimeEvent, opt => opt.Ignore())
+                .ForMember(e => e.Description, opt => opt.Ignore())
+                .ForMember(e => e.GroupId, opt => opt.Ignore())
+                .ForMember(e => e.Latitude, opt => opt.Ignore())
+                .ForMember(e => e.Longitude, opt => opt.Ignore())
+                .ForMember(e => e.Posts, opt => opt.Ignore())
+                .ForMember(e => e.SubCategories, opt => opt.Ignore())
+                .ForMember(e => e.Name, opt => opt.Ignore());
 
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();

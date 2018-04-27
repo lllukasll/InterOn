@@ -1,18 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
+using InterOn.Api.Helpers;
 using InterOn.Data.ModelsDto.Event;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {   [Authorize]
     [Route("api/group/{groupId}/event")]
     public class EventGroupController : Controller
     {
+        private readonly IHostingEnvironment _host;
         private readonly IEventService _service;
+        private readonly PhotoSettings _photoSettings;
 
-        public EventGroupController(IEventService service)
+        public EventGroupController(IOptions<PhotoSettings> options, IHostingEnvironment host, IEventService service)
         {
+            _photoSettings = options.Value;
+            _host = host;
             _service = service;
         }
         [HttpPost]
@@ -24,6 +33,26 @@ namespace InterOn.Api.Controllers
                 return BadRequest(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
             await _service.CreateEventForGroupAsync(eventDto, groupId,userId);
+            return Ok();
+        }
+        [HttpPost]
+        [Route("{eventId}/photo")]
+        public async Task<IActionResult> Upload(int groupId,int eventId, IFormFile file)
+        {
+            if (await _service.ExistEvent(eventId) == false) return NotFound();
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.ExistGroup(groupId) == false)
+                return BadRequest("Nie ma grupy o tym Id");
+            if (await _service.IsAdminEvent(eventId, userId) == false)
+                return BadRequest("Nie jesteś adminem eventu");
+
+            if (file == null) return BadRequest("Brak Pliku");
+            if (file.Length == 0) return BadRequest("Pusty plik");
+            if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
+            if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
+
+            var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
+            await _service.UploadPhoto(eventId, file, uploadsFolderPath);
             return Ok();
         }
         [HttpPut("{eventId}")]

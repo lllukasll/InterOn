@@ -1,8 +1,13 @@
-﻿using InterOn.Data.ModelsDto.Event;
+﻿using System.IO;
+using InterOn.Data.ModelsDto.Event;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using InterOn.Api.Helpers;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {
@@ -10,13 +15,35 @@ namespace InterOn.Api.Controllers
     [Route("api/event")]
     public class EventController : Controller
     {
+        private readonly IHostingEnvironment _host;
         private readonly IEventService _service;
+        private readonly PhotoSettings _photoSettings;
 
-        public EventController(IEventService service)
+
+        public EventController(IOptions<PhotoSettings> options, IHostingEnvironment host, IEventService service)
         {
+            _host = host;
             _service = service;
+            _photoSettings = options.Value;
         }
 
+        [HttpPost]
+        [Route("{eventId}/photo")]
+        public async Task<IActionResult> Upload(int eventId, IFormFile file)
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            if (await _service.ExistEvent(eventId) == false) return NotFound();
+            if (await _service.IsAdminEvent(eventId, userId) == false)
+                return BadRequest("Nie jesteś adminem eventu");
+            if (file == null) return BadRequest("Brak Pliku");
+            if (file.Length == 0) return BadRequest("Pusty plik");
+            if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
+            if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
+
+            var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
+            await _service.UploadPhoto(eventId, file, uploadsFolderPath);
+            return Ok();  
+        }
         [HttpPost]
         public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto eventDto)
         {

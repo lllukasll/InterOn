@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Event;
+using Microsoft.AspNetCore.Http;
 
 namespace InterOn.Service.Interfaces
 {
     public interface IEventService
     {
+        Task UploadPhoto(int eventId, IFormFile file, string uploadsFolderPath);
         Task<bool> IsAdminEvent(int eventId, int userId);
         Task RemoveUserEvent(int userId, int eventId);
         Task<bool> IfUserBelongToEvent(int eventId, int userId);

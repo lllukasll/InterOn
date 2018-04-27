@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Event;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
@@ -97,9 +100,25 @@ namespace InterOn.Service.Services
             _repository.RemoveUserEvent(userEvent);
             await _repository.SaveAsync();
         }
+        public async Task UploadPhoto(int eventId, IFormFile file, string uploadsFolderPath)
+        {
+            if (!Directory.Exists(uploadsFolderPath)) Directory.CreateDirectory(uploadsFolderPath);
+            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsFolderPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
 
+            var eventt = await _repository.GetAsync(eventId);
+            var test = new Event
+            {
+                PhotoUrl = $"{fileName}"
+            };
+            _mapper.Map(test,eventt);    
+            await _repository.SaveAsync();
+        }
         
-
         public async Task<bool> ExistEvent(int id) => await _repository.Exist(e => e.Id == id);
 
         public async Task<bool> ExistGroup(int id) => await _repository.IfGroupExist(id);
