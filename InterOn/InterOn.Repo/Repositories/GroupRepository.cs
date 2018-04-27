@@ -19,7 +19,7 @@ namespace InterOn.Repo.Repositories
             _context.UserGroups.Remove(userGroup);
         }
 
-        public async Task<Group> GetGroup(int id, bool includeRelated = true)
+        public async Task<Group> GetGroupAsync(int id, bool includeRelated = true)
         {
             if (!includeRelated)
                 return await _context.Groups.FindAsync(id);
@@ -27,7 +27,6 @@ namespace InterOn.Repo.Repositories
             return await _context.Groups
                 .Include(u => u.Users)
                 .ThenInclude(u => u.User)
-                .Include(gp => gp.GroupPhoto)
                 .Include(g => g.SubCategories)
                 .ThenInclude(gc => gc.SubCategory)
                 .SingleOrDefaultAsync(g => g.Id == id);
@@ -38,7 +37,6 @@ namespace InterOn.Repo.Repositories
             return await _context.Groups
                 .Include(gu => gu.Users)
                 .ThenInclude(u => u.User)
-                .Include(gp => gp.GroupPhoto)
                 .Include(g => g.SubCategories)
                 .ThenInclude(g => g.SubCategory)
                 .ThenInclude(gmc => gmc.MainCategory)

@@ -12,7 +12,7 @@ namespace InterOn.Repo.Interfaces
         Task SaveUserGroupAsync();
         Task AddUserGroupAsync(UserGroup userGroup);
         void RemoveUserGroup(UserGroup userGroup);
-        Task<Group> GetGroup(int id, bool includeRelated = true);
+        Task<Group> GetGroupAsync(int id, bool includeRelated = true);
         Task<IEnumerable<Group>> GetGroups();
     }
 }

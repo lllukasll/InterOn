@@ -17,7 +17,6 @@ namespace InterOn.Repo
         public DbSet<Group> Groups { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<MainCategory> MainCategories { get; set; }
-        public DbSet<GroupPhoto> GroupPhotos { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
@@ -29,21 +28,6 @@ namespace InterOn.Repo
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GroupCategory>().HasKey(gc => new {gc.SubCategoryId, gc.GroupId});
-            modelBuilder.Entity<Group>()
-                .HasOne(a => a.GroupPhoto)
-                .WithOne(b => b.Group)
-                .HasForeignKey<GroupPhoto>(b => b.GroupRef)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<MainCategory>()
-                .HasOne(a => a.MainCategoryPhoto)
-                .WithOne(b => b.MainCategory)
-                .HasForeignKey<MainCategoryPhoto>(b => b.MainCategoryRef)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<SubCategory>()
-                .HasOne(a => a.SubCategoryPhoto)
-                .WithOne(b => b.SubCategory)
-                .HasForeignKey<SubCategoryPhoto>(b => b.SubCategoryRef)
-                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<UserEvent>().HasKey(ug => new { ug.EventId, ug.UserId });
             modelBuilder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});    
             modelBuilder.Entity<EventSubCategory>().HasKey(es => new {es.EventId, es.SubCategoryId});

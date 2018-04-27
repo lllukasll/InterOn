@@ -69,11 +69,8 @@ namespace InterOn.Api
             services.AddScoped<IMainCategoryRepository, MainCategoryRepository>();           
             services.AddScoped<ISubCategoryService, SubCategoryService>();
             services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
-            services.AddScoped<IGroupPhotoService, GroupPhotoService>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IEventService, EventService>();
-            services.AddScoped<IMainCategoryPhotoService, MainCategoryPhotoService>();
-            services.AddScoped<ISubCategoryPhotoService, SubCategroyPhotoService>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentRepository, CommentRepository>();

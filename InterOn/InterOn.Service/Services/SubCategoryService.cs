@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
@@ -6,6 +8,7 @@ using InterOn.Data.ModelsDto.Category;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace InterOn.Service.Services
 {
@@ -49,6 +52,22 @@ namespace InterOn.Service.Services
         {
             var subCategoryFromRepo = await _repository.GetSubCategoryForMainCategory(mainId, subId);
             _repository.Remove(subCategoryFromRepo);
+            await _repository.SaveAsync();
+        }
+
+        public async Task UploadPhoto(int subCategoryId, IFormFile file, string uploadsFolderPath)
+        {
+            if (!Directory.Exists(uploadsFolderPath)) Directory.CreateDirectory(uploadsFolderPath);
+            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsFolderPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var subCategory = await _repository.GetAsync(subCategoryId);
+            var photo = new SubCategory { SubCategoryPhoto = $"{fileName}" };
+            _mapper.Map(photo, subCategory);
             await _repository.SaveAsync();
         }
 

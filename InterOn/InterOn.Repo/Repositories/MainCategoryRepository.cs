@@ -15,14 +15,18 @@ namespace InterOn.Repo.Repositories
         }
         public async Task<MainCategory> GetMainCategory(int id, bool includeRelated = true)
         {
-            if (!includeRelated == true)
+            if (!includeRelated)
                 return await GetAsync(id);
-            return await _context.Set<MainCategory>().Include(s => s.SubCategories).Include(p=>p.MainCategoryPhoto).SingleOrDefaultAsync(c => c.Id == id);
+            return await _context.Set<MainCategory>()
+                .Include(s => s.SubCategories)
+                .SingleOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<MainCategory>> GetMainCategories()
         {
-            return await _context.Set<MainCategory>().Include(s => s.SubCategories).Include(p=>p.MainCategoryPhoto).ToListAsync();
+            return await _context.Set<MainCategory>()
+                .Include(s => s.SubCategories)
+                .ToListAsync();
         }
 
        

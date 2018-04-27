@@ -16,7 +16,6 @@ namespace InterOn.Repo.Repositories
         public async Task<IEnumerable<SubCategory>> GetSubCategoriesForMainCategory(int mainCategoryId)
         {
             return await _context.Set<SubCategory>()
-                .Include(p=>p.SubCategoryPhoto)
                 .Where(sc => sc.MainCategoryId == mainCategoryId)
                 .OrderBy(o => o.Name)
                 .ToListAsync();
@@ -30,7 +29,6 @@ namespace InterOn.Repo.Repositories
         public async Task<SubCategory> GetSubCategoryForMainCategory(int mainId, int subId)
         {
             return await _context.Set<SubCategory>()
-                .Include(p=>p.SubCategoryPhoto)
                 .Where(s => s.Id == subId && s.MainCategoryId == mainId)
                 .SingleOrDefaultAsync();
         }
@@ -38,14 +36,12 @@ namespace InterOn.Repo.Repositories
         public async Task<IEnumerable<SubCategory>> GetAllSubCategoriesAsync()
         {
             return await _context.Set<SubCategory>()
-                .Include(p => p.SubCategoryPhoto)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Group>> GetAllGroupForSubCategoryAsync(int categoryId)
         {
             var query = await _context.Groups
-                .Include(a=>a.GroupPhoto)
                 .Where(a => a.SubCategories
                     .Any(c => c.SubCategoryId == categoryId))
                 .ToListAsync();

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Group;
+using Microsoft.AspNetCore.Http;
 
 namespace InterOn.Service.Interfaces
 {
@@ -18,5 +19,7 @@ namespace InterOn.Service.Interfaces
         Task Remove(int id);
         Task<UpdateGroupDto> UpdateGroup(UpdateGroupDto groupDto, int id);
         Task<bool> IfExist(int id);
+        Task UploadPhoto(int groupId, IFormFile file, string uploadsFolderPath);
+        Task<GroupUnauthorizedDto> GetGroupAllowAnonymousAsync(int id);
     }
 }

@@ -15,9 +15,9 @@ namespace InterOn.Data.ModelsDto.Group
         ///  public int AdminId{ get; set; }
         public ICollection<int> SubCategories { get; set; }
 
-        public ICollection<int> Users;
+        public ICollection<int> Users { get; set; }
 
-        public UpdateGroupDto(ICollection<int> users)
+        public UpdateGroupDto()
         {
             Users = new Collection<int>();
             SubCategories = new Collection<int>();

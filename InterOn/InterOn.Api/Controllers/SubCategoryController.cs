@@ -1,18 +1,41 @@
-﻿using InterOn.Data.ModelsDto.Category;
+﻿using System.IO;
+using InterOn.Data.ModelsDto.Category;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using InterOn.Api.Helpers;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {
 
     public class SubCategoryController : Controller
     {
+        private readonly PhotoSettings _photoSettings;
+        private readonly IHostingEnvironment _host;
         private readonly ISubCategoryService _service;
 
-        public SubCategoryController(ISubCategoryService repository)
+        public SubCategoryController(ISubCategoryService subCategoryService, IHostingEnvironment host, IOptions<PhotoSettings> options)
         {
-            _service = repository;
+            _photoSettings = options.Value;
+            _service = subCategoryService;
+            _host = host;
+        }
+        [HttpPost("/api/maincategories/{mainCategoryId}/subcategories/{subCategoryId}/photo")]
+        public async Task<IActionResult> UploadPhoto(int mainCategoryId, int subCategoryId, IFormFile file)
+        {
+            if (await _service.ExistMainCategory(mainCategoryId) == false) return NotFound();
+            if (await _service.ExistSubCategory(subCategoryId) == false) return NotFound();
+            if (file == null) return BadRequest("Brak Pliku");
+            if (file.Length == 0) return BadRequest("Pusty plik");
+            if (file.Length > _photoSettings.MaxBytes) return BadRequest("Za duży plik");
+            if (!_photoSettings.IsSupported(file.FileName)) return BadRequest("Nieprawidłowy typ");
+       
+            var uploadsFolderPath = Path.Combine(_host.WebRootPath, "uploads");
+            await _service.UploadPhoto(subCategoryId, file, uploadsFolderPath);
+            return Ok();
         }
 
         [HttpGet("/api/maincategories/{mainId}/subcategories")]

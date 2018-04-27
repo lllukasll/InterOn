@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using InterOn.Data.ModelsDto.Category;
 
 namespace InterOn.Data.ModelsDto.Group
 {
@@ -18,11 +19,13 @@ namespace InterOn.Data.ModelsDto.Group
 
         public int NumberOfUsers { get; set; }
 
-        public ICollection<UserGroupDto> Users { get; set; }
+        //public ICollection<UserGroupDto> Users { get; set; }
+        public ICollection<SubCategoriesDto> SubCategoriesDtos { get; set; }
 
         public GroupUnauthorizedDto()
         {
-            Users = new Collection<UserGroupDto>();
+            SubCategoriesDtos = new Collection<SubCategoriesDto>();
+          //  Users = new Collection<UserGroupDto>();
          }
     }
 }

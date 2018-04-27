@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Category;
+using Microsoft.AspNetCore.Http;
 
 namespace InterOn.Service.Interfaces
 {
@@ -14,5 +15,6 @@ namespace InterOn.Service.Interfaces
         Task<IEnumerable<MainCategoryDto>> GetMainCategories();
         Task AddAsync(MainCategory category);
         Task Remove(int id);
+        Task UploadPhoto(int mainCategoryId, IFormFile file, string uploadsFolderPath);
     }
 }

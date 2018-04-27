@@ -19,7 +19,7 @@ namespace InterOn.Data.DbModels
 
         public DateTime CreateDateTime { get; set; }
 
-        public GroupPhoto GroupPhoto{ get; set; }
+        public string GroupPhoto{ get; set; }
         
         //admin
         public int? UserId { get; set; }

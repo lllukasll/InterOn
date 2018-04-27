@@ -27,7 +27,27 @@ namespace InterOn.Api.Helpers
                 .ForMember(e => e.Posts, opt => opt.Ignore())
                 .ForMember(e => e.SubCategories, opt => opt.Ignore())
                 .ForMember(e => e.Name, opt => opt.Ignore());
-
+            CreateMap<Group, Group>()
+                .ForMember(e => e.Id, opt => opt.Ignore())
+                .ForMember(e => e.User, opt => opt.Ignore())
+                .ForMember(e => e.CreateDateTime, opt => opt.Ignore())
+                .ForMember(e => e.Description, opt => opt.Ignore())
+                .ForMember(e => e.Name, opt => opt.Ignore())
+                .ForMember(e => e.Posts, opt => opt.Ignore())
+                .ForMember(e => e.SubCategories, opt => opt.Ignore())
+                .ForMember(e => e.UserId, opt => opt.Ignore())
+                .ForMember(e => e.Users, opt => opt.Ignore());
+            CreateMap<MainCategory, MainCategory>()
+                .ForMember(e => e.Id, opt => opt.Ignore())
+                .ForMember(e => e.SubCategories, opt => opt.Ignore())
+                .ForMember(e => e.Name, opt => opt.Ignore());
+            CreateMap<SubCategory, SubCategory>()
+                .ForMember(e => e.Id, opt => opt.Ignore())
+                .ForMember(e => e.MainCategory, opt => opt.Ignore())
+                .ForMember(e => e.Name, opt => opt.Ignore())
+                .ForMember(e => e.MainCategoryId, opt => opt.Ignore())
+                .ForMember(e => e.Groups, opt => opt.Ignore())
+                .ForMember(e => e.Events, opt => opt.Ignore());
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();
 
@@ -47,18 +67,15 @@ namespace InterOn.Api.Helpers
 
             //Group
             CreateMap<Group, GroupUnauthorizedDto>()
-                .ForMember(gdt => gdt.AvatarUrl,
-                    otp => otp.MapFrom(g => g.GroupPhoto.FileName));
-
-
-
-
+                .ForMember(gdt => gdt.SubCategoriesDtos,
+                    otp => otp.MapFrom(g => g.SubCategories.Select(id =>
+                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name, SubCategoryPhoto = id.SubCategory.SubCategoryPhoto })))
+                .ForMember(gdt=>gdt.NumberOfUsers,
+                    opt=>opt.MapFrom(g=>g.Users.Count()));
             CreateMap<Group, GroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name})))
-                .ForMember(gdt => gdt.AvatarUrl,
-                    otp => otp.MapFrom(g => g.GroupPhoto.FileName))
+                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name, SubCategoryPhoto = id.SubCategory.SubCategoryPhoto })))
                 .ForMember(gdt => gdt.Users,
                     opt => opt.MapFrom(g => g.Users.Select(id =>
                         new UserGroupDto { Id = id.User.Id, UserName = id.User.Username})));
@@ -104,26 +121,17 @@ namespace InterOn.Api.Helpers
                 .ForMember(g => g.Id, opt => opt.Ignore());
 
             CreateMap<MainCategory, SaveCategoryDto>();
-            CreateMap<MainCategory, MainCategoryDto>()
-                .ForMember(gdt => gdt.AvatarUrl,
-                    otp => otp.MapFrom(g => g.MainCategoryPhoto.FileName));
-
+            CreateMap<MainCategory, MainCategoryDto>();
+     
             //SubCategory
             CreateMap<SubCategoryDto, SubCategory>();
-            CreateMap<SubCategory, SubCategoryDto>()
-                .ForMember(gdt => gdt.AvatarUrl,
-                    otp => otp.MapFrom(g => g.SubCategoryPhoto.FileName));
-               
+            CreateMap<SubCategory, SubCategoryDto>();
+           
                
             CreateMap<SaveCategoryDto, SubCategory>()
                 .ForMember(g => g.Id, opt => opt.Ignore());
 
-            //photo
 
-            CreateMap<GroupPhoto, GroupPhotoDto>();
-            CreateMap<GroupPhoto, GetGroupPhotoDto>();
-            CreateMap<SubCategoryPhoto, SubCategoryPhotoDto>();
-            CreateMap<MainCategoryPhoto, MainCategoryPhotoDto>();
             //Event
 
             CreateMap<CreateEventDto, Event>()
@@ -171,11 +179,11 @@ namespace InterOn.Api.Helpers
             CreateMap<Event, EventGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new SubCategoriesDto {Id = id.SubCategoryId, Name = id.SubCategory.Name})));
+                        new SubCategoriesDto {Id = id.SubCategoryId, Name = id.SubCategory.Name,SubCategoryPhoto = id.SubCategory.SubCategoryPhoto})));
             CreateMap<Event, EventDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name })));
+                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name, SubCategoryPhoto = id.SubCategory.SubCategoryPhoto })));
             //post
             CreateMap<UpdateGroupPostDto, Post>()
                 .ForMember(dto => dto.Id,

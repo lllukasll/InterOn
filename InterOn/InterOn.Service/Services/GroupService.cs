@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Group;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace InterOn.Service.Services
 {
@@ -22,8 +24,8 @@ namespace InterOn.Service.Services
 
         public async Task<Group> GetGroupAsync(int id, bool includeRelated = true)
         {
-            if (!includeRelated) return await _repository.GetGroup(id, false);
-            return await _repository.GetGroup(id);
+            if (!includeRelated) return await _repository.GetGroupAsync(id, false);
+            return await _repository.GetGroupAsync(id);
         }
 
         public async Task<GroupDto> GetGroupMappedAsync(int id)
@@ -42,7 +44,7 @@ namespace InterOn.Service.Services
 
         public async Task Remove(int id)
         {
-            var group = await _repository.GetGroup(id, false);
+            var group = await _repository.GetGroupAsync(id, false);
             _repository.Remove(group);
             await _repository.SaveAsync();
         }
@@ -61,10 +63,10 @@ namespace InterOn.Service.Services
 
         public async Task<UpdateGroupDto> UpdateGroup(UpdateGroupDto groupDto, int id)
         {
-            var group = await _repository.GetGroup(id);
+            var group = await _repository.GetGroupAsync(id);
             _mapper.Map(groupDto, group);
             await _repository.SaveAsync();
-            var groupResult = await _repository.GetGroup(group.Id);
+            var groupResult = await _repository.GetGroupAsync(group.Id);
             var result = _mapper.Map<Group, UpdateGroupDto>(groupResult);
             return result;
         }
@@ -72,6 +74,29 @@ namespace InterOn.Service.Services
         public async Task<bool> IfExist(int id)
         {
             return await _repository.Exist(g => g.Id == id);
+        }
+
+        public async Task UploadPhoto(int groupId, IFormFile file, string uploadsFolderPath)
+        {
+            if (!Directory.Exists(uploadsFolderPath)) Directory.CreateDirectory(uploadsFolderPath);
+            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsFolderPath, fileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var group = await _repository.GetAsync(groupId);
+            var photo = new Group {GroupPhoto = $"{fileName}"};
+            _mapper.Map(photo, group);
+            await _repository.SaveAsync();
+        }
+
+        public async Task<GroupUnauthorizedDto> GetGroupAllowAnonymousAsync(int id)
+        {
+            var group =await _repository.GetGroupAsync(id);
+            var mapResult = _mapper.Map<Group, GroupUnauthorizedDto>(group);
+            return mapResult;
         }
 
         public async Task CreateUserGroup(int groupId, int userId)
