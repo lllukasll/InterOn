@@ -64,7 +64,7 @@ namespace InterOn.Service.Services
             }
 
             var mainCategory = await _repository.GetAsync(mainCategoryId);
-            var photo = new MainCategory { MainCategoryPhoto = $"{fileName}" };
+            var photo = new MainCategoryPhotoDto { MainCategoryPhoto = $"{fileName}" };
             _mapper.Map(photo, mainCategory);
             await _repository.SaveAsync();
         }

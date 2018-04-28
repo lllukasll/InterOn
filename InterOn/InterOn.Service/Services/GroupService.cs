@@ -87,7 +87,7 @@ namespace InterOn.Service.Services
             }
 
             var group = await _repository.GetAsync(groupId);
-            var photo = new Group {GroupPhoto = $"{fileName}"};
+            var photo = new GroupPhotoDto {GroupPhoto = $"{fileName}"};
             _mapper.Map(photo, group);
             await _repository.SaveAsync();
         }

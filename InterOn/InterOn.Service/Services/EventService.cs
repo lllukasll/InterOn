@@ -111,7 +111,7 @@ namespace InterOn.Service.Services
             }
 
             var eventt = await _repository.GetAsync(eventId);
-            var test = new Event
+            var test = new EventPhotoDto
             {
                 PhotoUrl = $"{fileName}"
             };

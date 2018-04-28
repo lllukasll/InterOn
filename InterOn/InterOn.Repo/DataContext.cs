@@ -23,7 +23,9 @@ namespace InterOn.Repo
         public DbSet<EventSubCategory> EventSubCategories { get; set; }
         public DbSet<UserEvent> UserEvents { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
-
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+     
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,7 +33,28 @@ namespace InterOn.Repo
             modelBuilder.Entity<UserEvent>().HasKey(ug => new { ug.EventId, ug.UserId });
             modelBuilder.Entity<UserGroup>().HasKey(ug => new {ug.UserId, ug.GroupId});    
             modelBuilder.Entity<EventSubCategory>().HasKey(es => new {es.EventId, es.SubCategoryId});
-          
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.UserA)
+                .WithMany()
+                .HasForeignKey(f => f.UserAId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.UserB)
+                .WithMany()
+                .HasForeignKey(f => f.UserBId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Message>()
+                .HasOne(f => f.SenderUser)
+                .WithMany()
+                .HasForeignKey(f => f.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(f => f.ReceiverUser)
+                .WithMany()
+                .HasForeignKey(f => f.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }

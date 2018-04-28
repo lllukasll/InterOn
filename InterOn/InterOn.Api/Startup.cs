@@ -75,6 +75,10 @@ namespace InterOn.Api
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IUserFriendRepository, UserFriendRepository>();
+            services.AddScoped<IUserFriendService, UserFriendService>();
+            services.AddScoped<IUserMessageRepository, UserMessageRepository>();
+            services.AddScoped<IUserMessageService, UserMessageService>();
         }
      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

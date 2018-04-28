@@ -6,7 +6,10 @@ using InterOn.Data.ModelsDto.Category;
 using InterOn.Data.ModelsDto.Comments;
 using InterOn.Data.ModelsDto.Event;
 using InterOn.Data.ModelsDto.Group;
+using InterOn.Data.ModelsDto.Message;
 using InterOn.Data.ModelsDto.Post;
+using InterOn.Data.ModelsDto.User;
+using InterOn.Repo.Repositories;
 
 namespace InterOn.Api.Helpers
 {
@@ -16,52 +19,17 @@ namespace InterOn.Api.Helpers
         {
             //CreateMap<User, UserDto>();
             //CreateMap<UserDto, User>();
-            CreateMap<Event, Event>()
-                .ForMember(e => e.Id, opt => opt.Ignore())
-                .ForMember(e => e.User, opt => opt.Ignore())
-                .ForMember(e => e.DateTimeEvent, opt => opt.Ignore())
-                .ForMember(e => e.Description, opt => opt.Ignore())
-                .ForMember(e => e.GroupId, opt => opt.Ignore())
-                .ForMember(e => e.Latitude, opt => opt.Ignore())
-                .ForMember(e => e.Longitude, opt => opt.Ignore())
-                .ForMember(e => e.Posts, opt => opt.Ignore())
-                .ForMember(e => e.SubCategories, opt => opt.Ignore())
-                .ForMember(e => e.Name, opt => opt.Ignore());
-            CreateMap<Group, Group>()
-                .ForMember(e => e.Id, opt => opt.Ignore())
-                .ForMember(e => e.User, opt => opt.Ignore())
-                .ForMember(e => e.CreateDateTime, opt => opt.Ignore())
-                .ForMember(e => e.Description, opt => opt.Ignore())
-                .ForMember(e => e.Name, opt => opt.Ignore())
-                .ForMember(e => e.Posts, opt => opt.Ignore())
-                .ForMember(e => e.SubCategories, opt => opt.Ignore())
-                .ForMember(e => e.UserId, opt => opt.Ignore())
-                .ForMember(e => e.Users, opt => opt.Ignore());
-            CreateMap<MainCategory, MainCategory>()
-                .ForMember(e => e.Id, opt => opt.Ignore())
-                .ForMember(e => e.SubCategories, opt => opt.Ignore())
-                .ForMember(e => e.Name, opt => opt.Ignore());
-            CreateMap<SubCategory, SubCategory>()
-                .ForMember(e => e.Id, opt => opt.Ignore())
-                .ForMember(e => e.MainCategory, opt => opt.Ignore())
-                .ForMember(e => e.Name, opt => opt.Ignore())
-                .ForMember(e => e.MainCategoryId, opt => opt.Ignore())
-                .ForMember(e => e.Groups, opt => opt.Ignore())
-                .ForMember(e => e.Events, opt => opt.Ignore());
-            //CreateMap<User,User>()
-            //    .ForMember(e => e.Id, opt => opt.Ignore())
-            //    .ForMember(e => e.Groups, opt => opt.Ignore())
-            //    .ForMember(e => e.Username, opt => opt.Ignore())
-            //    .ForMember(e => e.Email, opt => opt.Ignore())
-            //    .ForMember(e => e.EmailConfirmed, opt => opt.Ignore())
-            //    .ForMember(e => e.GroupAdmin, opt => opt.Ignore())
-            //    .ForMember(e => e.Name, opt => opt.Ignore())
-            //    .ForMember(e => e.PasswordHash, opt => opt.Ignore())
-            //    .ForMember(e => e.PasswordSalt, opt => opt.Ignore())
-            //    .ForMember(e => e.Posts, opt => opt.Ignore())
-            //    .ForMember(e => e.Surname, opt => opt.Ignore())
-            //    .ForMember(e => e.Events, opt => opt.Ignore());
-
+            //Photo
+            CreateMap<EventPhotoDto, Event>();
+            CreateMap<GroupPhotoDto, Group>();
+            CreateMap<MainCategoryPhotoDto, MainCategory>();
+            CreateMap<SubCategoryPhotoDto, SubCategory>();
+            
+            //message
+            CreateMap<SendMessageDto, Message>();
+            //Friends
+            CreateMap<ConfirmFriendDto, Friend>();
+            
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();
 
