@@ -30,7 +30,7 @@ namespace InterOn.Service.Services
         public async Task UpdateCommentForGroupAsync(int commentId, UpdateGroupPostCommentDto commentsDto)
         {
             var comment = await _repository.GetAsync(commentId);
-            comment.UpdateDateTime = DateTime.Now;
+            commentsDto.UpdateDateTime = DateTime.Now;
             _mapper.Map(commentsDto, comment);
             await _repository.SaveAsync();
         }

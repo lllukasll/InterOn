@@ -9,8 +9,8 @@ namespace InterOn.Data.ModelsDto.Comments
         public string Content { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        //do zmiany :)
-        public int UserId { get; set; }
-        public int PostId { get; set; }
+       
+        public UserDto User { get; set; }
+        
     }
 }

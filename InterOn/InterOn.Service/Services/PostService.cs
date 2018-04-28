@@ -7,6 +7,7 @@ using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Post;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
@@ -35,15 +36,15 @@ namespace InterOn.Service.Services
             await _repository.AddAsyn(post);
             await _repository.SaveAsync();
 
-            var postResult = await _repository.GetAsync(post.Id);
+            var postResult = await _repository.GetPostGroupAsync(groupId,post.Id);
             var result = _mapper.Map<Post, PostGroupDto>(postResult);
             return result;
         }
 
         public async Task<Post> UpdatePostGroupAsync(int groupId, int postId, UpdateGroupPostDto updateGroupPost)
         {
-            var post = await _repository.GetPostGroup(groupId, postId);
-            updateGroupPost.UpdateDateTime = DateTime.Now;;
+            var post = await _repository.GetPostGroupAsync(groupId, postId);
+            updateGroupPost.UpdateDateTime = DateTime.Now;
             _mapper.Map(updateGroupPost, post);
             await _repository.SaveAsync();
             return post;
@@ -59,7 +60,7 @@ namespace InterOn.Service.Services
 
         public async Task<IEnumerable<PostGroupDto>> GetAllPostsForGroupAsync(int groupId)
         {
-            var posts = await _repository.FindAllAsync(g => g.GroupId == groupId);
+            var posts = await _repository.GetAllIncluding(a=>a.User).OrderBy(d=>d.CreateDateTime).ToListAsync();
             var postDtos = _mapper.Map<IEnumerable<Post>, IEnumerable<PostGroupDto>>(posts);
 
             return postDtos;

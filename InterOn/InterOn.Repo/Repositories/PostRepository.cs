@@ -17,11 +17,12 @@ namespace InterOn.Repo.Repositories
         public async Task<bool> IfUserAddPost(int postId, int userId) =>
             await _context.Posts.AnyAsync(p => p.UserId == userId & p.Id == postId);
 
-        public async Task<Post> GetPostGroup(int groupId, int postId)
+        public async Task<Post> GetPostGroupAsync(int groupId, int postId)
         {
             return await _context.Posts
-                .Where(s => s.Id ==postId  && s.GroupId== groupId)
-                .SingleOrDefaultAsync();
+                    .Include(u=>u.User)
+                    .Where(s => s.Id ==postId  && s.GroupId== groupId)
+                    .SingleOrDefaultAsync();
         }
     }
 }

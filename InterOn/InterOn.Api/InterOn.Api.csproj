@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\uploads\062b7017-a4a3-4d39-9c3b-c395ff53715c.jpg" />
+    <Content Remove="wwwroot\uploads\0f73275a-5ff2-4868-840d-2a7f6cdfe9e5.jpg" />
   </ItemGroup>
 
   <ItemGroup>

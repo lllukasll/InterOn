@@ -48,6 +48,20 @@ namespace InterOn.Api.Helpers
                 .ForMember(e => e.MainCategoryId, opt => opt.Ignore())
                 .ForMember(e => e.Groups, opt => opt.Ignore())
                 .ForMember(e => e.Events, opt => opt.Ignore());
+            //CreateMap<User,User>()
+            //    .ForMember(e => e.Id, opt => opt.Ignore())
+            //    .ForMember(e => e.Groups, opt => opt.Ignore())
+            //    .ForMember(e => e.Username, opt => opt.Ignore())
+            //    .ForMember(e => e.Email, opt => opt.Ignore())
+            //    .ForMember(e => e.EmailConfirmed, opt => opt.Ignore())
+            //    .ForMember(e => e.GroupAdmin, opt => opt.Ignore())
+            //    .ForMember(e => e.Name, opt => opt.Ignore())
+            //    .ForMember(e => e.PasswordHash, opt => opt.Ignore())
+            //    .ForMember(e => e.PasswordSalt, opt => opt.Ignore())
+            //    .ForMember(e => e.Posts, opt => opt.Ignore())
+            //    .ForMember(e => e.Surname, opt => opt.Ignore())
+            //    .ForMember(e => e.Events, opt => opt.Ignore());
+
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();
 
@@ -189,12 +203,20 @@ namespace InterOn.Api.Helpers
                 .ForMember(dto => dto.Id,
                     opt => opt.Ignore());
             CreateMap<CreateGroupPostDto, Post>();
-            CreateMap<Post, PostGroupDto>();
+            CreateMap<Post, PostGroupDto>()
+                .ForMember(c => c.User,
+                    opt => opt.MapFrom(a =>
+                        new UserDto { AvatarUrl = a.User.AvatarUrl, Id = a.User.Id, Username = a.User.Username }));
+
             //comment
 
             CreateMap<CreateGroupPostCommentDto, Comment>();
             CreateMap<UpdateGroupPostCommentDto, Comment>();
-            CreateMap<Comment, CommentDto>();
+            CreateMap<Comment, CommentDto>()
+                .ForMember(c => c.User,
+                    opt => opt.MapFrom(a =>
+                        new UserDto {AvatarUrl = a.User.AvatarUrl, Id = a.User.Id, Username = a.User.Username}));
+                
         }
     }
 }
