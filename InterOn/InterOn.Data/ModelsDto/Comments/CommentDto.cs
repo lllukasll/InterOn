@@ -1,5 +1,4 @@
 ﻿using System;
-using InterOn.Data.DbModels;
 
 namespace InterOn.Data.ModelsDto.Comments
 {

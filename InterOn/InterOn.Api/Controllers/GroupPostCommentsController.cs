@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using InterOn.Api.Helpers;
 using InterOn.Data.ModelsDto.Comments;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,7 @@ namespace InterOn.Api.Controllers
             [FromBody] CreateGroupPostCommentDto commentsDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return new UnprocessableEntityObjectResult(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
             if (await _service.IfGroupExistAsync(groupId) == false)
                 return NotFound("Nie ma takiej Grupy");

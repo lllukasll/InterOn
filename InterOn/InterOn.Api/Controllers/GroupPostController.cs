@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using InterOn.Api.Helpers;
 using InterOn.Data.ModelsDto.Post;
 using InterOn.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,8 @@ namespace InterOn.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePostForGroup(int groupId,[FromBody] CreateGroupPostDto createGroupPostDto )
         {
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObjectResult(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
             if (await _service.IfExistGroupAsync(groupId) == false)
                 return NotFound("Nie ma takiej grupy");
@@ -31,6 +34,8 @@ namespace InterOn.Api.Controllers
         [HttpPut("{postId}")]
         public async Task<IActionResult> UpdatePostForGroup(int groupId,int postId, [FromBody] UpdateGroupPostDto updateGroupPost)
         {
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObjectResult(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
             if (await _service.IfExistGroupAsync(groupId) == false)
                 return NotFound("Nie ma takiej grupy");

@@ -163,7 +163,7 @@ namespace InterOn.Api.Helpers
             CreateMap<Event, EventGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new SubCategoriesDto {Id = id.SubCategoryId, Name = id.SubCategory.Name,SubCategoryPhoto = id.SubCategory.SubCategoryPhoto})));
+                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name,SubCategoryPhoto = id.SubCategory.SubCategoryPhoto })));
             CreateMap<Event, EventDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
@@ -176,7 +176,7 @@ namespace InterOn.Api.Helpers
             CreateMap<Post, PostGroupDto>()
                 .ForMember(c => c.User,
                     opt => opt.MapFrom(a =>
-                        new UserDto { AvatarUrl = a.User.AvatarUrl, Id = a.User.Id, Username = a.User.Username }));
+                        new UserDto { AvatarUrl = a.User.AvatarUrl, Id = a.User.Id, Name = a.User.Name, Surname = a.User.Surname }));
 
             //comment
 
@@ -185,7 +185,7 @@ namespace InterOn.Api.Helpers
             CreateMap<Comment, CommentDto>()
                 .ForMember(c => c.User,
                     opt => opt.MapFrom(a =>
-                        new UserDto {AvatarUrl = a.User.AvatarUrl, Id = a.User.Id, Username = a.User.Username}));
+                        new UserDto { AvatarUrl = a.User.AvatarUrl, Id = a.User.Id, Name = a.User.Name,Surname = a.User.Surname }));
                 
         }
     }
