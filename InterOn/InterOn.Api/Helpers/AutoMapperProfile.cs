@@ -61,7 +61,9 @@ namespace InterOn.Api.Helpers
                         new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name, SubCategoryPhoto = id.SubCategory.SubCategoryPhoto })))
                 .ForMember(gdt => gdt.Users,
                     opt => opt.MapFrom(g => g.Users.Select(id =>
-                        new UserGroupDto { Id = id.User.Id, UserName = id.User.Username})));
+                        new UserGroupDto { Id = id.User.Id, Name = id.User.Name,Surname = id.User.Surname,AvatarUrl = id.User.AvatarUrl})))
+                .ForMember(gdt => gdt.NumberOfUsers,
+                    opt => opt.MapFrom(g => g.Users.Count()));
 
             CreateMap<Group, CreateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,

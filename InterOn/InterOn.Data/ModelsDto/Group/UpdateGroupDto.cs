@@ -3,14 +3,9 @@ using System.Collections.ObjectModel;
 
 namespace InterOn.Data.ModelsDto.Group
 {
-    public class UpdateGroupDto
-    {
-        
+    public class UpdateGroupDto : GroupManipulationDto
+    { 
         public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
 
         ///  public int AdminId{ get; set; }
         public ICollection<int> SubCategories { get; set; }
@@ -21,7 +16,6 @@ namespace InterOn.Data.ModelsDto.Group
         {
             Users = new Collection<int>();
             SubCategories = new Collection<int>();
-        }
-        
+        }  
     }
 }

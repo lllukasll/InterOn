@@ -13,7 +13,8 @@ namespace InterOn.Data.ModelsDto.Group
         public DateTime CreateDateTime { get; set; }
         public int UserId { get; set; }
         public string GroupPhoto { get; set; }
-     
+        public int NumberOfUsers { get; set; }
+
         public ICollection<SubCategoriesDto> SubCategories { get; set; }
         public ICollection<UserGroupDto> Users { get; set; }
 

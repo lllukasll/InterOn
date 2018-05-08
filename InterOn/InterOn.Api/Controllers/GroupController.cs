@@ -30,13 +30,14 @@ namespace InterOn.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObjectResult(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
             var result = await _service.CreateGroup(groupDto, userId);
+
             return Ok(result);
         }
-        [HttpPost]
-        [Route("{groupId}/photo")]
+        [HttpPost("{groupId}/photo")]
         public async Task<IActionResult> Upload(int groupId, IFormFile file)
         {
             if (await _service.IfExist(groupId) == false) return NotFound();
@@ -58,7 +59,8 @@ namespace InterOn.Api.Controllers
                 return NotFound();
             if (await _service.IsAdminAsync(userId,id) == false)
                 return BadRequest("Nie jesteś Adminem Grupy");
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObjectResult(ModelState);
             var result = await _service.UpdateGroup(groupDto, id);
             if (result == null) return NotFound();
             return Ok(result);
