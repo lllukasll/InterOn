@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using InterOn.Data.ModelsDto.Message;
 using InterOn.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterOn.Api.Controllers
 {
+    [Authorize]
     [Route("/api/messages/{userId}")]
     public class MessageController : Controller
     {
@@ -21,6 +23,14 @@ namespace InterOn.Api.Controllers
             await _service.SendMessageAsync(userIdLogged, userId, sendMessageDto);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMessages(int userId)
+        {
+            var userIdLogged = int.Parse(HttpContext.User.Identity.Name);
+            var result = await _service.GetMessagesAsync(userIdLogged, userId);
+            return Ok(result);
         }
 
     }

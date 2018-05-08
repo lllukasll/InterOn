@@ -9,7 +9,6 @@ using InterOn.Data.ModelsDto.Group;
 using InterOn.Data.ModelsDto.Message;
 using InterOn.Data.ModelsDto.Post;
 using InterOn.Data.ModelsDto.User;
-using InterOn.Repo.Repositories;
 
 namespace InterOn.Api.Helpers
 {
@@ -17,6 +16,7 @@ namespace InterOn.Api.Helpers
     {
         public AutoMapperProfile()
         {
+            
             //CreateMap<User, UserDto>();
             //CreateMap<UserDto, User>();
             //Photo
@@ -27,6 +27,7 @@ namespace InterOn.Api.Helpers
             
             //message
             CreateMap<SendMessageDto, Message>();
+            CreateMap<Message, MessageDto>();
             //Friends
             CreateMap<ConfirmFriendDto, Friend>();
             
@@ -69,7 +70,6 @@ namespace InterOn.Api.Helpers
                 .ForMember(g => g.SubCategories,
                     opt => opt.MapFrom(gdt => gdt.SubCategories.Select(id => new GroupCategory {SubCategoryId = id})))
                 .ForMember(g => g.Users, opt => opt.Ignore());
-
 
             CreateMap<Group, UpdateGroupDto>()
                 .ForMember(gdt => gdt.SubCategories,

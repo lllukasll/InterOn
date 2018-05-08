@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
@@ -13,7 +14,7 @@ namespace InterOn.Service.Services
         private readonly IUserMessageRepository _repository;
         private readonly IMapper _mapper;
 
-        public UserMessageService(IUserMessageRepository repository,IMapper mapper)
+        public UserMessageService(IUserMessageRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -27,6 +28,13 @@ namespace InterOn.Service.Services
             message.CreateDateTime = DateTime.Now;
             await _repository.AddAsyn(message);
             await _repository.SaveAsync();
+        }
+
+        public async Task<IEnumerable<MessageDto>> GetMessagesAsync(int senderId, int receiverId)
+        {
+            var messages = await _repository.GetMessageAsync(senderId, receiverId);
+            var result = _mapper.Map<IEnumerable<Message>, IEnumerable<MessageDto>>(messages);
+            return result;
         }
     }
 }
