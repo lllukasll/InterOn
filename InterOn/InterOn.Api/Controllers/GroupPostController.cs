@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using InterOn.Api.Helpers;
 using InterOn.Data.ModelsDto.Post;
 using InterOn.Service.Interfaces;
@@ -64,10 +65,20 @@ namespace InterOn.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPostsForGroup(int groupId)
         {
-            if (await _service.IfExistGroupAsync(groupId) == false)
-                return NotFound("Nie ma takiej grupy");
-            var resultDtos = await _service.GetAllPostsForGroupAsync(groupId);
-            return Ok(resultDtos);
+            try
+            {
+
+                if (await _service.IfExistGroupAsync(groupId) == false)
+                    return NotFound("Nie ma takiej grupy");
+                var resultDtos = await _service.GetAllPostsForGroupAsync(groupId);
+                return Ok(resultDtos);
+
+            }
+            catch (Exception e)
+            {
+               return BadRequest(e.InnerException);
+            }
+
         }
     }
 }

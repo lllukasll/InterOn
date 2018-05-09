@@ -176,7 +176,28 @@ namespace InterOn.Api.Helpers
             CreateMap<Post, PostGroupDto>()
                 .ForMember(c => c.User,
                     opt => opt.MapFrom(a =>
-                        new UserDto { AvatarUrl = a.User.AvatarUrl, Id = a.User.Id, Name = a.User.Name, Surname = a.User.Surname }));
+                        new UserDto
+                        {
+                            AvatarUrl = a.User.AvatarUrl,
+                            Id = a.User.Id, Name = a.User.Name,
+                            Surname = a.User.Surname
+                        }))
+                .ForMember(p=>p.PostComments,
+                    opt=>opt.MapFrom(pp=>pp.Comments.Select( a=>
+                        new PostCommentDto
+                        {
+                            Content = a.Content,
+                            CreateDateTime = a.CreateDateTime,
+                            UpdateDateTime = a.UpdateDateTime,
+                            User = new UserDto
+                            {
+                                Id=a.User.Id,
+                                Name=a.User.Name,
+                                Surname = a.User.Surname,
+                                AvatarUrl = a.User.AvatarUrl
+                            }
+                         
+                        })));
 
             //comment
 
