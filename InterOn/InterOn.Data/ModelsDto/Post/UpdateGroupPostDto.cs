@@ -2,9 +2,8 @@
 
 namespace InterOn.Data.ModelsDto.Post
 {
-    public class UpdateGroupPostDto
+    public class UpdateGroupPostDto : ContentManipulationDto
     {
-        public string Content { get; set; }
         public DateTime UpdateDateTime { get; set; }
     }
 }

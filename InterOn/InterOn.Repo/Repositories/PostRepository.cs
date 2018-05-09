@@ -21,6 +21,8 @@ namespace InterOn.Repo.Repositories
         {
             return await _context.Posts
                     .Include(u=>u.User)
+                    .Include(a=>a.Comments)
+                        .ThenInclude(ac=>ac.User)
                     .Where(s => s.Id ==postId  && s.GroupId== groupId)
                     .SingleOrDefaultAsync();
         }
