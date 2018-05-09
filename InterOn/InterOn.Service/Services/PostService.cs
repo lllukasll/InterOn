@@ -60,7 +60,7 @@ namespace InterOn.Service.Services
 
         public async Task<IEnumerable<PostGroupDto>> GetAllPostsForGroupAsync(int groupId)
         {
-            var posts = await _repository.GetAllIncluding(a=>a.User).OrderBy(d=>d.CreateDateTime).ToListAsync();
+            var posts = await _repository.GetAllIncluding(a=>a.User).OrderByDescending(d=>d.CreateDateTime).ToListAsync();
             var postDtos = _mapper.Map<IEnumerable<Post>, IEnumerable<PostGroupDto>>(posts);
 
             return postDtos;
