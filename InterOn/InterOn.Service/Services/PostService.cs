@@ -36,18 +36,18 @@ namespace InterOn.Service.Services
             await _repository.AddAsyn(post);
             await _repository.SaveAsync();
 
-            var postResult = await _repository.GetPostGroupAsync(groupId,post.Id);
+            var postResult = await _repository.GetPostGroupAsync(post.Id);
             var result = _mapper.Map<Post, PostGroupDto>(postResult);
             return result;
         }
 
-        public async Task<Post> UpdatePostGroupAsync(int groupId, int postId, UpdateGroupPostDto updateGroupPost)
+        public async Task UpdatePostGroupAsync(int postId,UpdateGroupPostDto updateGroupPost)
         {
-            var post = await _repository.GetPostGroupAsync(groupId, postId);
+            var post = await _repository.GetPostGroupAsync(postId);
             updateGroupPost.UpdateDateTime = DateTime.Now;
             _mapper.Map(updateGroupPost, post);
             await _repository.SaveAsync();
-            return post;
+           
         }
 
         public async Task RemovePost(int postId)

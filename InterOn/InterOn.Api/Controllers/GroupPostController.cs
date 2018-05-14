@@ -44,7 +44,7 @@ namespace InterOn.Api.Controllers
                 return NotFound("Nie ma takiego postu");
             if (await _service.IfUserAddPostAsync(postId, userId) == false)
                 return BadRequest("Użytkownik nie może edytować posta");
-            await _service.UpdatePostGroupAsync(userId,postId,updateGroupPost);
+            await _service.UpdatePostGroupAsync(postId,updateGroupPost);
             
             var result = await _service.MapPostDto(postId);
             return Ok(result);

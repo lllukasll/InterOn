@@ -1,11 +1,5 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using InterOn.Api.Helpers;
-using InterOn.Service.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace InterOn.Api.Controllers
 {

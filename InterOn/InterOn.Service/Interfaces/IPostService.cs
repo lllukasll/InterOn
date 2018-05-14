@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Post;
 
 namespace InterOn.Service.Interfaces
@@ -12,7 +11,7 @@ namespace InterOn.Service.Interfaces
         Task<bool> IfExistPost(int postId);
         Task<bool> IfExistGroupAsync(int groupId);
         Task<PostGroupDto> CreatePostGroupAsync(int groupId, int userId, CreateGroupPostDto createGroupPostDto);
-        Task<Post> UpdatePostGroupAsync(int groupId, int postId, UpdateGroupPostDto updateGroupPost);
+        Task UpdatePostGroupAsync(int postId, UpdateGroupPostDto updateGroupPost);
         Task RemovePost(int postId);
         Task<IEnumerable<PostGroupDto>> GetAllPostsForGroupAsync(int groupId);
     }
