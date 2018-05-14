@@ -35,7 +35,9 @@ namespace InterOn.Api.Controllers
             var userId = int.Parse(HttpContext.User.Identity.Name);
             var result = await _service.CreateGroup(groupDto, userId);
 
-            return Ok(result);
+            CreateGroupResponseDto response = new CreateGroupResponseDto{Id = result};
+
+            return Ok(response);
         }
         [HttpPost("{groupId}/photo")]
         public async Task<IActionResult> Upload(int groupId, IFormFile file)
