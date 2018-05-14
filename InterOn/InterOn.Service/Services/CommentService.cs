@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
 using InterOn.Data.ModelsDto.Comments;
 using InterOn.Repo.Interfaces;
 using InterOn.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterOn.Service.Services
 {
@@ -42,7 +44,17 @@ namespace InterOn.Service.Services
             await _repository.SaveAsync();
         }
 
-        public async Task CreateCommentForGroupAsync(int groupId, int userId, int postId,
+        public async Task<CommentDto> GetCommentPostGroupAsync(int postId,int commentId)
+        {
+            var comment = await _repository
+                .GetAllIncluding(u => u.User)
+                .Where(p => p.PostId == postId)
+                .SingleOrDefaultAsync(a => a.Id == commentId);
+            var resultComment = _mapper.Map<Comment, CommentDto>(comment);
+            return resultComment;
+        }
+
+        public async Task<CommentDto> CreateCommentForGroupAsync(int groupId, int userId, int postId,
             CreateGroupPostCommentDto createGroupComment)
         {
             var comment = _mapper.Map<CreateGroupPostCommentDto, Comment>(createGroupComment);
@@ -51,9 +63,10 @@ namespace InterOn.Service.Services
             comment.CreateDateTime = DateTime.Now;
             await _repository.AddAsyn(comment);
             await _repository.SaveAsync();
+            return await GetCommentPostGroupAsync(postId, comment.Id);
         }
 
-        public async Task<IEnumerable<CommentDto>> GetAllCommentsFromPostGroup(int postId)
+        public async Task<IEnumerable<CommentDto>> GetAllCommentsForPostGroup(int postId)
         {
             var comments = await _repository.GetCommentsForPostGroup(postId);
             var resultComments = _mapper.Map<IEnumerable<Comment>, IEnumerable<CommentDto>>(comments);

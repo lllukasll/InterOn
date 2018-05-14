@@ -18,6 +18,17 @@ namespace InterOn.Api.Controllers
             _service = service;
         }
 
+        [HttpGet("{commentId}",Name = "GetComment")]
+        public async Task<IActionResult> GetCommentForPostGroup(int postId, int groupId,int commentId)
+        {
+            if (await _service.IfGroupExistAsync(groupId) == false)
+                return NotFound("Nie ma takiej Grupy");
+            if (await _service.IfPostExistAsync(postId) == false)
+                return NotFound("Nie ma Takiego Postu");
+            var result = await _service.GetCommentPostGroupAsync(postId,commentId);
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateCommentsForPostGroup(int groupId, int postId,
             [FromBody] CreateGroupPostCommentDto commentsDto)
@@ -29,8 +40,8 @@ namespace InterOn.Api.Controllers
                 return NotFound("Nie ma takiej Grupy");
             if (await _service.IfPostExistAsync(postId) == false)
                 return NotFound("Nie ma Takiego Postu");
-            await _service.CreateCommentForGroupAsync(groupId, userId, postId, commentsDto);
-            return StatusCode(201);
+            var result = await _service.CreateCommentForGroupAsync(groupId, userId, postId, commentsDto);
+            return CreatedAtRoute("GetComment", new { postId,  groupId, commentId = result.Id}, result);
         }
 
         [HttpPut("{commentId}")]
@@ -59,7 +70,7 @@ namespace InterOn.Api.Controllers
                 return NotFound("Nie ma takiej Grupy");
             if (await _service.IfPostExistAsync(postId) == false)
                 return NotFound("Nie ma Takiego Postu");
-            var result = await _service.GetAllCommentsFromPostGroup(postId);
+            var result = await _service.GetAllCommentsForPostGroup(postId);
             return Ok(result);
         }
 
