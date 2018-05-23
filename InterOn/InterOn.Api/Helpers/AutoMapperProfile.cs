@@ -126,6 +126,8 @@ namespace InterOn.Api.Helpers
                     opt=>opt.MapFrom(a=>a.Address.Latitude))
                 .ForMember(e => e.Longitude,
                     opt => opt.MapFrom(a => a.Address.Longitude))
+                .ForMember(e => e.Address,
+                    opt => opt.MapFrom(a => a.Address.Address))
                 .ForMember(g => g.Users, opt => opt.Ignore())
                 .ForMember(e => e.User, opt => opt.Ignore());
               
@@ -142,6 +144,9 @@ namespace InterOn.Api.Helpers
                     opt => opt.MapFrom(a => a.Address.Latitude))
                 .ForMember(e => e.Longitude,
                     opt => opt.MapFrom(a => a.Address.Longitude))
+                .ForMember(e => e.Address,
+                    opt => opt.MapFrom(a => a.Address.Address))
+
                 .AfterMap((gdto, g) =>
                 {
                     //Remove
@@ -160,14 +165,21 @@ namespace InterOn.Api.Helpers
             CreateMap<Event, UpdateEventDto>()
                 .ForMember(ue => ue.SubCategories,
                     opt => opt.MapFrom(ev => ev.SubCategories.Select(esc => esc.SubCategoryId)));
-            CreateMap<Event, EventGroupDto>()
-                .ForMember(gdt => gdt.SubCategories,
-                    otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name,SubCategoryPhoto = id.SubCategory.SubCategoryPhoto })));
             CreateMap<Event, EventDto>()
                 .ForMember(gdt => gdt.SubCategories,
                     otp => otp.MapFrom(g => g.SubCategories.Select(id =>
-                        new SubCategoriesDto { Id = id.SubCategoryId, Name = id.SubCategory.Name, SubCategoryPhoto = id.SubCategory.SubCategoryPhoto })));
+                        new SubCategoriesDto
+                        {
+                            Id = id.SubCategoryId,
+                            Name = id.SubCategory.Name,
+                            SubCategoryPhoto = id.SubCategory.SubCategoryPhoto
+                        })))
+                .ForMember(edto => edto.AddressDto,
+                    opt => opt.MapFrom(a =>
+                        new AddressDto
+                        {
+                            Address = a.Address, Latitude = a.Latitude, Longitude = a.Longitude
+                        }));
             //post
             CreateMap<UpdateGroupPostDto, Post>()
                 .ForMember(dto => dto.Id,

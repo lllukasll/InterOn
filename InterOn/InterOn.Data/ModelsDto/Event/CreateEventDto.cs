@@ -15,6 +15,7 @@ namespace InterOn.Data.ModelsDto.Event
         public int GroupId { get; set; }
         public int UserId { get; set; }
 
+
         [Required]
         public AddressDto Address { get; set; }
 

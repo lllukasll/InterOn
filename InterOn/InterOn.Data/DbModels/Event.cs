@@ -20,6 +20,8 @@ namespace InterOn.Data.DbModels
 
         public int? GroupId { get; set; }
 
+        public string Address { get; set; }
+
         [Required]
         public string Longitude { get; set; }
         [Required]

@@ -35,7 +35,7 @@ namespace InterOn.Api.Controllers
             var userId = int.Parse(HttpContext.User.Identity.Name);
             var result = await _service.CreateGroup(groupDto, userId);
 
-            CreateGroupResponseDto response = new CreateGroupResponseDto{Id = result};
+            var response = new CreateGroupResponseDto{Id = result};
 
             return Ok(response);
         }

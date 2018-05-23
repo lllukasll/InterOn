@@ -13,14 +13,14 @@ namespace InterOn.Service.Interfaces
         Task<bool> IfUserBelongToEvent(int eventId, int userId);
         Task<bool> ExistEvent(int id);
         Task<bool> ExistGroup(int id);
-        Task CreateEventAsync(int userId,CreateEventDto eventDto);
+        Task<EventDto> CreateEventAsync(int userId, CreateEventDto eventDto);
         Task UpdateEventAsync(int eventId, UpdateEventDto eventDto);
         Task CreateEventUserAsync(int eventId, int userId);
-        Task CreateEventForGroupAsync(CreateEventDto eventDto, int groupId, int userId);
-        Task<IEnumerable<EventGroupDto>> GetAllEventGroupAsync(int groupId);
+        Task<EventDto> CreateEventForGroupAsync(CreateEventDto eventDto, int groupId, int userId);
+        Task<IEnumerable<EventDto>> GetAllEventGroupAsync(int groupId);
         Task Delete(int eventId);
         Task<IEnumerable<EventDto>> GetAllEventAsync();
         Task<EventDto> GetEventAsync(int eventId);
-        Task<EventGroupDto> GetEventAsync(int eventId, int groupId);
+        Task<EventDto> GetEventAsync(int eventId, int groupId);
     }
 }

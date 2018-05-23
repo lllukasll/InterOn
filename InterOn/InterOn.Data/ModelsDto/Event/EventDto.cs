@@ -13,9 +13,7 @@ namespace InterOn.Data.ModelsDto.Event
         public DateTime DateTimeEvent { get; set; }
         public string PhotoUrl { get; set; }
         public int GroupId { get; set; }
-        //Admin
-        //public int UserId { get; set; }
-        //public User User { get; set; }
+        public AddressDto AddressDto { get; set; }
 
         public ICollection<SubCategoriesDto> SubCategories { get; set; }
 

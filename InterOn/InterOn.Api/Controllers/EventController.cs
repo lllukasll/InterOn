@@ -49,9 +49,9 @@ namespace InterOn.Api.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var userId = int.Parse(HttpContext.User.Identity.Name);
-            await _service.CreateEventAsync(userId,eventDto);
+            var result =  await _service.CreateEventAsync(userId,eventDto);
             
-            return Ok();
+            return CreatedAtRoute("GetEvent",new {eventId=result.Id},result);
         }
 
         [HttpPut("{id}")]
@@ -81,7 +81,7 @@ namespace InterOn.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{eventId}")]
+        [HttpGet("{eventId}",Name = "GetEvent")]
         public async Task<IActionResult> GetEvent(int eventId)
         {
             var result = await _service.GetEventAsync(eventId);

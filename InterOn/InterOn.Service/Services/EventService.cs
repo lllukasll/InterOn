@@ -23,12 +23,14 @@ namespace InterOn.Service.Services
             _repository = repository;
         }
 
-        public async Task CreateEventAsync(int userId, CreateEventDto eventDto)
+        public async Task<EventDto> CreateEventAsync(int userId, CreateEventDto eventDto)
         {
             var eventt = _mapper.Map<CreateEventDto, Event>(eventDto);
             eventt.UserId = userId;
             await _repository.AddAsyn(eventt);
             await _repository.SaveAsync();
+
+            return await GetEventAsync(eventt.Id);
         }
 
         public async Task UpdateEventAsync(int eventId, UpdateEventDto eventDto)
@@ -50,7 +52,7 @@ namespace InterOn.Service.Services
             await _repository.SaveAsync();
         }
 
-        public async Task CreateEventForGroupAsync(CreateEventDto eventDto, int groupId, int userId)
+        public async Task<EventDto> CreateEventForGroupAsync(CreateEventDto eventDto, int groupId, int userId)
         {
             var eventforgroup = _mapper.Map<CreateEventDto, Event>(eventDto);
             eventforgroup.GroupId = groupId;
@@ -58,12 +60,13 @@ namespace InterOn.Service.Services
             await _repository.AddAsyn(eventforgroup);
             await _repository.SaveAsync();
 
+            return await GetEventAsync(eventforgroup.Id, groupId);
         }
 
-        public async Task<IEnumerable<EventGroupDto>> GetAllEventGroupAsync(int groupId)
+        public async Task<IEnumerable<EventDto>> GetAllEventGroupAsync(int groupId)
         {
             var eventGroup = await _repository.GetGroupEvents(groupId);
-            var resultMap = _mapper.Map<IEnumerable<Event>, IEnumerable<EventGroupDto>>(eventGroup);
+            var resultMap = _mapper.Map<IEnumerable<Event>, IEnumerable<EventDto>>(eventGroup);
             return resultMap;
         }
 
@@ -80,17 +83,18 @@ namespace InterOn.Service.Services
             var resultMap = _mapper.Map<IEnumerable<Event>, IEnumerable<EventDto>>(eventt);
             return resultMap;
         }
-
+        //Event Public
         public async Task<EventDto> GetEventAsync(int eventId)
         {
             var eventt = await _repository.GetEventAsync(eventId, 0);
             var resultMap = _mapper.Map<Event, EventDto>(eventt);
             return resultMap;
         }
-        public async Task<EventGroupDto> GetEventAsync(int eventId,int groupId)
+        //Event Group
+        public async Task<EventDto> GetEventAsync(int eventId,int groupId)
         {
             var eventt = await _repository.GetEventAsync(eventId, groupId);
-            var resultMap = _mapper.Map<Event, EventGroupDto>(eventt);
+            var resultMap = _mapper.Map<Event, EventDto>(eventt);
             return resultMap;
         }
 
