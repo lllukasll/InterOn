@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using InterOn.Data.DbModels;
@@ -35,19 +36,46 @@ namespace InterOn.Service.Services
         public async Task ConfirmFriend(int userIdLog, int userId)
         {
             var friend = await _repository.GetConfirmFriendAsync(userIdLog, userId);
+        
             var addconfirm = new ConfirmFriendDto
             {
                 Confirmed = true
             };
             _mapper.Map(addconfirm, friend);
             await _repository.SaveAsync();
+         
         }
 
         public async Task RemoveFriendAsync(int userIdLog, int userId)
         {
             var friend = await _repository.GetConfirmFriendAsync(userIdLog, userId);
-            _repository.Remove(friend);
-            await _repository.SaveAsync();
+         
+            await _repository.DeleteAsyn(friend);
+        }
+
+        public async Task<bool> IsExistFriendship(int userIdLog, int userId)
+        {
+            return await _repository.IsFriendshipExist(userIdLog, userId);
+        }
+
+        public async Task<bool> IsExistUser(int userId)
+        {
+            return await _repository.IsUserExist(userId);
+        }
+        public async Task<IEnumerable<FriendDto>> GetInvFriendsAsync(int userIdLogged)
+        {
+            var friends = await _repository.GetInvitationedFriendsAsyn(userIdLogged);
+            var result = _mapper.Map<IEnumerable<Friend>, IEnumerable<FriendDto>>(friends);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<FriendDto>> GetConfirmedFriendsAsync(int userId)
+        {
+            var friends = await _repository.GetConfirmedFriendsAsyn(userId);
+            var result = _mapper.Map<IEnumerable<Friend>, IEnumerable<FriendDto>>(friends);
+
+            return result;
         }
     }
 }

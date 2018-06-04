@@ -30,7 +30,9 @@ namespace InterOn.Api.Helpers
             CreateMap<Message, MessageDto>();
             //Friends
             CreateMap<ConfirmFriendDto, Friend>();
-            
+
+            CreateMap<Friend, FriendDto>();
+         
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();
 

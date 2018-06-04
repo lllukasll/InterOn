@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace InterOn.Api
 {
+
     public class Program
     {
         public static void Main(string[] args)

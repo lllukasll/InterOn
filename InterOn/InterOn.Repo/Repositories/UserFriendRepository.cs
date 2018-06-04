@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using InterOn.Data.DbModels;
 using InterOn.Repo.Interfaces;
@@ -12,6 +13,35 @@ namespace InterOn.Repo.Repositories
         {
         }
 
-        public async Task<Friend> GetConfirmFriendAsync(int userIdLog, int userId) => await _context.Friends.Where(a => a.UserAId == userIdLog |a.UserBId==userIdLog & a.UserAId==userId | a.UserBId == userId).SingleAsync();
+        public async Task<bool> IsFriendshipExist(int userIdLog, int userId) => 
+            await _context.Friends.AnyAsync(a =>
+                a.UserAId == userIdLog | a.UserBId == userIdLog & a.UserAId == userId | a.UserBId == userId);
+        public async Task<Friend> GetConfirmFriendAsync(int userIdLog, int userId) => 
+            await _context.Friends
+                .Where(a => a.UserAId == userIdLog |a.UserBId==userIdLog & a.UserAId==userId | a.UserBId == userId)
+                .SingleAsync();
+        public async Task<IEnumerable<Friend>> GetConfirmedFriendsAsyn(int userId)
+        {
+            return await _context.Friends
+                .Include(a=>a.UserA)
+                .Include(a=>a.UserB)
+                .Where(a => a.Confirmed && a.UserAId == userId || a.UserBId==userId && a.UserAId != a.UserBId )
+                .ToListAsync();
+        }
+
+        public async Task<bool> IsUserExist(int userId)
+        {
+            return await _context.Users.AnyAsync(a => a.Id == userId);
+        } 
+
+        public async Task<IEnumerable<Friend>> GetInvitationedFriendsAsyn(int userId)
+        {
+            return await _context.Friends
+                .Include(a => a.UserA)
+                .Include(a => a.UserB)
+                .Where( a => a.Confirmed == false & a.UserAId == userId || a.UserBId == userId && a.UserAId != a.UserBId )
+                .OrderBy(a=>a.Established)
+                .ToListAsync();
+        }
     }
 }
