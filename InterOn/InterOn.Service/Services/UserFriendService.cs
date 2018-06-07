@@ -48,9 +48,9 @@ namespace InterOn.Service.Services
 
         public async Task RemoveFriendAsync(int userIdLog, int userId)
         {
-            var friend = await _repository.GetConfirmFriendAsync(userIdLog, userId);
-         
-            await _repository.DeleteAsyn(friend);
+            //var friend = await _repository.GetConfirmFriendAsync(userIdLog, userId);
+            var f = await _repository.GetAsync(userId);
+            await _repository.DeleteAsyn(f);
         }
 
         public async Task<bool> IsExistFriendship(int userIdLog, int userId)

@@ -61,23 +61,11 @@ namespace InterOn.Api.Controllers
         }
 
         [HttpDelete()]
-        [Route("/api/user/{userId}/friends/remove")]
-        public async Task<IActionResult> RemoveFriend(int userId)
+        [Route("/api/user/friends/remove/{id}")]
+        public async Task<IActionResult> RemoveFriend(int id)
         {
             var userIdLogged = int.Parse(HttpContext.User.Identity.Name);
-            if (userIdLogged == userId)
-            {
-                return BadRequest("Ten sam użytkownik nie może usunąć siebie ze znajomych");
-            }
-            if (!await _service.IsExistUser(userId))
-            {
-                return BadRequest("Nie ma takiego użytkowika o tym Id");
-            }
-            if (!await _service.IsExistFriendship(userIdLogged, userId))
-            {
-                return BadRequest("Nie ma takiech znajomych");
-            }
-             await _service.RemoveFriendAsync(userIdLogged, userId);
+            await _service.RemoveFriendAsync(userIdLogged, id);
             return Ok();
         }
 
