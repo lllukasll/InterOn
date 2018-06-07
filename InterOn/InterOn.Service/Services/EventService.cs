@@ -83,6 +83,14 @@ namespace InterOn.Service.Services
             var resultMap = _mapper.Map<IEnumerable<Event>, IEnumerable<EventDto>>(eventt);
             return resultMap;
         }
+
+        public async Task<IEnumerable<EventDto>> GetAllEventsForUserAsync(int id)
+        {
+            var eventt = await _repository.GetEventsForUser(id);
+            var resultMap = _mapper.Map<IEnumerable<Event>, IEnumerable<EventDto>>(eventt);
+            return resultMap;
+        }
+
         //Event Public
         public async Task<EventDto> GetEventAsync(int eventId)
         {

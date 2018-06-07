@@ -51,6 +51,20 @@ namespace InterOn.Repo.Repositories
                 .Where(a=>a.GroupId==0)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Event>> GetEventsForUser(int id)
+        {
+            return await _context.Events
+                .Include(gu => gu.Users)
+                .ThenInclude(u => u.User)
+                .Include(g => g.SubCategories)
+                .ThenInclude(g => g.SubCategory)
+                .OrderBy(a => a.DateTimeEvent)
+                .Where(a => a.GroupId == 0)
+                .Where(x => x.Users.Any(z => z.UserId == id))
+                .ToListAsync();
+        }
+
         public async Task<Event> GetEventAsync(int eventId,int groupId)
         {
             return await _context.Events

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace InterOn.Api.Controllers
 {
     [Authorize]
-    [Route("/api/user/{userId}/friends")]
     public class FriendController : Controller
     {
         private readonly IUserFriendService _service;
@@ -15,7 +14,9 @@ namespace InterOn.Api.Controllers
         {
             _service = service;
         }
-        [HttpPost("Add")]
+
+        [HttpPost()]
+        [Route("/api/user/{userId}/friends/add")]
         public async Task<IActionResult> AddFriend(int userId)
         {
             var userIdLogged = int.Parse(HttpContext.User.Identity.Name);
@@ -36,7 +37,9 @@ namespace InterOn.Api.Controllers
 
             return Ok();
         }
-        [HttpPut("confirm")]
+
+        [HttpPut()]
+        [Route("/api/user/{userId}/friends/confirm")]
         public async Task<IActionResult> ConfirmFriend(int userId)
         {
             var userIdLogged = int.Parse(HttpContext.User.Identity.Name);
@@ -56,7 +59,9 @@ namespace InterOn.Api.Controllers
             await _service.ConfirmFriend(userIdLogged, userId);
             return Ok();
         }
-        [HttpDelete("remove")]
+
+        [HttpDelete()]
+        [Route("/api/user/{userId}/friends/remove")]
         public async Task<IActionResult> RemoveFriend(int userId)
         {
             var userIdLogged = int.Parse(HttpContext.User.Identity.Name);
@@ -75,24 +80,20 @@ namespace InterOn.Api.Controllers
              await _service.RemoveFriendAsync(userIdLogged, userId);
             return Ok();
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetConfirmedFriends(int userId)
+        [Route("/api/friends")]
+        public async Task<IActionResult> GetConfirmedFriends()
         {
-            if (!await _service.IsExistUser(userId))
-            {
-                return BadRequest("Nie ma takiego użytkowika o tym Id");
-            }
             var userIdLogged = int.Parse(HttpContext.User.Identity.Name);
             var res = await _service.GetConfirmedFriendsAsync(userIdLogged);
             return Ok(res);
         }
-        [HttpGet("invitation")]
-        public async Task<IActionResult> GetInvitaionFriends(int userId)
+
+        [HttpGet()]
+        [Route("/api/invitations")]
+        public async Task<IActionResult> GetInvitaionFriends()
         {
-            if (!await _service.IsExistUser(userId))
-            {
-                return BadRequest("Nie ma takiego użytkowika o tym Id");
-            }
             var userIdLogged = int.Parse(HttpContext.User.Identity.Name);
             var res = await _service.GetInvFriendsAsync(userIdLogged);
             return Ok(res);

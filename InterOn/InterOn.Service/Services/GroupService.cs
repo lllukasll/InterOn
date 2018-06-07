@@ -42,6 +42,13 @@ namespace InterOn.Service.Services
             return result;
         }
 
+        public async Task<IEnumerable<GroupDto>> GetGroupsForUserAsync(int id)
+        {
+            var group = await _repository.GetGroupsForUser(id);
+            var result = _mapper.Map<IEnumerable<Group>, IEnumerable<GroupDto>>(group);
+            return result;
+        }
+
         public async Task Remove(int id)
         {
             var group = await _repository.GetGroupAsync(id, false);

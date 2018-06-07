@@ -76,6 +76,17 @@ namespace InterOn.Api.Controllers
 
             return Ok(group);
         }
+
+        [HttpGet("forUser")]
+        public async Task<IActionResult> GetGroupsFroUser()
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            var group = await _service.GetGroupsForUserAsync(userId);
+            if (group == null) return NotFound();
+
+            return Ok(group);
+        }
+
         [AllowAnonymous]
         [HttpGet("anonymous/{id}")]
         public async Task<IActionResult> GetGroupAllowAnonymous(int id)

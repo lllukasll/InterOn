@@ -14,5 +14,6 @@ namespace InterOn.Repo.Interfaces
         void RemoveUserGroup(UserGroup userGroup);
         Task<Group> GetGroupAsync(int id, bool includeRelated = true);
         Task<IEnumerable<Group>> GetGroups();
+        Task<IEnumerable<Group>> GetGroupsForUser(int id);
     }
 }

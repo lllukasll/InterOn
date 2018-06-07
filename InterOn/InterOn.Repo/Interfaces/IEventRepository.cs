@@ -14,6 +14,7 @@ namespace InterOn.Repo.Interfaces
         void RemoveUserEvent(UserEvent userEvent);
         Task<IEnumerable<Event>> GetGroupEvents(int groupId);
         Task<IEnumerable<Event>> GetEvents();
+        Task<IEnumerable<Event>> GetEventsForUser(int id);
         Task<Event> GetEventAsync(int eventId,int groupId);
     }
 }

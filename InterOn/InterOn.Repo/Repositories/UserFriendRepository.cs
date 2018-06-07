@@ -15,17 +15,17 @@ namespace InterOn.Repo.Repositories
 
         public async Task<bool> IsFriendshipExist(int userIdLog, int userId) => 
             await _context.Friends.AnyAsync(a =>
-                a.UserAId == userIdLog | a.UserBId == userIdLog & a.UserAId == userId | a.UserBId == userId);
+                (a.UserAId == userIdLog | a.UserBId == userIdLog) & (a.UserAId == userId | a.UserBId == userId));
         public async Task<Friend> GetConfirmFriendAsync(int userIdLog, int userId) => 
             await _context.Friends
-                .Where(a => a.UserAId == userIdLog |a.UserBId==userIdLog & a.UserAId==userId | a.UserBId == userId)
+                .Where(a => a.UserBId == userIdLog & a.UserAId==userId)
                 .SingleAsync();
         public async Task<IEnumerable<Friend>> GetConfirmedFriendsAsyn(int userId)
         {
             return await _context.Friends
                 .Include(a=>a.UserA)
                 .Include(a=>a.UserB)
-                .Where(a => a.Confirmed && a.UserAId == userId || a.UserBId==userId && a.UserAId != a.UserBId )
+                .Where(a => a.Confirmed && ( a.UserAId == userId || a.UserBId==userId && a.UserAId != a.UserBId ))
                 .ToListAsync();
         }
 
@@ -39,7 +39,7 @@ namespace InterOn.Repo.Repositories
             return await _context.Friends
                 .Include(a => a.UserA)
                 .Include(a => a.UserB)
-                .Where( a => a.Confirmed == false & a.UserAId == userId || a.UserBId == userId && a.UserAId != a.UserBId )
+                .Where( a => a.Confirmed == false & a.UserBId == userId)
                 .OrderBy(a=>a.Established)
                 .ToListAsync();
         }

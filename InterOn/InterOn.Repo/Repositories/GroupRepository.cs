@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using InterOn.Data.DbModels;
@@ -40,6 +41,18 @@ namespace InterOn.Repo.Repositories
                 .Include(g => g.SubCategories)
                 .ThenInclude(g => g.SubCategory)
                 .ThenInclude(gmc => gmc.MainCategory)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Group>> GetGroupsForUser(int id)
+        {
+            return await _context.Groups
+                .Include(gu => gu.Users)
+                .ThenInclude(u => u.User)
+                .Include(g => g.SubCategories)
+                .ThenInclude(g => g.SubCategory)
+                .ThenInclude(gmc => gmc.MainCategory)
+                .Where(x => x.Users.Any(z => z.UserId == id))
                 .ToListAsync();
         }
 

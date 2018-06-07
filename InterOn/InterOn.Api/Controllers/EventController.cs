@@ -81,6 +81,16 @@ namespace InterOn.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("forUser")]
+        public async Task<IActionResult> GetEventsForUser()
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            var result = await _service.GetAllEventsForUserAsync(userId);
+            if (result == null)
+                return NotFound("Nie ma żadnego wydarzenia");
+            return Ok(result);
+        }
+
         [HttpGet("{eventId}",Name = "GetEvent")]
         public async Task<IActionResult> GetEvent(int eventId)
         {

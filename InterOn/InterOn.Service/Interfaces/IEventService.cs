@@ -20,6 +20,7 @@ namespace InterOn.Service.Interfaces
         Task<IEnumerable<EventDto>> GetAllEventGroupAsync(int groupId);
         Task Delete(int eventId);
         Task<IEnumerable<EventDto>> GetAllEventAsync();
+        Task<IEnumerable<EventDto>> GetAllEventsForUserAsync(int id);
         Task<EventDto> GetEventAsync(int eventId);
         Task<EventDto> GetEventAsync(int eventId, int groupId);
     }
