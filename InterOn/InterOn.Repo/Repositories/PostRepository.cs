@@ -13,7 +13,8 @@ namespace InterOn.Repo.Repositories
         }
 
         public async Task<bool> IfGroupExist(int groupId) => await _context.Groups.AnyAsync(a => a.Id == groupId);
-
+        public async Task<bool> IfEventExist(int eventId) => await _context.Events.AnyAsync(a => a.Id == eventId);
+        
         public async Task<bool> IfUserAddPost(int postId, int userId) =>
             await _context.Posts.AnyAsync(p => p.UserId == userId & p.Id == postId);
 

@@ -26,11 +26,20 @@ namespace InterOn.Service.Services
             await _repository.IfUserAddPost(postId, userId);
         public async Task<bool> IfExistGroupAsync(int groupId) => await _repository.IfGroupExist(groupId);
 
-        public async Task<PostGroupDto> CreatePostGroupAsync(int groupId, int userId, CreateGroupPostDto createGroupPostDto)
+        public async Task<bool> IfExistEventAsync(int eventId) => await _repository.IfEventExist(eventId);
+
+        public async Task<PostGroupDto> CreatePostGroupAsync(int userId, CreateGroupPostDto createGroupPostDto)
         {
             var post = _mapper.Map<CreateGroupPostDto, Post>(createGroupPostDto);
             post.UserId = userId;
-            post.GroupId = groupId;
+            if (post.EventId == 0)
+            {
+                post.EventId = null;
+            }else if (post.GroupId == 0)
+            {
+                post.GroupId = null;
+            }
+            
             post.CreateDateTime = DateTime.Now;
 
             await _repository.AddAsyn(post);
@@ -73,6 +82,23 @@ namespace InterOn.Service.Services
 
             return postDtos;
         }
+
+        public async Task<IEnumerable<PostGroupDto>> GetAllPostsForEventAsync(int eventId)
+        {
+
+            //var posts = await _repository.GetAllIncluding(a=>a.User).OrderByDescending(d=>d.CreateDateTime).ToListAsync();
+
+            var posts = await _repository
+                .GetAllIncluding(a => a.User, c => c.Comments)
+                .OrderByDescending(d => d.CreateDateTime)
+                .Where(c => c.EventId == eventId)
+                .ToListAsync();
+
+            var postDtos = _mapper.Map<IEnumerable<Post>, IEnumerable<PostGroupDto>>(posts);
+
+            return postDtos;
+        }
+        
 
         public async Task<bool> IfExistPost(int postId)
         {

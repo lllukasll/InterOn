@@ -181,7 +181,12 @@ namespace InterOn.Api.Helpers
                         new AddressDto
                         {
                             Address = a.Address, Latitude = a.Latitude, Longitude = a.Longitude
-                        }));
+                        }))
+                .ForMember(gdt => gdt.Users,
+                    opt => opt.MapFrom(g => g.Users.Select(id =>
+                        new UserGroupDto { Id = id.User.Id, Name = id.User.Name, Surname = id.User.Surname, AvatarUrl = id.User.AvatarUrl })))
+                .ForMember(gdt => gdt.NumberOfUsers,
+                    opt => opt.MapFrom(g => g.Users.Count())); ;
             //post
             CreateMap<UpdateGroupPostDto, Post>()
                 .ForMember(dto => dto.Id,

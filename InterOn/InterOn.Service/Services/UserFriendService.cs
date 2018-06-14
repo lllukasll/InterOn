@@ -28,6 +28,7 @@ namespace InterOn.Service.Services
                 UserAId = userIdLog,
                 UserBId = userId,
                 Established = DateTime.Now,
+                ConversationName = userIdLog.ToString() + userId.ToString()
             };
             await _repository.AddAsyn(friend);
             await _repository.SaveAsync();

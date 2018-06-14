@@ -10,9 +10,11 @@ namespace InterOn.Service.Interfaces
         Task<PostGroupDto> MapPostDto(int postId);
         Task<bool> IfExistPost(int postId);
         Task<bool> IfExistGroupAsync(int groupId);
-        Task<PostGroupDto> CreatePostGroupAsync(int groupId, int userId, CreateGroupPostDto createGroupPostDto);
+        Task<bool> IfExistEventAsync(int eventId);
+        Task<PostGroupDto> CreatePostGroupAsync(int userId, CreateGroupPostDto createGroupPostDto);
         Task UpdatePostGroupAsync(int postId, UpdateGroupPostDto updateGroupPost);
         Task RemovePost(int postId);
         Task<IEnumerable<PostGroupDto>> GetAllPostsForGroupAsync(int groupId);
+        Task<IEnumerable<PostGroupDto>> GetAllPostsForEventAsync(int eventId);
     }
 }

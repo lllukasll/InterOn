@@ -8,5 +8,6 @@ namespace InterOn.Repo.Interfaces
         Task<bool> IfUserAddPost(int postId, int userId);
         Task<Post> GetPostGroupAsync(int postId);
         Task<bool> IfGroupExist(int groupId);
+        Task<bool> IfEventExist(int eventId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using AutoMapper;
+using InterOn.Api.Controllers;
 using InterOn.Api.Helpers;
 using InterOn.Repo;
 using InterOn.Repo.Interfaces;
@@ -9,6 +10,7 @@ using InterOn.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +36,7 @@ namespace InterOn.Api
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"), b => b.MigrationsAssembly("InterOn.Repo")));
             services.AddMvc();
             services.AddAutoMapper();
+            services.AddSignalR();
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -79,6 +82,7 @@ namespace InterOn.Api
             services.AddScoped<IUserFriendService, UserFriendService>();
             services.AddScoped<IUserMessageRepository, UserMessageRepository>();
             services.AddScoped<IUserMessageService, UserMessageService>();
+            //services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
         }
      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,8 +96,13 @@ namespace InterOn.Api
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials());
-
+            
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHubController>("/chat");
+            });
 
             app.UseMvc();
         }

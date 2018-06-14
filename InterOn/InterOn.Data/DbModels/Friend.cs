@@ -9,6 +9,7 @@ namespace InterOn.Data.DbModels
         public User UserA { get; set; }
         public User UserB { get; set; }
         public DateTime Established { get; set; }
+        public string ConversationName { get; set; }
         public bool Confirmed { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace InterOn.Data.ModelsDto.User
         public UserDto UserB { get; set; }
         public DateTime Established { get; set; }
         public bool Confirmed { get; set; }
+        public string ConversationName { get; set; }
     }
 }
