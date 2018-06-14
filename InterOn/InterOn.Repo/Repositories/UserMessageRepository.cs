@@ -19,8 +19,7 @@ namespace InterOn.Repo.Repositories
                 .Include(u => u.ReceiverUser)
                 .Include(u => u.SenderUser)
                 .OrderBy(o => o.CreateDateTime)
-                .Where(a => a.SenderId == senderId || a.ReceiverId == receiverId && a.ReceiverId == receiverId ||
-                            a.SenderId == senderId).ToListAsync();
+                .Where(a => (a.SenderId == senderId && a.ReceiverId == receiverId) || (a.ReceiverId == senderId && a.SenderId == receiverId)).ToListAsync();
         }
     }
 }
